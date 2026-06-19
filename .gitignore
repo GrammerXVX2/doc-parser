@@ -10,6 +10,8 @@
 /output_stage5/
 /output_stage6/
 /data/bench_output/
+/data/input/*
+!data/input/.gitkeep
 /data/output/*
 !data/output/.gitkeep
 
