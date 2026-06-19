@@ -81,6 +81,7 @@ impl JobWorker {
                 return Err(anyhow::anyhow!("MAX_PAGES_LIMIT_EXCEEDED"));
             }
 
+            model.document_id = job.document_id.clone();
             model.job_id = Some(job.job_id.clone());
             write_document_outputs(&model, &self.output_dir, true)?;
 
@@ -90,6 +91,7 @@ impl JobWorker {
                     .join(&job.document_id)
                     .join("assets"),
             )?;
+                model.document_id = job.document_id.clone();
             let max_assets = self.max_extracted_assets_mb.saturating_mul(1024 * 1024);
             if assets_size > max_assets {
                 return Err(anyhow::anyhow!("OUTPUT_ASSETS_LIMIT_EXCEEDED"));

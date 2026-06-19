@@ -31,6 +31,10 @@ pub struct AppState {
     pub config_valid: bool,
     pub storage_ready: bool,
     pub model_registry_ready: bool,
+    pub auth_required: bool,
+    pub auth_enabled: bool,
+    pub auth_token_env: String,
+    pub auth_token_configured: bool,
 }
 
 impl AppState {
@@ -42,6 +46,7 @@ impl AppState {
         self.config_valid
             && self.storage_ready
             && self.model_registry_ready
+            && (!self.auth_enabled || self.auth_token_configured)
             && !self.queue.is_closed()
             && self.queue_remaining() > 0
     }
@@ -103,6 +108,15 @@ pub fn build_state(profile: ServiceProfile) -> AppState {
 
     let storage_ready = ensure_storage_ready(&profile);
     let model_registry_ready = evaluate_model_registry_ready(pipeline_config.as_ref());
+    let auth_enabled = profile.auth.enabled;
+    let auth_token_env = profile.auth.dev_token_env.clone();
+    let auth_token_configured = if auth_enabled {
+        std::env::var(&auth_token_env)
+            .map(|value| !value.trim().is_empty())
+            .unwrap_or(false)
+    } else {
+        true
+    };
 
     AppState {
         security_limits: SecurityLimits {
@@ -131,6 +145,10 @@ pub fn build_state(profile: ServiceProfile) -> AppState {
         config_valid,
         storage_ready,
         model_registry_ready,
+        auth_required: auth_enabled,
+        auth_enabled,
+        auth_token_env,
+        auth_token_configured,
     }
 }
 

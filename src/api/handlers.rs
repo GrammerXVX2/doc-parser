@@ -54,6 +54,24 @@ pub async fn readyz(State(state): State<AppState>) -> Json<ReadyResponse> {
         });
     }
 
+    if state.auth_enabled && !state.auth_token_configured {
+        return Json(ReadyResponse {
+            status: "failed".to_string(),
+            queue_capacity_remaining: state.queue_remaining(),
+            workers: state.workers,
+            message: Some("AUTH_TOKEN_NOT_CONFIGURED: не найден токен для dev API auth.".to_string()),
+        });
+    }
+
+    if state.auth_required && !state.auth_token_configured {
+        return Json(ReadyResponse {
+            status: "failed".to_string(),
+            queue_capacity_remaining: state.queue_remaining(),
+            workers: state.workers,
+            message: Some("AUTH_TOKEN_NOT_CONFIGURED: отсутствует токен авторизации (env).".to_string()),
+        });
+    }
+
     if state.queue.is_closed() {
         return Json(ReadyResponse {
             status: "failed".to_string(),
@@ -81,23 +99,80 @@ pub async fn readyz(State(state): State<AppState>) -> Json<ReadyResponse> {
     })
 }
 
+fn require_dev_token_if_enabled(state: &AppState, headers: &HeaderMap) -> ApiResult<()> {
+    if !state.auth_enabled {
+        return Ok(());
+    }
+
+    let token = std::env::var(&state.auth_token_env).map_err(|_| {
+        ApiError::new(
+            StatusCode::SERVICE_UNAVAILABLE,
+            "AUTH_TOKEN_NOT_CONFIGURED",
+            "Не настроен dev API token. Установите переменную окружения с токеном.",
+            false,
+        )
+    })?;
+
+    if token.trim().is_empty() {
+        return Err(ApiError::new(
+            StatusCode::SERVICE_UNAVAILABLE,
+            "AUTH_TOKEN_NOT_CONFIGURED",
+            "Не настроен dev API token. Установите переменную окружения с токеном.",
+            false,
+        ));
+    }
+
+    let unauthorized = || {
+        ApiError::new(
+            StatusCode::UNAUTHORIZED,
+            "UNAUTHORIZED",
+            "Необходим корректный Authorization Bearer token.",
+            false,
+        )
+    };
+
+    let Some(value) = headers.get(axum::http::header::AUTHORIZATION) else {
+        return Err(unauthorized());
+    };
+    let Ok(value) = value.to_str() else {
+        return Err(unauthorized());
+    };
+    let Some(provided) = value.strip_prefix("Bearer ") else {
+        return Err(unauthorized());
+    };
+
+    if provided.trim() != token {
+        return Err(unauthorized());
+    }
+
+    Ok(())
+}
+
 pub async fn metrics(State(state): State<AppState>) -> impl IntoResponse {
     crate::observability::prometheus::metrics_handler(State(state)).await
 }
 
-pub async fn system_performance(State(state): State<AppState>) -> Json<SystemPerformanceResponse> {
-    Json(SystemPerformanceResponse {
+pub async fn system_performance(
+    State(state): State<AppState>,
+    headers: HeaderMap,
+) -> ApiResult<Json<SystemPerformanceResponse>> {
+    require_dev_token_if_enabled(&state, &headers)?;
+
+    Ok(Json(SystemPerformanceResponse {
         provider: state.performance_provider.clone(),
         ocr_backend: state.ocr_backend.clone(),
         batching_enabled: state.batching_enabled,
         warmup_completed: state.warmup_completed,
-    })
+    }))
 }
 
 pub async fn upload_document(
     State(state): State<AppState>,
+    headers: HeaderMap,
     multipart: Result<Multipart, MultipartRejection>,
 ) -> ApiResult<Json<UploadAcceptedResponse>> {
+    require_dev_token_if_enabled(&state, &headers)?;
+
     if state.queue_remaining() == 0 {
         return Err(ApiError::new(
             StatusCode::TOO_MANY_REQUESTS,
@@ -270,8 +345,11 @@ pub async fn upload_document(
 
 pub async fn get_job_status(
     State(state): State<AppState>,
+    headers: HeaderMap,
     Path(job_id): Path<String>,
 ) -> ApiResult<Json<JobStatusResponse>> {
+    require_dev_token_if_enabled(&state, &headers)?;
+
     let Some(job) = state.registry.get(&job_id).await.map_err(|_| {
         ApiError::new(
             StatusCode::INTERNAL_SERVER_ERROR,
@@ -301,8 +379,11 @@ pub async fn get_job_status(
 
 pub async fn get_document_model(
     State(state): State<AppState>,
+    headers: HeaderMap,
     Path(document_id): Path<String>,
 ) -> ApiResult<Response> {
+    require_dev_token_if_enabled(&state, &headers)?;
+
     let output_root = PathBuf::from(state.profile.storage.output_dir.clone()).join(&document_id);
     let model_path = output_root.join("model.json");
     if !model_path.exists() {
@@ -331,8 +412,11 @@ pub async fn get_document_model(
 
 pub async fn get_document_markdown(
     State(state): State<AppState>,
+    headers: HeaderMap,
     Path(document_id): Path<String>,
 ) -> ApiResult<Response> {
+    require_dev_token_if_enabled(&state, &headers)?;
+
     let output_root = PathBuf::from(state.profile.storage.output_dir.clone()).join(&document_id);
     let path = output_root.join("markdown.md");
     if !path.exists() {
@@ -348,8 +432,11 @@ pub async fn get_document_markdown(
 
 pub async fn get_document_text(
     State(state): State<AppState>,
+    headers: HeaderMap,
     Path(document_id): Path<String>,
 ) -> ApiResult<Response> {
+    require_dev_token_if_enabled(&state, &headers)?;
+
     let output_root = PathBuf::from(state.profile.storage.output_dir.clone()).join(&document_id);
     let path = output_root.join("plain_text.txt");
     if !path.exists() {

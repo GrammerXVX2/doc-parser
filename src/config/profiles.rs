@@ -47,11 +47,28 @@ pub struct ObservabilityConfig {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AuthProfile {
+    pub enabled: bool,
+    pub dev_token_env: String,
+}
+
+impl Default for AuthProfile {
+    fn default() -> Self {
+        Self {
+            enabled: false,
+            dev_token_env: "DOC_PARSER_DEV_TOKEN".to_string(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ServiceProfile {
     pub service: ServiceConfig,
     pub storage: StorageConfig,
     pub security: SecurityConfig,
     pub observability: ObservabilityConfig,
+    #[serde(default)]
+    pub auth: AuthProfile,
 }
 
 impl ServiceProfile {

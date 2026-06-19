@@ -1,0 +1,29 @@
+services:
+  document_parser:
+    build:
+      context: .
+      dockerfile: docker/document-parser.Dockerfile
+    image: document_parser:dev
+    container_name: document_parser_dev
+    environment:
+      RUST_LOG: info
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    command: ["cargo", "run", "--", "serve", "--config", "configs/profiles/dev_team.jsonc"]
+    ports:
+      - "8080:8080"services:
+  document_parser:
+    build:
+      context: .
+      dockerfile: docker/document-parser.Dockerfile
+    image: document_parser:dev
+    container_name: document_parser_dev
+    environment:
+      RUST_LOG: info
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    command: ["cargo", "run", "--", "serve", "--config", "configs/profiles/dev_team.jsonc"]
+    ports:
+      - "8080:8080"
