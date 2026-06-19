@@ -41,6 +41,11 @@ cargo run -- doctor
 ```bash
 cargo run -- serve --config configs/profiles/api.jsonc
 ```
+Командный dev-профиль (3 разработчика):
+
+```bash
+cargo run -- serve --config configs/profiles/dev_team.jsonc
+```
 
 Проверка:
 

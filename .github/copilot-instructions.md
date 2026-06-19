@@ -1,901 +1,785 @@
-# Задача: Stage 10 — Production hardening, regression suite, benchmarks, deployment docs
+# Задача: Dev launch fixes для `GrammerXVX2/doc-parser`
 
 ## Контекст
 
-Проект уже должен иметь Stage 1–9.
+Репозиторий: `GrammerXVX2/doc-parser`.
 
-Система уже имеет:
+Система уже содержит CLI/API/job queue/storage/security/pipeline skeleton. Сейчас планируется запустить её в dev-режиме для 3 разработчиков, чтобы они могли загружать документы через API и получать:
 
-- canonical `DocumentModel`;
-- CLI parser;
-- HTTP API;
-- job queue;
-- local storage;
-- observability;
-- security limits;
-- HTML/Markdown/TXT/PDF/Image/DOCX/XLSX/PPTX/RTF/DOC support;
-- OCR interfaces;
-- ONNX OCR backend architecture;
-- mock/fixture/real OCR hooks;
-- layout/table/formula abstractions;
-- Russian-first language defaults;
-- Office extractors;
-- converter sandbox;
-- performance configs;
-- dynamic batching foundation;
-- model registry;
-- warmup;
-- benchmark command.
+```text
+model.json
+markdown.md
+plain_text.txt
+assets/
+```
 
-Теперь нужен финальный production hardening слой.
+По аудиту обнаружены критичные нюансы, которые нужно исправить перед запуском.
 
 ---
 
-# Главная цель Stage 10
+# Главная цель
 
-Реализовать:
+Подготовить проект к безопасному и удобному dev-запуску для 3 разработчиков.
 
-```text
-1. Regression corpus structure.
-2. Golden snapshot tests for model.json.
-3. Quality metrics for extraction.
-4. End-to-end benchmark suite.
-5. Failure injection tests.
-6. Security hardening checklist and enforcement tests.
-7. Dockerfile and deployment docs.
-8. Operational runbooks.
-9. Final documentation index.
-10. Release readiness checks.
+После выполнения должно работать:
+
+```bash
+cargo run -- serve --config configs/profiles/dev_team.jsonc
+```
+
+И сценарий:
+
+```bash
+curl -F "file=@testdata/ru/sample_ru.html" \
+     -F "language=ru" \
+     -F "extract_tables=true" \
+     -F "table_chunks=true" \
+     http://127.0.0.1:8080/v1/documents
+```
+
+должен возвращать `job_id` и `document_id`.
+
+После завершения job должны открываться:
+
+```bash
+GET /v1/jobs/{job_id}
+GET /v1/documents/{document_id}/model
+GET /v1/documents/{document_id}/markdown
+GET /v1/documents/{document_id}/text
 ```
 
 ---
 
-# Фундаментальное требование
+# P0. Исправить `document_id` mismatch в `JobWorker`
 
-## Русский язык по умолчанию
+## Проблема
 
-Все пользовательские сообщения, документация для оператора и примеры должны быть на русском.
+В `src/jobs/worker.rs` worker получает `job.document_id`, но после `run_pipeline` модель может иметь собственный `model.document_id`.
 
-Machine-readable codes остаются английскими uppercase.
+Сейчас output пишется через:
+
+```rust
+write_document_outputs(&model, &self.output_dir, true)?;
+```
+
+А `write_document_outputs` пишет в:
+
+```text
+output_dir / model.document_id / model.json
+```
+
+API же ищет результат по:
+
+```text
+output_dir / job.document_id / model.json
+```
+
+Из-за этого возможен сценарий:
+
+```text
+POST /v1/documents -> document_id = doc_abc
+GET /v1/jobs/job_xyz -> completed
+GET /v1/documents/doc_abc/model -> DOCUMENT_NOT_FOUND
+```
+
+## Требование
+
+В `src/jobs/worker.rs` перед `write_document_outputs` обязательно выставить:
+
+```rust
+model.document_id = job.document_id.clone();
+model.job_id = Some(job.job_id.clone());
+```
+
+Примерно здесь:
+
+```rust
+let (_classification, mut model) = run_pipeline(&job.input_path, &context)?;
+
+if model.pages.len() > self.max_pages_per_document {
+    return Err(anyhow::anyhow!("MAX_PAGES_LIMIT_EXCEEDED"));
+}
+
+model.document_id = job.document_id.clone();
+model.job_id = Some(job.job_id.clone());
+
+write_document_outputs(&model, &self.output_dir, true)?;
+```
+
+## Тест
+
+Добавить/обновить тест, который проверяет:
+
+1. Создаётся job с `document_id = doc_test`.
+2. Worker обрабатывает input.
+3. Output появляется именно в:
+
+```text
+output/doc_test/model.json
+```
+
+4. Внутри `model.json`:
+
+```json
+"document_id": "doc_test"
+```
+
+5. API `GET /v1/documents/doc_test/model` находит результат.
 
 ---
 
-# Не делать
+# P0. Добавить dev-team service profile
 
-Не нужно реализовывать:
-
-```text
-cloud-specific Kubernetes manifests
-real S3 production deployment
-real auth/billing/multitenancy
-real custom CUDA kernels
-full INT8 calibration pipeline
-```
-
-Но документация должна указать, куда это добавлять.
-
----
-
-# Новые/доработанные директории
-
-Добавить:
+## Создать файл
 
 ```text
-regression/
-  corpus/
-    html/
-    markdown/
-    txt/
-    pdf/
-    images/
-    docx/
-    xlsx/
-    pptx/
-    legacy/
-  expected/
-    html/
-    markdown/
-    txt/
-    pdf/
-    images/
-    docx/
-    xlsx/
-    pptx/
-    legacy/
-  README.md
-
-benchmarks/
-  datasets/
-  reports/
-  README.md
-
-docs/
-  PRODUCTION.md
-  DEPLOYMENT.md
-  SECURITY.md
-  OBSERVABILITY.md
-  RUNBOOK.md
-  QUALITY_METRICS.md
-  REGRESSION_TESTING.md
-  RELEASE_CHECKLIST.md
-
-scripts/
-  run_regression.sh
-  run_benchmarks.sh
-  validate_golden.py или .rs
-  smoke_test.sh
-
-docker/
-  Dockerfile
-  docker-compose.local.yml
-  README.md
+configs/profiles/dev_team.jsonc
 ```
 
-If Python scripts are not desired, use Rust binaries instead.  
-Prefer Rust where practical, shell for orchestration is acceptable.
-
----
-
-# Этап 1: Regression corpus layout
-
-Create documented corpus structure.
-
-Each test case:
-
-```text
-regression/corpus/<format>/<case_name>/
-  input.<ext>
-  case.jsonc
-  fixtures/
-  README.md optional
-```
-
-Example `case.jsonc`:
+## Содержимое
 
 ```jsonc
 {
-  "case_id": "ru_html_basic",
-  "format": "html",
-  "language": "ru",
-  "description": "Базовый HTML-документ на русском языке.",
-  "expected": {
-    "min_pages": 1,
-    "min_elements": 3,
-    "must_contain_text": [
-      "Пример документа",
-      "Таблица"
-    ],
-    "must_have_element_types": [
-      "heading",
-      "text"
-    ],
-    "must_have_chunks": true
+  "service": {
+    "enabled": true,
+    "host": "0.0.0.0",
+    "port": 8080,
+    "locale": "ru",
+    "default_language": "ru",
+    "max_concurrent_jobs": 2,
+    "job_queue_capacity": 30
   },
-  "tolerances": {
-    "ignore_fields": [
-      "document_id",
-      "job_id",
-      "processed_at",
-      "duration_ms",
-      "sha256",
-      "asset_id",
-      "path"
-    ]
+  "storage": {
+    "backend": "local",
+    "input_dir": "data/input",
+    "output_dir": "data/output",
+    "metadata_backend": "local_json",
+    "object_store_backend": "local"
+  },
+  "security": {
+    "max_file_size_mb": 100,
+    "max_pages_per_document": 300,
+    "max_extracted_assets_mb": 512,
+    "max_image_width_px": 8000,
+    "max_image_height_px": 8000,
+    "max_archive_entries": 3000,
+    "max_archive_total_uncompressed_mb": 1024,
+    "max_processing_time_sec": 300,
+    "allow_external_converters": false,
+    "allow_network_for_converters": false
+  },
+  "observability": {
+    "tracing_enabled": true,
+    "metrics_enabled": true,
+    "prometheus_enabled": true,
+    "prometheus_path": "/metrics"
+  },
+  "auth": {
+    "enabled": false,
+    "dev_token_env": "DOC_PARSER_DEV_TOKEN"
   }
 }
 ```
 
----
+## Почему
 
-# Этап 2: Golden snapshot framework
+Для 3 разработчиков нельзя использовать только in-memory metadata, потому что после рестарта сервера все job statuses потеряются.
 
-Implement snapshot tests.
+`metadata_backend` должен быть:
 
-Goal:
-
-```text
-Run parser on corpus input
-normalize nondeterministic fields
-compare with expected model snapshot
-```
-
-Add module:
-
-```text
-src/regression/
-  mod.rs
-  normalize.rs
-  runner.rs
-  assertions.rs
-```
-
-Or integration test:
-
-```text
-tests/regression_tests.rs
-```
-
-## Normalization
-
-Ignore/normalize:
-
-```text
-document_id
-job_id
-timestamps
-duration_ms
-absolute paths
-sha256 if unstable
-asset_id if generated randomly
-processing runtime hostname
-model warmup timings
-```
-
-Keep stable:
-
-```text
-schema_version
-source extension/mime
-document_profile
-page_count
-element types
-content text
-table structures
-chunks metadata
-warnings/error codes
+```jsonc
+"local_json"
 ```
 
 ---
 
-# Этап 3: Assertion-based regression
+# P0. Исправить Docker/dev запуск
 
-Golden snapshots can be brittle. Add assertion-based checks.
+## Проблема
 
-Implement:
+Сейчас `docker-compose.yml` запускает one-shot parse:
 
-```rust
-pub struct RegressionAssertions {
-    pub min_pages: Option<usize>,
-    pub min_elements: Option<usize>,
-    pub must_contain_text: Vec<String>,
-    pub must_have_element_types: Vec<String>,
-    pub must_have_chunks: bool,
-    pub must_have_tables: Option<bool>,
-    pub must_have_ocr: Option<bool>,
-    pub max_errors: Option<usize>,
-}
+```yaml
+command: ["cargo", "run", "--", "parse", "testdata/sample.html", "--output", "output"]
 ```
 
-Run both:
+Для dev-команды нужен API server.
+
+## Требование
+
+Создать отдельный файл:
 
 ```text
-1. structural assertions
-2. optional golden snapshot diff
+docker-compose.dev.yml
 ```
 
----
-
-# Этап 4: Quality metrics
-
-Implement extraction quality report.
-
-```rust
-pub struct QualityReport {
-    pub document_id: String,
-    pub format: String,
-    pub language: String,
-    pub pages: usize,
-    pub elements: usize,
-    pub chars: usize,
-    pub words: usize,
-    pub tables: usize,
-    pub images: usize,
-    pub formulas: usize,
-    pub ocr_elements: usize,
-    pub warnings: usize,
-    pub errors: usize,
-    pub empty_pages: usize,
-    pub duplicate_text_ratio: f32,
-    pub low_confidence_ocr_ratio: f32,
-    pub chunk_count: usize,
-}
-```
-
-Add command:
+Сервис должен запускать:
 
 ```bash
-cargo run -- quality --input output/<document_id>/model.json
+cargo run -- serve --config configs/profiles/dev_team.jsonc
 ```
 
-Output:
+## Содержимое
 
-```text
-quality_report.json
-quality_report.md
+```yaml
+services:
+  document_parser:
+    build:
+      context: .
+      dockerfile: docker/document-parser.Dockerfile
+    image: document_parser:dev
+    container_name: document_parser_dev
+    environment:
+      RUST_LOG: info
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    command: ["cargo", "run", "--", "serve", "--config", "configs/profiles/dev_team.jsonc"]
+    ports:
+      - "8080:8080"
 ```
+
+## Важно
+
+Не подключать `ocr_service` и GPU в dev compose по умолчанию.
+
+GPU/OCR compose можно оставить отдельно для будущего.
 
 ---
 
-# Этап 5: Duplicate text detection metric
+# P0. Добавить dev smoke script
 
-Implement approximate duplicate text metric:
+## Создать файл
 
 ```text
-- collect normalized text blocks
-- count repeated identical/near-identical blocks
-- duplicate_text_ratio = duplicate_chars / total_chars
+scripts/dev_smoke_api.sh
 ```
 
-This helps catch OCR/native duplication regression.
+## Требования
+
+Скрипт должен:
+
+1. Проверить `/healthz`.
+2. Проверить `/readyz`.
+3. Загрузить тестовый документ.
+4. Получить `job_id` и `document_id`.
+5. Poll job status до:
+
+```text
+completed | partial | failed
+```
+
+6. Если статус:
+
+```text
+completed | partial
+```
+
+проверить:
+
+```text
+/v1/documents/{document_id}/model
+/v1/documents/{document_id}/markdown
+/v1/documents/{document_id}/text
+```
+
+7. Вернуть non-zero exit code при ошибке.
+
+## Пример запуска
+
+```bash
+scripts/dev_smoke_api.sh http://127.0.0.1:8080 testdata/ru/sample_ru.html
+```
+
+Если аргументы не переданы:
+
+```bash
+BASE_URL=http://127.0.0.1:8080
+INPUT_FILE=testdata/ru/sample_ru.html
+```
+
+## Dependencies
+
+Можно использовать:
+
+```text
+bash
+curl
+python3
+```
+
+Если не хочется Python — использовать `jq`, но Python предпочтительнее, потому что `jq` может быть не установлен.
 
 ---
 
-# Этап 6: Failure injection tests
+# P1. Добавить optional dev API token middleware
 
-Add tests for failure cases:
+## Цель
 
-```text
-missing input file
-empty file
-unsupported extension
-corrupt zip/docx/xlsx/pptx
-corrupt PDF
-oversized file
-image dimensions too large
-external converter missing
-OCR model missing
-Triton unavailable
-queue full
-processing timeout
-path traversal attempt
+Если API будет доступен не только локально, нужен простой dev-token.
+
+## Config
+
+В `ServiceProfile` добавить optional auth config:
+
+```rust
+pub struct AuthProfile {
+    pub enabled: bool,
+    pub dev_token_env: String,
+}
 ```
 
-All should produce:
+Config:
 
-```text
-structured error
-no panic
-Russian message
-stable machine code
+```jsonc
+"auth": {
+  "enabled": false,
+  "dev_token_env": "DOC_PARSER_DEV_TOKEN"
+}
 ```
 
----
+## Поведение
 
-# Этап 7: Security hardening tests
-
-Add tests for:
+Если:
 
 ```text
-path traversal in upload filename
-path traversal in asset_id/path
-OOXML zip slip
-archive too many entries
-archive uncompressed size limit
-large image dimensions
-external command no shell
-external converter timeout
-external converter stderr truncation
+auth.enabled = false
 ```
 
-Create doc:
+middleware ничего не требует.
+
+Если:
 
 ```text
-docs/SECURITY.md
+auth.enabled = true
 ```
 
-Include:
+API должен требовать header:
+
+```http
+Authorization: Bearer <token>
+```
+
+Token брать из env var:
 
 ```text
-- threat model
-- supported file risks
-- external converter risks
-- sandbox policy
-- current limits
-- known limitations
-- recommended production isolation
+DOC_PARSER_DEV_TOKEN
 ```
 
----
-
-# Этап 8: End-to-end benchmark suite
-
-Improve benchmark command from Stage 9.
-
-Benchmark modes:
+Если env var отсутствует при `enabled=true`:
 
 ```text
-mock
-cpu
-gpu
-triton
+readyz should be failed/degraded
+requests should return 500/503 with AUTH_TOKEN_NOT_CONFIGURED
 ```
 
-Datasets:
+## Какие endpoints можно оставить public
 
 ```text
-small_ru
-mixed_formats
-ocr_heavy
-office_heavy
-pdf_heavy
+GET /healthz
+GET /readyz
+GET /metrics optional
 ```
 
-Report:
+Для dev можно защитить всё, кроме `healthz`/`readyz`.
+
+## Ошибка
 
 ```json
 {
-  "profile": "benchmark",
-  "dataset": "small_ru",
-  "documents": 100,
-  "pages": 250,
-  "duration_ms": 10000,
-  "documents_per_second": 10.0,
-  "pages_per_second": 25.0,
-  "latency_ms": {
-    "p50": 100,
-    "p95": 250,
-    "p99": 500
-  },
-  "formats": {
-    "pdf": 20,
-    "docx": 10,
-    "html": 30
-  },
-  "errors": {},
-  "warnings": {},
-  "ocr": {
-    "pages": 50,
-    "crops": 1000,
-    "avg_recognition_batch_size": 64
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Необходим корректный Authorization Bearer token.",
+    "recoverable": false,
+    "details": {}
   }
 }
 ```
 
-Script:
+## Тесты
+
+Добавить tests:
+
+```text
+auth disabled -> upload works without token
+auth enabled without token -> 401
+auth enabled wrong token -> 401
+auth enabled correct token -> upload accepted
+```
+
+Если middleware слишком большой для одного PR — можно сделать config field и тесты пропустить, но желательно реализовать.
+
+---
+
+# P1. Добавить документацию для dev-запуска
+
+## Создать файл
+
+```text
+docs/DEV_LAUNCH.md
+```
+
+Документ должен быть на русском.
+
+## Описать
+
+```text
+1. Как запустить локально через cargo.
+2. Как запустить через docker compose.
+3. Как проверить health/ready.
+4. Как загрузить документ через curl.
+5. Как проверить job status.
+6. Как получить model/markdown/text.
+7. Где лежат input/output/metadata.
+8. Как очистить dev data.
+9. Какие форматы разрешены в первом dev-цикле.
+10. Что нельзя коммитить в репозиторий.
+```
+
+## Важное предупреждение
+
+Добавить явно:
+
+```text
+Запрещено коммитить реальные юридические документы, персональные данные,
+договоры, сканы паспортов, финансовые документы и OCR/debug artifacts.
+```
+
+## Разрешённые форматы первого dev-цикла
+
+```text
+.html
+.md
+.txt
+.pdf
+.png
+.jpg
+.jpeg
+.docx
+.xlsx
+```
+
+## Форматы второго dev-цикла
+
+```text
+.pptx
+.rtf
+.doc
+.tiff
+.webp
+```
+
+---
+
+# P1. Добавить cleanup script
+
+## Создать файл
+
+```text
+scripts/dev_clean_data.sh
+```
+
+## Поведение
+
+Удалять:
+
+```text
+data/input/*
+data/output/*
+data/metadata/jobs/*
+```
+
+Но сохранять `.gitkeep`, если они есть.
+
+Пример:
 
 ```bash
-scripts/run_benchmarks.sh
+#!/usr/bin/env bash
+set -euo pipefail
+
+rm -rf data/input/* data/output/* data/metadata/jobs/*
+mkdir -p data/input data/output data/metadata/jobs
+touch data/input/.gitkeep data/output/.gitkeep data/metadata/jobs/.gitkeep
+
+echo "Dev data cleaned."
 ```
 
 ---
 
-# Этап 9: Smoke tests
+# P1. Уменьшить риск memory spike на dev upload
 
-Add:
+## Проблема
+
+`upload_document` читает весь файл в память:
+
+```rust
+field.bytes().await?.to_vec()
+```
+
+Для dev это допустимо, но лимит `512 MB` слишком большой.
+
+## Требование
+
+В `dev_team.jsonc` поставить:
+
+```jsonc
+"max_file_size_mb": 100
+```
+
+Также в `docs/DEV_LAUNCH.md` указать:
+
+```text
+На dev upload файл читается в память целиком, поэтому не загружайте большие архивы/сканы.
+```
+
+Streaming upload пока не реализовывать.
+
+---
+
+# P1. External converters disabled by default in dev
+
+В `dev_team.jsonc` должно быть:
+
+```jsonc
+"allow_external_converters": false
+```
+
+В docs объяснить:
+
+```text
+RTF/DOC и некоторые fallback-конверсии могут не работать в dev_team profile,
+потому что внешние конвертеры выключены для безопасности и стабильности.
+```
+
+---
+
+# P1. Добавить простой список dev curl-команд
+
+В `docs/DEV_LAUNCH.md` добавить:
 
 ```bash
-scripts/smoke_test.sh
-```
+# Запуск
+cargo run -- serve --config configs/profiles/dev_team.jsonc
 
-Should run:
+# Health
+curl -s http://127.0.0.1:8080/healthz
 
-```text
-cargo check
-cargo test
-cargo run -- parse testdata/ru/sample_ru.html --output target/smoke_output
-cargo run -- quality --input target/smoke_output/<doc>/model.json
-```
+# Ready
+curl -s http://127.0.0.1:8080/readyz
 
-If API feature enabled:
+# Upload
+curl -s \
+  -F "file=@testdata/ru/sample_ru.html" \
+  -F "language=ru" \
+  -F "extract_tables=true" \
+  -F "table_chunks=true" \
+  http://127.0.0.1:8080/v1/documents
 
-```text
-start server
-healthz
-upload sample
-poll job
-fetch model
-shutdown server
-```
+# Job
+curl -s http://127.0.0.1:8080/v1/jobs/<job_id>
 
----
+# Model
+curl -s http://127.0.0.1:8080/v1/documents/<document_id>/model
 
-# Этап 10: Dockerfile
+# Markdown
+curl -s http://127.0.0.1:8080/v1/documents/<document_id>/markdown
 
-Create:
-
-```text
-docker/Dockerfile
-```
-
-Requirements:
-
-```text
-multi-stage build if practical
-non-root user
-working directory /app
-config directory /app/configs
-data directory /app/data
-expose 8080
-default command serve
-```
-
-Optional system packages:
-
-```text
-libreoffice
-pandoc
-poppler-utils
-tesseract not required
-```
-
-Since external tools may be heavy, document two image variants:
-
-```text
-minimal
-full-converters
-```
-
-MVP Dockerfile can be minimal and docs explain optional converter installation.
-
----
-
-# Этап 11: Docker Compose local
-
-Create:
-
-```text
-docker/docker-compose.local.yml
-```
-
-Service:
-
-```text
-document-parser
-ports:
-  - "8080:8080"
-volumes:
-  - ./data:/app/data
-  - ./configs:/app/configs
-environment:
-  RUST_LOG: info
+# Text
+curl -s http://127.0.0.1:8080/v1/documents/<document_id>/text
 ```
 
 ---
 
-# Этап 12: Production docs
+# P2. Добавить list endpoints, если быстро
 
-## docs/PRODUCTION.md
-
-Include:
+Опционально, если не сильно увеличит PR:
 
 ```text
-- architecture overview
-- runtime profiles
-- recommended limits
-- worker settings
-- storage layout
-- model loading
-- OCR backend modes
+GET /v1/jobs
+GET /v1/documents
 ```
 
-## docs/DEPLOYMENT.md
+Для dev-команды это удобно.
 
-Include:
+MVP response:
 
-```text
-- local binary
-- Docker
-- systemd example
-- environment variables
-- config files
+```json
+{
+  "jobs": [
+    {
+      "job_id": "...",
+      "document_id": "...",
+      "status": "completed",
+      "created_at": "...",
+      "updated_at": "..."
+    }
+  ]
+}
 ```
 
-## docs/OBSERVABILITY.md
-
-Include:
+Если `MetadataStore` не умеет list — добавить только для:
 
 ```text
-- logs
-- tracing fields
-- metrics list
-- Prometheus endpoint
-- health/readiness
+InMemoryMetadataStore
+LocalJsonMetadataStore
 ```
 
-## docs/RUNBOOK.md
+Если это слишком большой объём — не делать в этом PR.
 
-Include troubleshooting:
+---
+
+# Тесты, которые обязательно добавить/обновить
+
+## 1. Worker document_id test
+
+Файл:
 
 ```text
-OCR model not found
-LibreOffice unavailable
-queue full
-high latency
-too many partial documents
-PDF render failures
-OOM prevention
-disk full
+tests/job_worker_output_tests.rs
 ```
 
-## docs/REGRESSION_TESTING.md
-
-Include:
+Проверить:
 
 ```text
-how to add corpus case
-how to update golden snapshots
-how to run regression
-what fields are normalized
-```
-
-## docs/QUALITY_METRICS.md
-
-Include:
-
-```text
-quality report fields
-duplicate ratio
-low confidence OCR ratio
-warnings/errors interpretation
-```
-
-## docs/RELEASE_CHECKLIST.md
-
-Include:
-
-```text
-cargo check
-cargo test
-regression
-benchmarks
-smoke tests
-Docker build
-security tests
-docs update
+worker writes output to job.document_id directory
+model.json contains job.document_id
 ```
 
 ---
 
-# Этап 13: Release readiness command
+## 2. Dev profile loads
 
-Add command:
-
-```bash
-cargo run -- doctor
-```
-
-Checks:
+Файл:
 
 ```text
-config loads
-output directory writable
-input directory writable
-optional converters availability
-OCR model files if configured
-Triton reachable if configured
-Prometheus enabled if service profile
-security limits sane
+tests/dev_profile_tests.rs
 ```
 
-Output Russian report:
+Проверить:
 
 ```text
-Проверка окружения document-parser
-
-OK: Конфигурация загружена
-OK: Каталог вывода доступен
-WARN: LibreOffice не найден
-WARN: OCR model det.onnx не найден
-```
-
-JSON option:
-
-```bash
-cargo run -- doctor --json
+configs/profiles/dev_team.jsonc loads
+metadata_backend == local_json
+max_file_size_mb <= 100
+allow_external_converters == false
+locale == ru
 ```
 
 ---
 
-# Этап 14: API readiness hardening
+## 3. API end-to-end test
 
-Ensure:
+Если есть test harness для API:
 
 ```text
-readyz reports queue full
-readyz reports storage unavailable
-readyz reports model registry not warmed if required
+upload -> job complete -> get model by returned document_id
 ```
 
-Do not mark ready if fatal config invalid.
+Если полный worker test тяжёлый, можно сделать более простой test вокруг worker/output.
 
 ---
 
-# Этап 15: Documentation index
+## 4. Auth tests
 
-Update root `README.md`:
+Если реализован optional token middleware:
 
 ```text
-- What this project does
-- Supported formats
-- Quick start CLI
-- Quick start API
-- Output structure
-- Russian-first behavior
-- Links to docs
-- Limitations
+auth disabled accepts request
+auth enabled rejects missing/wrong token
+auth enabled accepts correct token
 ```
 
 ---
 
-# Этап 16: CI-friendly checks
+## 5. Script presence test optional
 
-Even if no CI file is needed, create script:
-
-```bash
-scripts/ci_check.sh
-```
-
-Runs:
+Не обязательно, но можно проверить, что файлы существуют:
 
 ```text
-cargo fmt --check
-cargo clippy --all-targets -- -D warnings optional/configurable
-cargo test
-scripts/smoke_test.sh
-```
-
-If clippy too strict, document exceptions.
-
----
-
-# Tests to add
-
-## regression_tests.rs
-
-```text
-run corpus cases
-assert structure
-compare normalized snapshot if expected exists
-```
-
-## quality_tests.rs
-
-```text
-quality report generated
-duplicate_text_ratio detects duplicates
-low_confidence_ocr_ratio works
-```
-
-## failure_injection_tests.rs
-
-```text
-all failure cases return structured errors
-no panic
-Russian messages
-```
-
-## security_hardening_tests.rs
-
-```text
-path traversal blocked
-zip slip blocked
-limits enforced
-external commands safe
-```
-
-## doctor_tests.rs
-
-```text
-doctor reports missing optional tools as warnings
-doctor reports invalid required config as error
-json output valid
+scripts/dev_smoke_api.sh
+scripts/dev_clean_data.sh
+docker-compose.dev.yml
+docs/DEV_LAUNCH.md
 ```
 
 ---
 
-# Error/warning codes
-
-Add if missing:
-
-```text
-REGRESSION_ASSERTION_FAILED
-GOLDEN_SNAPSHOT_MISMATCH
-QUALITY_REPORT_FAILED
-DUPLICATE_TEXT_HIGH
-LOW_OCR_CONFIDENCE_RATIO_HIGH
-
-DOCTOR_CONFIG_INVALID
-DOCTOR_STORAGE_UNAVAILABLE
-DOCTOR_MODEL_MISSING
-DOCTOR_CONVERTER_MISSING
-DOCTOR_TRITON_UNAVAILABLE
-
-SECURITY_PATH_TRAVERSAL_BLOCKED
-SECURITY_ZIP_SLIP_BLOCKED
-SECURITY_LIMIT_EXCEEDED
-
-SMOKE_TEST_FAILED
-BENCHMARK_THRESHOLD_FAILED
-```
-
-Messages in Russian.
-
----
-
-# Definition of Done
+# Acceptance criteria
 
 Задача считается выполненной, если:
 
-1. Проект компилируется:
+1. `model.document_id` в worker принудительно синхронизируется с `job.document_id`.
+2. После API upload result можно получить по `document_id`, возвращенному в upload response.
+3. Добавлен файл:
 
-```bash
-cargo check
+```text
+configs/profiles/dev_team.jsonc
 ```
 
-2. Все тесты проходят:
+4. `dev_team.jsonc` использует:
+
+```text
+metadata_backend = local_json
+max_file_size_mb = 100
+max_pages_per_document = 300
+allow_external_converters = false
+locale = ru
+```
+
+5. Добавлен `docker-compose.dev.yml`, который запускает API server, а не one-shot parse.
+6. Добавлен `scripts/dev_smoke_api.sh`.
+7. Добавлен `scripts/dev_clean_data.sh`.
+8. Добавлен `docs/DEV_LAUNCH.md`.
+9. В docs явно написано, что нельзя коммитить реальные документы и персональные данные.
+10. Если реализован auth:
+    - config поддерживает `auth.enabled`;
+    - `Authorization: Bearer` проверяется;
+    - tests добавлены.
+11. Все тесты проходят:
 
 ```bash
 cargo test
 ```
 
-3. Regression corpus structure exists.
-
-4. Regression runner/tests exist.
-
-5. Golden snapshot normalization exists.
-
-6. Assertion-based regression exists.
-
-7. Quality report command exists:
+12. Проект компилируется:
 
 ```bash
-cargo run -- quality --input <model.json>
+cargo check
 ```
 
-8. Duplicate text ratio metric exists.
+13. Existing CLI parse mode не сломан:
 
-9. Failure injection tests exist.
-
-10. Security hardening tests exist.
-
-11. Benchmark suite/report is documented and runnable.
-
-12. Smoke test script exists.
-
-13. Dockerfile exists.
-
-14. docker-compose.local.yml exists.
-
-15. `doctor` command exists.
-
-16. Production docs exist:
-
-```text
-PRODUCTION.md
-DEPLOYMENT.md
-SECURITY.md
-OBSERVABILITY.md
-RUNBOOK.md
-REGRESSION_TESTING.md
-QUALITY_METRICS.md
-RELEASE_CHECKLIST.md
+```bash
+cargo run -- parse testdata/ru/sample_ru.html --output output
 ```
 
-17. Root README links to documentation.
+14. Dev server запускается:
 
-18. API readiness is hardened.
+```bash
+cargo run -- serve --config configs/profiles/dev_team.jsonc
+```
 
-19. Russian locale/messages remain default.
+15. Smoke script проходит:
 
-20. Existing Stage 1–9 functionality is not broken.
-
-21. No production `unwrap()`.
+```bash
+scripts/dev_smoke_api.sh http://127.0.0.1:8080 testdata/ru/sample_ru.html
+```
 
 ---
 
-# После этого этапа
+# Не делать в этом PR
 
-После Stage 10 проект считается production-skeleton complete.
-
-Дальше работа идёт не промптами по архитектуре, а конкретными задачами:
+Не нужно сейчас:
 
 ```text
-- подключить выбранные реальные OCR модели;
-- подобрать layout/table/formula модели;
-- провести benchmark на реальных документах;
-- настроить GPU/TensorRT/Triton;
-- добавить PostgreSQL/S3;
-- добавить auth/multitenancy;
-- добавить Kubernetes/Helm;
-- улучшать качество на corpus regression failures.
+real OCR model integration
+PostgreSQL
+S3
+Kubernetes
+streaming upload
+full auth/users/roles
+web UI
+GPU/TensorRT/Triton
 ```
+
+Главная цель — стабильный dev-запуск для 3 разработчиков.

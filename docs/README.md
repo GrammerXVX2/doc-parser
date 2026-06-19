@@ -1,3 +1,7 @@
+
+## Dev Launch
+
+- [DEV_LAUNCH.md](DEV_LAUNCH.md)
 # Universal Document Parsing Pipeline
 
 ## Назначение
@@ -122,6 +126,7 @@ output/
 - [SECURITY.md](SECURITY.md)
 - [OBSERVABILITY.md](OBSERVABILITY.md)
 - [RUNBOOK.md](RUNBOOK.md)
+- [DEV_LAUNCH.md](DEV_LAUNCH.md)
 - [REGRESSION_TESTING.md](REGRESSION_TESTING.md)
 - [QUALITY_METRICS.md](QUALITY_METRICS.md)
 - [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md)
