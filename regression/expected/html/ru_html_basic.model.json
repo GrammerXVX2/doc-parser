@@ -1,0 +1,718 @@
+{
+  "schema_version": "1.0.0",
+  "document_id": "input_html",
+  "job_id": null,
+  "source": {
+    "uri": "regression/corpus/html/ru_html_basic/input.html",
+    "filename": "input.html",
+    "extension": "html",
+    "mime_type": "text/html",
+    "size_bytes": 469,
+    "hashes": {
+      "sha256": "8d49c71427f5e591228da343b049cb76cec96cc62f0fb213694561945ddc9bbe"
+    },
+    "uploaded_at": null,
+    "processed_at": "2026-06-19T08:59:19.915919614Z",
+    "container": {
+      "type": null,
+      "parent_uri": null,
+      "entry_path": null
+    }
+  },
+  "document_profile": {
+    "format": "html",
+    "content_mode": "digital",
+    "languages": [
+      "ru"
+    ],
+    "language_info": {
+      "primary": "ru",
+      "detected": [
+        {
+          "language": "ru",
+          "confidence": 0.7380952,
+          "source": "text_detection"
+        },
+        {
+          "language": "en",
+          "confidence": 0.35,
+          "source": "text_detection"
+        }
+      ],
+      "hints": [
+        "ru",
+        "en"
+      ],
+      "is_mixed": true,
+      "confidence": 0.7380952
+    },
+    "has_native_text": true,
+    "has_images": false,
+    "has_tables": false,
+    "has_formulas": false,
+    "has_ocr_required_regions": false,
+    "has_handwriting": false,
+    "has_multicolumn_layout": false,
+    "document_type_guess": null,
+    "confidence": 0.9
+  },
+  "stats": {
+    "page_count": 1,
+    "element_count": 8,
+    "text_element_count": 8,
+    "ocr_element_count": 0,
+    "image_count": 0,
+    "table_count": 0,
+    "formula_count": 0,
+    "list_count": 3,
+    "total_chars": 201,
+    "total_words": 32
+  },
+  "coordinate_system": {
+    "origin": "top_left",
+    "unit": "px",
+    "dpi": null,
+    "normalized_to_page": true
+  },
+  "assets": [],
+  "pages": [
+    {
+      "page_number": 1,
+      "page_type": "document_page",
+      "width": null,
+      "height": null,
+      "dpi": null,
+      "rotation_degrees": 0.0,
+      "page_image_asset_id": null,
+      "page_profile": {
+        "content_mode": "digital",
+        "has_native_text": true,
+        "has_ocr_required_regions": false,
+        "has_tables": false,
+        "has_images": false,
+        "has_formulas": false,
+        "has_handwriting": false,
+        "language": "ru",
+        "language_info": {
+          "primary": "ru",
+          "detected": [
+            {
+              "language": "ru",
+              "confidence": 0.7380952,
+              "source": "text_detection"
+            },
+            {
+              "language": "en",
+              "confidence": 0.35,
+              "source": "text_detection"
+            }
+          ],
+          "hints": [
+            "ru",
+            "en"
+          ],
+          "is_mixed": true,
+          "confidence": 0.7380952
+        },
+        "confidence": 0.9
+      },
+      "elements": [
+        {
+          "element_id": "p1_e1",
+          "type": "heading",
+          "tag": "h1",
+          "role": null,
+          "reading_order": 1,
+          "global_order": 1,
+          "bbox": [
+            40.0,
+            20.0,
+            1160.0,
+            44.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": "<h1>Финансовый отчёт</h1>",
+            "markdown": "# Финансовый отчёт",
+            "normalized_text": "финансовый отчёт",
+            "raw": "<h1>Финансовый отчёт</h1>",
+            "text": "Финансовый отчёт"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "path",
+              "value": "inline_dom"
+            },
+            "stage": "html_extraction",
+            "tool": "html_dom_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e2",
+          "type": "paragraph",
+          "tag": "p",
+          "role": null,
+          "reading_order": 2,
+          "global_order": 2,
+          "bbox": [
+            40.0,
+            48.0,
+            1160.0,
+            72.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": "<p>Смешанный текст: используется API и HTTP клиент.</p>",
+            "markdown": "Смешанный текст: используется API и HTTP клиент.",
+            "normalized_text": "смешанный текст: используется api и http клиент.",
+            "raw": "<p>Смешанный текст: используется API и HTTP клиент.</p>",
+            "text": "Смешанный текст: используется API и HTTP клиент."
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "path",
+              "value": "inline_dom"
+            },
+            "stage": "html_extraction",
+            "tool": "html_dom_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.824999988079071,
+            "detected": [
+              {
+                "confidence": 0.824999988079071,
+                "language": "ru",
+                "source": "text_detection"
+              },
+              {
+                "confidence": 0.3499999940395355,
+                "language": "en",
+                "source": "text_detection"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": true,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e3",
+          "type": "paragraph",
+          "tag": "p",
+          "role": null,
+          "reading_order": 3,
+          "global_order": 3,
+          "bbox": [
+            40.0,
+            76.0,
+            1160.0,
+            100.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": "<p>Цена: 100000 руб., скидка 5%.</p>",
+            "markdown": "Цена: 100000 руб., скидка 5%.",
+            "normalized_text": "цена: 100000 руб., скидка 5%.",
+            "raw": "<p>Цена: 100000 руб., скидка 5%.</p>",
+            "text": "Цена: 100000 руб., скидка 5%."
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "path",
+              "value": "inline_dom"
+            },
+            "stage": "html_extraction",
+            "tool": "html_dom_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e4",
+          "type": "code",
+          "tag": "pre",
+          "role": null,
+          "reading_order": 4,
+          "global_order": 4,
+          "bbox": [
+            40.0,
+            104.0,
+            1160.0,
+            128.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": "<pre><code>fn main() { println!(\"Привет\"); }</code></pre>",
+            "markdown": "```\nfn main() { println!(\"Привет\"); }\n```",
+            "normalized_text": "fn main() { println!(\"привет\"); }",
+            "raw": "<pre><code>fn main() { println!(\"Привет\"); }</code></pre>",
+            "text": "fn main() { println!(\"Привет\"); }"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "path",
+              "value": "inline_dom"
+            },
+            "stage": "html_extraction",
+            "tool": "html_dom_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e5",
+          "type": "code",
+          "tag": "code",
+          "role": null,
+          "reading_order": 5,
+          "global_order": 5,
+          "bbox": [
+            40.0,
+            132.0,
+            1160.0,
+            156.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": "<code>fn main() { println!(\"Привет\"); }</code>",
+            "markdown": "```\nfn main() { println!(\"Привет\"); }\n```",
+            "normalized_text": "fn main() { println!(\"привет\"); }",
+            "raw": "<code>fn main() { println!(\"Привет\"); }</code>",
+            "text": "fn main() { println!(\"Привет\"); }"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "path",
+              "value": "inline_dom"
+            },
+            "stage": "html_extraction",
+            "tool": "html_dom_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e6",
+          "type": "list",
+          "tag": "ul",
+          "role": null,
+          "reading_order": 6,
+          "global_order": 6,
+          "bbox": [
+            40.0,
+            160.0,
+            1160.0,
+            184.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": "<ul>\n    <li>Пункт 1</li>\n    <li>Пункт 2</li>\n  </ul>",
+            "markdown": "Пункт 1 \n     Пункт 2",
+            "normalized_text": "пункт 1 \n     пункт 2",
+            "raw": "<ul>\n    <li>Пункт 1</li>\n    <li>Пункт 2</li>\n  </ul>",
+            "text": "Пункт 1 \n     Пункт 2"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "path",
+              "value": "inline_dom"
+            },
+            "stage": "html_extraction",
+            "tool": "html_dom_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e7",
+          "type": "list_item",
+          "tag": "li",
+          "role": null,
+          "reading_order": 7,
+          "global_order": 7,
+          "bbox": [
+            40.0,
+            188.0,
+            1160.0,
+            212.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": "<li>Пункт 1</li>",
+            "markdown": "- Пункт 1",
+            "normalized_text": "пункт 1",
+            "raw": "<li>Пункт 1</li>",
+            "text": "Пункт 1"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "path",
+              "value": "inline_dom"
+            },
+            "stage": "html_extraction",
+            "tool": "html_dom_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e8",
+          "type": "list_item",
+          "tag": "li",
+          "role": null,
+          "reading_order": 8,
+          "global_order": 8,
+          "bbox": [
+            40.0,
+            216.0,
+            1160.0,
+            240.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": "<li>Пункт 2</li>",
+            "markdown": "- Пункт 2",
+            "normalized_text": "пункт 2",
+            "raw": "<li>Пункт 2</li>",
+            "text": "Пункт 2"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "path",
+              "value": "inline_dom"
+            },
+            "stage": "html_extraction",
+            "tool": "html_dom_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        }
+      ],
+      "text": "Финансовый отчёт\nСмешанный текст: используется API и HTTP клиент.\nЦена: 100000 руб., скидка 5%.\nfn main() { println!(\"Привет\"); }\nfn main() { println!(\"Привет\"); }\nПункт 1 \n     Пункт 2\nПункт 1\nПункт 2",
+      "markdown": "# Финансовый отчёт\n\nСмешанный текст: используется API и HTTP клиент.\n\nЦена: 100000 руб., скидка 5%.\n\n```\nfn main() { println!(\"Привет\"); }\n```\n\n```\nfn main() { println!(\"Привет\"); }\n```\n\nПункт 1 \n     Пункт 2\n\n- Пункт 1\n\n- Пункт 2",
+      "html": "<!doctype html>\n<html lang=\"ru\">\n<head>\n  <meta charset=\"utf-8\" />\n  <title>Пример RU документа</title>\n</head>\n<body>\n  <h1>Финансовый отчёт</h1>\n  <p>Смешанный текст: используется API и HTTP клиент.</p>\n  <p>Цена: 100000 руб., скидка 5%.</p>\n  <ul>\n    <li>Пункт 1</li>\n    <li>Пункт 2</li>\n  </ul>\n  <pre><code>fn main() { println!(\"Привет\"); }</code></pre>\n</body>\n</html>\n",
+      "warnings": []
+    }
+  ],
+  "chunks": [
+    {
+      "chunk_id": "chunk_1",
+      "type": "section",
+      "title": "Финансовый отчёт",
+      "section_path": [
+        "Финансовый отчёт"
+      ],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "p1_e1",
+        "p1_e2",
+        "p1_e3",
+        "p1_e4",
+        "p1_e5",
+        "p1_e6",
+        "p1_e7",
+        "p1_e8"
+      ],
+      "text": "Финансовый отчёт\nСмешанный текст: используется API и HTTP клиент.\nЦена: 100000 руб., скидка 5%.\nfn main() { println!(\"Привет\"); }\nfn main() { println!(\"Привет\"); }\nПункт 1 \n     Пункт 2\nПункт 1\nПункт 2",
+      "markdown": "# Финансовый отчёт\n\nСмешанный текст: используется API и HTTP клиент.\n\nЦена: 100000 руб., скидка 5%.\n\n```\nfn main() { println!(\"Привет\"); }\n```\n\n```\nfn main() { println!(\"Привет\"); }\n```\n\nПункт 1 \n     Пункт 2\n\n- Пункт 1\n\n- Пункт 2",
+      "token_estimate": 74,
+      "metadata": {
+        "contains_code": true,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": false,
+        "language": "ru"
+      }
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "processing": {
+    "pipeline_version": "1.0.0",
+    "status": "ok",
+    "stages": [
+      {
+        "name": "html_parse",
+        "status": "ok",
+        "tool": "scraper",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "chunking",
+        "status": "ok",
+        "tool": "semantic_chunker",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "output_write",
+        "status": "ok",
+        "tool": "output_writer",
+        "duration_ms": 1,
+        "metadata": {}
+      }
+    ],
+    "total_duration_ms": 1,
+    "runtime": {
+      "hostname": null,
+      "cpu": null,
+      "gpu": null,
+      "cuda_version": null,
+      "onnxruntime_version": null
+    }
+  },
+  "pipeline_mode": "bulk",
+  "reading_order_strategy": "natural",
+  "routing_rules_count": 10,
+  "locale": "ru"
+}

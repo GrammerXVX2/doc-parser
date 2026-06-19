@@ -1,0 +1,47 @@
+services:
+  document_parser:
+    build:
+      context: .
+      dockerfile: docker/document-parser.Dockerfile
+    image: document_parser:latest
+    container_name: document_parser
+    environment:
+      OCR_SERVICE_URL: http://ocr_service:8000
+      OCR_LANGUAGES: en,ru
+      OCR_HTTP_TIMEOUT_SECS: 60
+      OUTPUT_ROOT_DIR: /workspace/output
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    command: ["cargo", "run", "--", "parse", "testdata/sample.html", "--output", "output"]
+    depends_on:
+      - ocr_service
+
+  ocr_service:
+    build:
+      context: .
+      dockerfile: docker/ocr-service.Dockerfile
+    image: document_parser_ocr:latest
+    container_name: document_parser_ocr
+    environment:
+      NVIDIA_VISIBLE_DEVICES: "4"
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+      OCR_DEVICE: gpu
+      OCR_LANG: en
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    command: ["uvicorn", "docker.ocr_service.app:app", "--host", "0.0.0.0", "--port", "8000"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["4"]
+              capabilities: [gpu]
+
+networks:
+  default:
+    name: document_parser_net

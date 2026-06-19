@@ -1,0 +1,54 @@
+{
+  "pipeline": {
+    "version": "1.0.0",
+    "mode": "bulk",
+    "language": {
+      "default_language": "ru",
+      "fallback_languages": ["ru", "en"]
+    },
+    "locale": {
+      "default": "ru"
+    },
+    "performance": {
+      "mode": "throughput",
+      "batching": {
+        "enabled": true,
+        "recognition": {
+          "enabled": true,
+          "max_batch_size": 128,
+          "max_wait_ms": 15,
+          "preferred_batch_sizes": [16, 32, 64, 128]
+        }
+      },
+      "warmup": {
+        "enabled": true,
+        "iterations": 3
+      },
+      "tensor_pool": {
+        "enabled": true,
+        "max_buffers": 64
+      }
+    },
+    "ml": {
+      "provider": "triton",
+      "triton": {
+        "enabled": true,
+        "url": "http://127.0.0.1:8000",
+        "grpc_url": "http://127.0.0.1:8001",
+        "det_model_name": "ocr_det",
+        "rec_model_name": "ocr_rec",
+        "layout_model_name": "layout"
+      }
+    },
+    "ocr": {
+      "enabled": true,
+      "backend": "triton",
+      "fallback_to_mock": true,
+      "languages": ["ru", "en"],
+      "language_hint": "ru",
+      "locale": "ru",
+      "save_crops": true,
+      "save_debug_artifacts": false
+    }
+  }
+}

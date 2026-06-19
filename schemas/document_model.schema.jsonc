@@ -1,0 +1,178 @@
+{
+  "$schema_note": "This is a practical JSONC contract, not a full JSON Schema Draft document.",
+  "schema_version": "1.0.0",
+
+  "document_id": "string",
+  "job_id": "string|null",
+
+  "source": {
+    "uri": "string",
+    "filename": "string",
+    "extension": "string",
+    "mime_type": "string",
+    "size_bytes": "integer|null",
+    "hashes": {
+      "sha256": "string|null"
+    },
+    "uploaded_at": "iso_datetime|null",
+    "processed_at": "iso_datetime|null",
+    "container": {
+      "type": "archive|email|batch|null",
+      "parent_uri": "string|null",
+      "entry_path": "string|null"
+    }
+  },
+
+  "document_profile": {
+    "format": "pdf|docx|doc|html|md|rtf|image|pptx|txt|xlsx|unknown",
+    "content_mode": "digital|scanned|hybrid|image|spreadsheet|presentation|plain_text|unknown",
+    "languages": ["string"],
+    "has_native_text": "boolean",
+    "has_images": "boolean",
+    "has_tables": "boolean",
+    "has_formulas": "boolean",
+    "has_ocr_required_regions": "boolean",
+    "has_handwriting": "boolean",
+    "has_multicolumn_layout": "boolean",
+    "document_type_guess": "string|null",
+    "confidence": "number 0..1"
+  },
+
+  "stats": {
+    "page_count": "integer",
+    "element_count": "integer",
+    "text_element_count": "integer",
+    "ocr_element_count": "integer",
+    "image_count": "integer",
+    "table_count": "integer",
+    "formula_count": "integer",
+    "list_count": "integer",
+    "total_chars": "integer",
+    "total_words": "integer"
+  },
+
+  "coordinate_system": {
+    "origin": "top_left",
+    "unit": "px|pt|synthetic",
+    "dpi": "integer|null",
+    "normalized_to_page": "boolean"
+  },
+
+  "assets": [
+    {
+      "asset_id": "string",
+      "type": "page_render|embedded_image|ocr_crop|table_html|table_csv|formula_image|debug",
+      "path": "string",
+      "mime_type": "string",
+      "page_number": "integer|null",
+      "width": "integer|null",
+      "height": "integer|null",
+      "dpi": "integer|null",
+      "sha256": "string|null",
+      "provenance": {
+        "source": "string",
+        "tool": "string",
+        "stage": "string"
+      }
+    }
+  ],
+
+  "pages": [
+    {
+      "page_number": "integer",
+      "page_type": "document_page|slide|sheet|image|synthetic_text_page",
+      "width": "number|null",
+      "height": "number|null",
+      "dpi": "integer|null",
+      "rotation_degrees": "number",
+      "page_image_asset_id": "string|null",
+
+      "page_profile": {
+        "content_mode": "digital|scanned|hybrid|image|sheet|slide|plain_text|unknown",
+        "has_native_text": "boolean",
+        "has_ocr_required_regions": "boolean",
+        "has_tables": "boolean",
+        "has_images": "boolean",
+        "has_formulas": "boolean",
+        "has_handwriting": "boolean",
+        "language": "string|null",
+        "confidence": "number 0..1"
+      },
+
+      "elements": ["Element[]"],
+
+      "text": "string",
+      "markdown": "string",
+      "html": "string",
+      "warnings": ["Warning[]"]
+    }
+  ],
+
+  "chunks": [
+    {
+      "chunk_id": "string",
+      "type": "section|page|table|image|code|formula|custom",
+      "title": "string|null",
+      "section_path": ["string"],
+      "page_start": "integer",
+      "page_end": "integer",
+      "element_ids": ["string"],
+      "text": "string",
+      "markdown": "string",
+      "token_estimate": "integer",
+      "metadata": {
+        "language": "string|null",
+        "contains_table": "boolean",
+        "contains_image": "boolean",
+        "contains_formula": "boolean",
+        "contains_code": "boolean",
+        "contains_ocr": "boolean"
+      }
+    }
+  ],
+
+  "errors": [
+    {
+      "code": "string",
+      "severity": "warning|error|fatal",
+      "scope": "document|page|element|asset|stage",
+      "page_number": "integer|null",
+      "element_id": "string|null",
+      "message": "string",
+      "recoverable": "boolean"
+    }
+  ],
+
+  "warnings": [
+    {
+      "code": "string",
+      "severity": "warning",
+      "scope": "document|page|element|stage",
+      "page_number": "integer|null",
+      "element_id": "string|null",
+      "message": "string"
+    }
+  ],
+
+  "processing": {
+    "pipeline_version": "string",
+    "status": "ok|partial|failed",
+    "stages": [
+      {
+        "name": "string",
+        "status": "ok|skipped|warning|error|timeout",
+        "tool": "string",
+        "duration_ms": "integer|null",
+        "metadata": {}
+      }
+    ],
+    "total_duration_ms": "integer|null",
+    "runtime": {
+      "hostname": "string|null",
+      "cpu": "string|null",
+      "gpu": "string|null",
+      "cuda_version": "string|null",
+      "onnxruntime_version": "string|null"
+    }
+  }
+}

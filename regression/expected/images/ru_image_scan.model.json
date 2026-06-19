@@ -1,0 +1,643 @@
+{
+  "schema_version": "1.0.0",
+  "document_id": "input_png",
+  "job_id": null,
+  "source": {
+    "uri": "regression/corpus/images/ru_image_scan/input.png",
+    "filename": "input.png",
+    "extension": "png",
+    "mime_type": "image/png",
+    "size_bytes": 9868,
+    "hashes": {
+      "sha256": "bfff471ac28bc35c56ddfe90088a5a856e63df249c55eb8d39fb2e2c99abbfe9"
+    },
+    "uploaded_at": null,
+    "processed_at": "2026-06-19T08:59:20.125245933Z",
+    "container": {
+      "type": null,
+      "parent_uri": null,
+      "entry_path": null
+    }
+  },
+  "document_profile": {
+    "format": "image",
+    "content_mode": "image",
+    "languages": [
+      "en"
+    ],
+    "language_info": {
+      "primary": "en",
+      "detected": [
+        {
+          "language": "en",
+          "confidence": 1.0,
+          "source": "text_detection"
+        }
+      ],
+      "hints": [
+        "ru",
+        "en"
+      ],
+      "is_mixed": false,
+      "confidence": 0.9
+    },
+    "has_native_text": false,
+    "has_images": true,
+    "has_tables": false,
+    "has_formulas": false,
+    "has_ocr_required_regions": true,
+    "has_handwriting": false,
+    "has_multicolumn_layout": false,
+    "document_type_guess": null,
+    "confidence": 0.9
+  },
+  "stats": {
+    "page_count": 1,
+    "element_count": 2,
+    "text_element_count": 1,
+    "ocr_element_count": 1,
+    "image_count": 1,
+    "table_count": 0,
+    "formula_count": 0,
+    "list_count": 0,
+    "total_chars": 59,
+    "total_words": 13
+  },
+  "coordinate_system": {
+    "origin": "top_left",
+    "unit": "px",
+    "dpi": null,
+    "normalized_to_page": true
+  },
+  "assets": [
+    {
+      "asset_id": "asset_432bb7a729bd410390fdca7cfb74ada9",
+      "type": "embedded_image",
+      "path": "assets/images/asset_432bb7a729bd410390fdca7cfb74ada9_input.png",
+      "mime_type": "image/png",
+      "page_number": null,
+      "width": 900,
+      "height": 500,
+      "dpi": null,
+      "sha256": "bfff471ac28bc35c56ddfe90088a5a856e63df249c55eb8d39fb2e2c99abbfe9",
+      "provenance": {
+        "source": "pipeline_asset_store",
+        "stage": "asset_write",
+        "tool": "local_asset_store"
+      }
+    }
+  ],
+  "pages": [
+    {
+      "page_number": 1,
+      "page_type": "image",
+      "width": 900.0,
+      "height": 500.0,
+      "dpi": null,
+      "rotation_degrees": 0.0,
+      "page_image_asset_id": "asset_432bb7a729bd410390fdca7cfb74ada9",
+      "page_profile": {
+        "content_mode": "image",
+        "has_native_text": false,
+        "has_ocr_required_regions": true,
+        "has_tables": false,
+        "has_images": true,
+        "has_formulas": false,
+        "has_handwriting": false,
+        "language": "en",
+        "language_info": {
+          "primary": "en",
+          "detected": [
+            {
+              "language": "en",
+              "confidence": 1.0,
+              "source": "text_detection"
+            }
+          ],
+          "hints": [
+            "ru",
+            "en"
+          ],
+          "is_mixed": false,
+          "confidence": 0.9
+        },
+        "confidence": 0.9
+      },
+      "elements": [
+        {
+          "element_id": "p1_e1",
+          "type": "image",
+          "tag": "img",
+          "role": "page_image",
+          "reading_order": 1,
+          "global_order": 1,
+          "bbox": [
+            0.0,
+            0.0,
+            900.0,
+            500.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "![image](assets/images/asset_432bb7a729bd410390fdca7cfb74ada9_input.png)",
+            "normalized_text": "",
+            "raw": null,
+            "text": ""
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "path",
+              "value": "source_image"
+            },
+            "stage": "image_native",
+            "tool": "image_decoder"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          },
+          "asset_id": "asset_432bb7a729bd410390fdca7cfb74ada9"
+        },
+        {
+          "element_id": "p1_ocr_1",
+          "type": "text_ocr",
+          "tag": "ocr",
+          "role": "paragraph",
+          "reading_order": 2,
+          "global_order": 2,
+          "bbox": [
+            100.0,
+            120.0,
+            900.0,
+            240.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "Mock OCR text for page 1 Mock OCR secondary line for page 1",
+            "normalized_text": "Mock OCR text for page 1 Mock OCR secondary line for page 1",
+            "raw": null,
+            "text": "Mock OCR text for page 1 Mock OCR secondary line for page 1"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "ocr",
+            "stage": "ocr_recognition",
+            "tool": "mock_ocr"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.699999988079071,
+            "overall": 0.699999988079071,
+            "text": 0.699999988079071
+          },
+          "warnings": [
+            {
+              "code": "LOW_OCR_CONFIDENCE",
+              "severity": "warning",
+              "scope": "element",
+              "page_number": 1,
+              "element_id": "p1_ocr_1",
+              "message": "Низкая уверенность OCR-распознавания.",
+              "recoverable": true
+            }
+          ],
+          "language": "ru",
+          "language_info": {
+            "confidence": 0.8999999761581421,
+            "detected": [
+              {
+                "confidence": 1.0,
+                "language": "en",
+                "source": "text_detection"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "en"
+          },
+          "ocr": {
+            "det_confidence": 0.699999988079071,
+            "engine": "mock_ocr",
+            "language_hint": "ru",
+            "lines": [
+              {
+                "bbox": [
+                  100.0,
+                  120.0,
+                  800.0,
+                  160.0
+                ],
+                "confidence": 0.949999988079071,
+                "language": "ru",
+                "text": "Mock OCR text for page 1"
+              },
+              {
+                "bbox": [
+                  100.0,
+                  200.0,
+                  900.0,
+                  240.0
+                ],
+                "confidence": 0.44999998807907104,
+                "language": "ru",
+                "text": "Mock OCR secondary line for page 1"
+              }
+            ],
+            "rec_confidence": 0.699999988079071
+          }
+        },
+        {
+          "element_id": "p1_table_placeholder_table_mock_1",
+          "type": "table",
+          "tag": "table_placeholder",
+          "role": "scanned_table_placeholder",
+          "reading_order": 3,
+          "global_order": 3,
+          "bbox": [
+            108.0,
+            140.0,
+            792.0,
+            360.0
+          ],
+          "polygon": null,
+          "content": {
+            "csv": "",
+            "html": "",
+            "markdown": "",
+            "normalized_text": "[Таблица обнаружена на скане, структура еще не распознана]",
+            "raw": null,
+            "text": "[Таблица обнаружена на скане, структура еще не распознана]"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "inferred",
+            "source_ref": {
+              "kind": "region",
+              "value": "table_mock_1"
+            },
+            "stage": "scanned_table_detection",
+            "tool": "mock_scanned_table_detector"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.8199999928474426,
+            "structure": 0.0,
+            "text": 0.99
+          },
+          "warnings": [
+            {
+              "code": "TABLE_PLACEHOLDER_CREATED",
+              "severity": "warning",
+              "scope": "element",
+              "page_number": 1,
+              "element_id": null,
+              "message": "На странице обнаружена таблица, но структура таблицы пока не распознана.",
+              "recoverable": true
+            }
+          ],
+          "detector_source": "mock_scanned_table_detector",
+          "language_info": {
+            "confidence": 0.8999999761581421,
+            "detected": [
+              {
+                "confidence": 1.0,
+                "language": "ru",
+                "source": "text_detection"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          },
+          "rows": 0,
+          "table_structure": {
+            "extraction_method": "detected_placeholder"
+          },
+          "columns": 0,
+          "detected_region_id": "table_mock_1"
+        },
+        {
+          "element_id": "p1_formula_placeholder_formula_mock_1",
+          "type": "formula",
+          "tag": "formula_placeholder",
+          "role": "formula_placeholder",
+          "reading_order": 4,
+          "global_order": 4,
+          "bbox": [
+            180.0,
+            360.0,
+            738.0,
+            420.0
+          ],
+          "polygon": null,
+          "content": {
+            "latex": null,
+            "markdown": "[Формула обнаружена, распознавание еще не выполнено]",
+            "mathml": null,
+            "normalized_text": "[Формула обнаружена, распознавание еще не выполнено]",
+            "raw": null,
+            "text": "[Формула обнаружена, распознавание еще не выполнено]"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "inferred",
+            "source_ref": {
+              "kind": "region",
+              "value": "formula_mock_1"
+            },
+            "stage": "formula_detection",
+            "tool": "mock_formula_detector"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.8500000238418579,
+            "text": 0.99
+          },
+          "warnings": [
+            {
+              "code": "FORMULA_PLACEHOLDER_CREATED",
+              "severity": "warning",
+              "scope": "element",
+              "page_number": 1,
+              "element_id": null,
+              "message": "Формула обнаружена, но распознавание пока не выполнено.",
+              "recoverable": true
+            }
+          ],
+          "format": "unknown",
+          "latex_source": null,
+          "detected_region_id": "formula_mock_1",
+          "language_info": {
+            "confidence": 0.8999999761581421,
+            "detected": [
+              {
+                "confidence": 1.0,
+                "language": "ru",
+                "source": "text_detection"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        }
+      ],
+      "text": "Mock OCR text for page 1 Mock OCR secondary line for page 1",
+      "markdown": "![image](assets/images/asset_432bb7a729bd410390fdca7cfb74ada9_input.png)\n\nMock OCR text for page 1 Mock OCR secondary line for page 1",
+      "html": "",
+      "warnings": []
+    }
+  ],
+  "chunks": [
+    {
+      "chunk_id": "chunk_1",
+      "type": "section",
+      "title": null,
+      "section_path": [],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "p1_e1",
+        "p1_ocr_1"
+      ],
+      "text": "Mock OCR text for page 1 Mock OCR secondary line for page 1",
+      "markdown": "![image](assets/images/asset_432bb7a729bd410390fdca7cfb74ada9_input.png)\n\nMock OCR text for page 1 Mock OCR secondary line for page 1",
+      "token_estimate": 15,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": true,
+        "contains_ocr": false,
+        "contains_table": false,
+        "language": "ru"
+      }
+    },
+    {
+      "chunk_id": "chunk_table_2",
+      "type": "table",
+      "title": "Таблица",
+      "section_path": [],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "p1_table_placeholder_table_mock_1"
+      ],
+      "text": "[Таблица обнаружена на скане, структура еще не распознана]",
+      "markdown": "",
+      "token_estimate": 27,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": true,
+        "language": "ru"
+      }
+    },
+    {
+      "chunk_id": "chunk_3",
+      "type": "section",
+      "title": null,
+      "section_path": [],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "p1_formula_placeholder_formula_mock_1"
+      ],
+      "text": "[Формула обнаружена, распознавание еще не выполнено]",
+      "markdown": "[Формула обнаружена, распознавание еще не выполнено]",
+      "token_estimate": 25,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": false,
+        "language": "ru"
+      }
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "processing": {
+    "pipeline_version": "1.0.0",
+    "status": "ok",
+    "stages": [
+      {
+        "name": "image_decode",
+        "status": "ok",
+        "tool": "image",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "ocr_recognition",
+        "status": "ok",
+        "tool": "mock_ocr",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "layout_detection",
+        "status": "ok",
+        "tool": "heuristic_layout_detector",
+        "duration_ms": 1,
+        "metadata": {
+          "regions": 2
+        }
+      },
+      {
+        "name": "scanned_table_detection",
+        "status": "ok",
+        "tool": "mock_scanned_table_detector",
+        "duration_ms": 1,
+        "metadata": {
+          "regions": 1
+        }
+      },
+      {
+        "name": "table_structure_recognition",
+        "status": "ok",
+        "tool": "mock_table_structure_recognizer",
+        "duration_ms": 1,
+        "metadata": {
+          "placeholder": true,
+          "regions": 1
+        }
+      },
+      {
+        "name": "formula_detection",
+        "status": "ok",
+        "tool": "mock_formula_detector",
+        "duration_ms": 1,
+        "metadata": {
+          "regions": 1
+        }
+      },
+      {
+        "name": "formula_recognition",
+        "status": "ok",
+        "tool": "mock_formula_recognizer",
+        "duration_ms": 1,
+        "metadata": {
+          "placeholder": true,
+          "regions": 1
+        }
+      },
+      {
+        "name": "header_footer_detection",
+        "status": "ok",
+        "tool": "header_footer_detector",
+        "duration_ms": 1,
+        "metadata": {
+          "footers": 0,
+          "headers": 0
+        }
+      },
+      {
+        "name": "layout_aware_reading_order",
+        "status": "ok",
+        "tool": "layout_reading_order",
+        "duration_ms": 1,
+        "metadata": {
+          "regions": 2
+        }
+      },
+      {
+        "name": "chunking",
+        "status": "ok",
+        "tool": "semantic_chunker",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "output_write",
+        "status": "ok",
+        "tool": "output_writer",
+        "duration_ms": 1,
+        "metadata": {}
+      }
+    ],
+    "total_duration_ms": 2,
+    "runtime": {
+      "hostname": null,
+      "cpu": null,
+      "gpu": null,
+      "cuda_version": null,
+      "onnxruntime_version": null
+    }
+  },
+  "pipeline_mode": "bulk",
+  "routing_rules_count": 10,
+  "locale": "ru"
+}

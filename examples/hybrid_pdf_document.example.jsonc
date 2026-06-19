@@ -1,0 +1,339 @@
+{
+  "schema_version": "1.0.0",
+  "document_id": "contract_2026_001",
+  "job_id": "job_pdf_001",
+
+  "source": {
+    "uri": "s3://documents/contracts/contract_2026_001.pdf",
+    "filename": "contract_2026_001.pdf",
+    "extension": "pdf",
+    "mime_type": "application/pdf",
+    "size_bytes": 10485760,
+    "hashes": {
+      "sha256": "example_sha256"
+    },
+    "uploaded_at": "2026-06-18T10:00:00Z",
+    "processed_at": "2026-06-18T10:00:08Z",
+    "container": {
+      "type": null,
+      "parent_uri": null,
+      "entry_path": null
+    }
+  },
+
+  "document_profile": {
+    "format": "pdf",
+    "content_mode": "hybrid",
+    "languages": ["ru", "en"],
+    "language_info": {
+      "primary": "ru",
+      "detected": [
+        {"language": "ru", "confidence": 0.9, "source": "text_detection"},
+        {"language": "en", "confidence": 0.5, "source": "text_detection"}
+      ],
+      "hints": ["ru", "en"],
+      "is_mixed": true,
+      "confidence": 0.9
+    },
+    "has_native_text": true,
+    "has_images": true,
+    "has_tables": true,
+    "has_formulas": false,
+    "has_ocr_required_regions": true,
+    "has_handwriting": false,
+    "has_multicolumn_layout": false,
+    "document_type_guess": "contract",
+    "confidence": 0.92
+  },
+
+  "stats": {
+    "page_count": 3,
+    "element_count": 42,
+    "text_element_count": 30,
+    "ocr_element_count": 6,
+    "image_count": 2,
+    "table_count": 1,
+    "formula_count": 0,
+    "list_count": 3,
+    "total_chars": 12000,
+    "total_words": 1800
+  },
+
+  "coordinate_system": {
+    "origin": "top_left",
+    "unit": "px",
+    "dpi": 144,
+    "normalized_to_page": true
+  },
+
+  "assets": [
+    {
+      "asset_id": "asset_page_1_render",
+      "type": "page_render",
+      "path": "assets/renders/page_1.png",
+      "mime_type": "image/png",
+      "page_number": 1,
+      "width": 1190,
+      "height": 1684,
+      "dpi": 144,
+      "sha256": "render_sha",
+      "provenance": {
+        "source": "pdf_page",
+        "tool": "pdfium",
+        "stage": "page_render"
+      }
+    },
+    {
+      "asset_id": "asset_signature_scan_p1",
+      "type": "embedded_image",
+      "path": "assets/images/signature_scan_p1.jpg",
+      "mime_type": "image/jpeg",
+      "page_number": 1,
+      "width": 600,
+      "height": 180,
+      "dpi": null,
+      "sha256": "img_sha",
+      "provenance": {
+        "source": "pdf_embedded_image",
+        "tool": "pdf_image_extractor",
+        "stage": "asset_extraction"
+      }
+    },
+    {
+      "asset_id": "asset_ocr_crop_p1_1",
+      "type": "ocr_crop",
+      "path": "assets/crops/p1_ocr_1.png",
+      "mime_type": "image/png",
+      "page_number": 1,
+      "width": 500,
+      "height": 60,
+      "dpi": 144,
+      "sha256": "crop_sha",
+      "provenance": {
+        "source": "page_render",
+        "tool": "ocr_crop_builder",
+        "stage": "ocr_preprocessing"
+      }
+    }
+  ],
+
+  "pages": [
+    {
+      "page_number": 1,
+      "page_type": "document_page",
+      "width": 1190,
+      "height": 1684,
+      "dpi": 144,
+      "rotation_degrees": 0,
+      "page_image_asset_id": "asset_page_1_render",
+
+      "page_profile": {
+        "content_mode": "hybrid",
+        "has_native_text": true,
+        "has_ocr_required_regions": true,
+        "has_tables": false,
+        "has_images": true,
+        "has_formulas": false,
+        "has_handwriting": false,
+        "language": "ru",
+        "language_info": {
+          "primary": "ru",
+          "detected": [{"language": "ru", "confidence": 0.9, "source": "text_detection"}],
+          "hints": ["ru", "en"],
+          "is_mixed": false,
+          "confidence": 0.9
+        },
+        "confidence": 0.94
+      },
+
+      "elements": [
+        {
+          "element_id": "p1_native_1",
+          "type": "heading",
+          "tag": "h1",
+          "role": "document_title",
+          "reading_order": 1,
+          "global_order": 1,
+          "bbox": [100, 80, 1090, 130],
+          "polygon": null,
+          "content": {
+            "text": "Договор оказания услуг",
+            "html": "<h1>Договор оказания услуг</h1>",
+            "markdown": "# Договор оказания услуг",
+            "normalized_text": "Договор оказания услуг",
+            "raw": null
+          },
+          "style": {
+            "font_size": 20,
+            "font_family": "Arial",
+            "bold": true,
+            "italic": false,
+            "monospace": false,
+            "color": null,
+            "background_color": null,
+            "alignment": "center"
+          },
+          "provenance": {
+            "method": "native",
+            "tool": "pdf_text_extractor",
+            "stage": "pdf_native_extraction",
+            "source_ref": {
+              "kind": "pdf_text_object",
+              "value": "page=1,obj=42"
+            }
+          },
+          "confidence": {
+            "overall": 0.99,
+            "text": 1,
+            "layout": 0.98,
+            "language": 0.95
+          },
+          "warnings": []
+        },
+        {
+          "element_id": "p1_ocr_1",
+          "type": "text_ocr",
+          "tag": "p",
+          "role": "stamp_or_signature_text",
+          "reading_order": 20,
+          "global_order": 20,
+          "bbox": [620, 1420, 1080, 1500],
+          "polygon": [[620, 1420], [1080, 1420], [1080, 1500], [620, 1500]],
+          "content": {
+            "text": "Подписано электронной подписью",
+            "html": "<p>Подписано электронной подписью</p>",
+            "markdown": "Подписано электронной подписью",
+            "normalized_text": "Подписано электронной подписью",
+            "raw": null
+          },
+          "ocr": {
+            "engine": "paddleocr",
+            "det_model": "det.onnx",
+            "rec_model": "rec.onnx",
+            "language_hint": ["ru"],
+            "det_confidence": 0.94,
+            "rec_confidence": 0.91,
+            "orientation_degrees": 0,
+            "crop_asset_id": "asset_ocr_crop_p1_1"
+          },
+          "provenance": {
+            "method": "ocr",
+            "tool": "onnxruntime_cuda",
+            "stage": "ocr_recognition",
+            "source_ref": {
+              "kind": "page_render_region",
+              "value": "asset_page_1_render:[620,1420,1080,1500]"
+            }
+          },
+          "confidence": {
+            "overall": 0.91,
+            "text": 0.91,
+            "layout": 0.94,
+            "language": 0.9
+          },
+          "deduplication": {
+            "status": "kept",
+            "duplicate_of": null,
+            "iou": null,
+            "text_similarity": null
+          },
+          "warnings": []
+        }
+      ],
+
+      "text": "Договор оказания услуг\n...\nПодписано электронной подписью",
+      "markdown": "# Договор оказания услуг\n\n...\n\nПодписано электронной подписью",
+      "html": "<h1>Договор оказания услуг</h1><p>...</p>",
+      "warnings": []
+    }
+  ],
+
+  "chunks": [
+    {
+      "chunk_id": "chunk_contract_intro",
+      "type": "section",
+      "title": "Договор оказания услуг",
+      "section_path": ["Договор оказания услуг"],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": ["p1_native_1", "p1_ocr_1"],
+      "text": "Договор оказания услуг\n...\nПодписано электронной подписью",
+      "markdown": "# Договор оказания услуг\n\n...\n\nПодписано электронной подписью",
+      "token_estimate": 400,
+      "metadata": {
+        "language": "ru",
+        "contains_table": false,
+        "contains_image": true,
+        "contains_formula": false,
+        "contains_code": false,
+        "contains_ocr": true
+      }
+    }
+  ],
+
+  "errors": [],
+  "warnings": [],
+
+  "processing": {
+    "pipeline_version": "synapbase-doc-parser-1.0.0",
+    "status": "ok",
+    "stages": [
+      {
+        "name": "detect_file_type",
+        "status": "ok",
+        "tool": "infer",
+        "duration_ms": 3,
+        "metadata": {}
+      },
+      {
+        "name": "pdf_native_extraction",
+        "status": "ok",
+        "tool": "pdf_text_extractor",
+        "duration_ms": 120,
+        "metadata": {}
+      },
+      {
+        "name": "pdf_render",
+        "status": "ok",
+        "tool": "pdfium",
+        "duration_ms": 240,
+        "metadata": {
+          "dpi": 144
+        }
+      },
+      {
+        "name": "ocr_detection",
+        "status": "ok",
+        "tool": "onnxruntime_cuda",
+        "duration_ms": 35,
+        "metadata": {
+          "batch_size": 1
+        }
+      },
+      {
+        "name": "ocr_recognition",
+        "status": "ok",
+        "tool": "onnxruntime_cuda",
+        "duration_ms": 20,
+        "metadata": {
+          "batch_size": 4
+        }
+      },
+      {
+        "name": "merge_native_ocr",
+        "status": "ok",
+        "tool": "native_ocr_merger",
+        "duration_ms": 5,
+        "metadata": {}
+      }
+    ],
+    "total_duration_ms": 423,
+    "runtime": {
+      "hostname": "worker-1",
+      "cpu": "AMD EPYC",
+      "gpu": "NVIDIA H200 NVL",
+      "cuda_version": "unknown",
+      "onnxruntime_version": "unknown"
+    }
+  }
+}

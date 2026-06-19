@@ -1,0 +1,301 @@
+{
+  "schema_version": "1.0.0",
+  "document_id": "book-1_1916_1780553995851",
+  "job_id": "job_html_001",
+  "source": {
+    "uri": "/app/src/synapbase/user_uploads/1/book-1_1916_1780553995851.html",
+    "filename": "book-1_1916_1780553995851.html",
+    "extension": "html",
+    "mime_type": "text/html",
+    "size_bytes": null,
+    "hashes": {
+      "sha256": null
+    },
+    "uploaded_at": null,
+    "processed_at": "2026-06-18T00:00:00Z",
+    "container": {
+      "type": null,
+      "parent_uri": null,
+      "entry_path": null
+    }
+  },
+  "document_profile": {
+    "format": "html",
+    "content_mode": "digital",
+    "languages": ["en"],
+    "language_info": {
+      "primary": "en",
+      "detected": [{"language": "en", "confidence": 0.95, "source": "text_detection"}],
+      "hints": ["ru", "en"],
+      "is_mixed": false,
+      "confidence": 0.95
+    },
+    "has_native_text": true,
+    "has_images": false,
+    "has_tables": false,
+    "has_formulas": false,
+    "has_ocr_required_regions": false,
+    "has_handwriting": false,
+    "has_multicolumn_layout": false,
+    "document_type_guess": "article",
+    "confidence": 0.98
+  },
+  "stats": {
+    "page_count": 2,
+    "element_count": 12,
+    "text_element_count": 7,
+    "ocr_element_count": 0,
+    "image_count": 0,
+    "table_count": 0,
+    "formula_count": 0,
+    "list_count": 2,
+    "total_chars": 3500,
+    "total_words": 600
+  },
+  "coordinate_system": {
+    "origin": "top_left",
+    "unit": "px",
+    "dpi": null,
+    "normalized_to_page": true
+  },
+  "assets": [],
+  "pages": [
+    {
+      "page_number": 1,
+      "page_type": "document_page",
+      "width": 595.3,
+      "height": 842,
+      "dpi": null,
+      "rotation_degrees": 0,
+      "page_image_asset_id": null,
+      "page_profile": {
+        "content_mode": "digital",
+        "has_native_text": true,
+        "has_ocr_required_regions": false,
+        "has_tables": false,
+        "has_images": false,
+        "has_formulas": false,
+        "has_handwriting": false,
+        "language": "en",
+        "language_info": {
+          "primary": "en",
+          "detected": [{"language": "en", "confidence": 0.95, "source": "text_detection"}],
+          "hints": ["ru", "en"],
+          "is_mixed": false,
+          "confidence": 0.95
+        },
+        "confidence": 0.98
+      },
+      "elements": [
+        {
+          "element_id": "p1_e1",
+          "type": "heading",
+          "tag": "h3",
+          "role": "section_title",
+          "reading_order": 1,
+          "global_order": 1,
+          "bbox": [40, 40, 555.3, 62],
+          "polygon": null,
+          "content": {
+            "text": "2.3 CodeAct",
+            "html": "<h3 class=\"wp-block-heading\">2.3 CodeAct</h3>",
+            "markdown": "### 2.3 CodeAct",
+            "normalized_text": "2.3 CodeAct",
+            "raw": "<h3 class=\"wp-block-heading\">2.3 CodeAct</h3>"
+          },
+          "style": {
+            "font_size": 16,
+            "font_family": null,
+            "bold": true,
+            "italic": false,
+            "monospace": false,
+            "color": null,
+            "background_color": null,
+            "alignment": "left"
+          },
+          "provenance": {
+            "method": "native",
+            "tool": "html_dom_parser",
+            "stage": "html_extraction",
+            "source_ref": {
+              "kind": "css_selector",
+              "value": "h3.wp-block-heading"
+            }
+          },
+          "confidence": {
+            "overall": 0.99,
+            "text": 1,
+            "layout": 0.95,
+            "language": 0.95
+          },
+          "warnings": []
+        },
+        {
+          "element_id": "p1_e2",
+          "type": "text",
+          "tag": "p",
+          "role": "paragraph",
+          "reading_order": 2,
+          "global_order": 2,
+          "bbox": [40, 72, 555.3, 90],
+          "polygon": null,
+          "content": {
+            "text": "CodeAct allows the LLM to write code and execute it.",
+            "html": "<p class=\"wp-block-paragraph\">CodeAct allows the LLM to write code and execute it.</p>",
+            "markdown": "CodeAct allows the LLM to write code and execute it.",
+            "normalized_text": "CodeAct allows the LLM to write code and execute it.",
+            "raw": "<p class=\"wp-block-paragraph\">CodeAct allows the LLM to write code and execute it.</p>"
+          },
+          "style": {
+            "font_size": 12,
+            "font_family": null,
+            "bold": false,
+            "italic": false,
+            "monospace": false,
+            "color": null,
+            "background_color": null,
+            "alignment": "left"
+          },
+          "provenance": {
+            "method": "native",
+            "tool": "html_dom_parser",
+            "stage": "html_extraction",
+            "source_ref": {
+              "kind": "css_selector",
+              "value": "p.wp-block-paragraph:nth-of-type(1)"
+            }
+          },
+          "confidence": {
+            "overall": 0.99,
+            "text": 1,
+            "layout": 0.95,
+            "language": 0.95
+          },
+          "warnings": []
+        },
+        {
+          "element_id": "p1_code_1",
+          "type": "code",
+          "tag": "pre",
+          "role": "code_block",
+          "reading_order": 6,
+          "global_order": 6,
+          "bbox": [40, 220, 555.3, 486],
+          "polygon": null,
+          "content": {
+            "text": "# User\nGenerate a dictionary with 50 fruits and the number of 'r' in each\n\n# Assistant\n<think> Okay let's write some python code for this. </think>",
+            "html": "<pre class=\"wp-block-prismatic-blocks language-markdown\"><code class=\"language-markdown\">...</code></pre>",
+            "markdown": "```markdown\n# User\nGenerate a dictionary with 50 fruits and the number of 'r' in each\n\n# Assistant\n<think> Okay let's write some python code for this. </think>\n```",
+            "normalized_text": "# User\nGenerate a dictionary with 50 fruits and the number of r in each\n# Assistant\nOkay let's write some python code for this.",
+            "raw": "<pre class=\"wp-block-prismatic-blocks language-markdown\"><code class=\"language-markdown\">...</code></pre>"
+          },
+          "code": {
+            "language": "markdown",
+            "line_count": 24,
+            "contains_shell_command": true,
+            "contains_python": true,
+            "is_executable": false
+          },
+          "style": {
+            "font_size": 10,
+            "font_family": null,
+            "bold": false,
+            "italic": false,
+            "monospace": true,
+            "color": null,
+            "background_color": null,
+            "alignment": "left"
+          },
+          "provenance": {
+            "method": "native",
+            "tool": "html_dom_parser",
+            "stage": "html_extraction",
+            "source_ref": {
+              "kind": "css_selector",
+              "value": "pre.wp-block-prismatic-blocks"
+            }
+          },
+          "confidence": {
+            "overall": 0.99,
+            "text": 1,
+            "layout": 0.9,
+            "language": 0.9
+          },
+          "warnings": []
+        }
+      ],
+      "text": "2.3 CodeAct\nCodeAct allows the LLM to write code and execute it.",
+      "markdown": "### 2.3 CodeAct\n\nCodeAct allows the LLM to write code and execute it.",
+      "html": "<h3>2.3 CodeAct</h3><p>CodeAct allows the LLM to write code and execute it.</p>",
+      "warnings": []
+    }
+  ],
+  "chunks": [
+    {
+      "chunk_id": "chunk_codeact_section",
+      "type": "section",
+      "title": "2.3 CodeAct",
+      "section_path": ["2.3 CodeAct"],
+      "page_start": 1,
+      "page_end": 2,
+      "element_ids": ["p1_e1", "p1_e2", "p1_code_1"],
+      "text": "2.3 CodeAct\nCodeAct allows the LLM to write code and execute it.",
+      "markdown": "### 2.3 CodeAct\n\nCodeAct allows the LLM to write code and execute it.",
+      "token_estimate": 300,
+      "metadata": {
+        "language": "en",
+        "contains_table": false,
+        "contains_image": false,
+        "contains_formula": false,
+        "contains_code": true,
+        "contains_ocr": false
+      }
+    }
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "code": "POSSIBLE_DUPLICATED_QUOTE",
+      "severity": "warning",
+      "scope": "document",
+      "page_number": null,
+      "element_id": null,
+      "message": "Repeated blockquote-like content appears across page boundary."
+    }
+  ],
+  "processing": {
+    "pipeline_version": "synapbase-doc-parser-1.0.0",
+    "status": "ok",
+    "stages": [
+      {
+        "name": "detect_file_type",
+        "status": "ok",
+        "tool": "infer",
+        "duration_ms": 2,
+        "metadata": {}
+      },
+      {
+        "name": "html_parse",
+        "status": "ok",
+        "tool": "html5ever/scraper",
+        "duration_ms": 8,
+        "metadata": {}
+      },
+      {
+        "name": "chunking",
+        "status": "ok",
+        "tool": "semantic_chunker",
+        "duration_ms": 4,
+        "metadata": {}
+      }
+    ],
+    "total_duration_ms": 14,
+    "runtime": {
+      "hostname": null,
+      "cpu": null,
+      "gpu": null,
+      "cuda_version": null,
+      "onnxruntime_version": null
+    }
+  }
+}

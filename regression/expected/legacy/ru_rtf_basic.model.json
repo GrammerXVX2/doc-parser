@@ -1,0 +1,304 @@
+{
+  "schema_version": "1.0.0",
+  "document_id": "input_rtf",
+  "job_id": null,
+  "source": {
+    "uri": "regression/corpus/legacy/ru_rtf_basic/input.rtf",
+    "filename": "input.rtf",
+    "extension": "rtf",
+    "mime_type": "application/rtf",
+    "size_bytes": 132,
+    "hashes": {
+      "sha256": "602f34e146adab307d6db7e2ce4dff39a9c05af5075573935049265c18bea5c1"
+    },
+    "uploaded_at": null,
+    "processed_at": "2026-06-19T08:59:20.329032078Z",
+    "container": {
+      "type": null,
+      "parent_uri": null,
+      "entry_path": null
+    }
+  },
+  "document_profile": {
+    "format": "rtf",
+    "content_mode": "digital",
+    "languages": [
+      "ru"
+    ],
+    "language_info": {
+      "primary": "ru",
+      "detected": [
+        {
+          "language": "ru",
+          "confidence": 0.2,
+          "source": "config_default"
+        }
+      ],
+      "hints": [
+        "ru",
+        "en"
+      ],
+      "is_mixed": false,
+      "confidence": 0.2
+    },
+    "has_native_text": true,
+    "has_images": false,
+    "has_tables": false,
+    "has_formulas": false,
+    "has_ocr_required_regions": false,
+    "has_handwriting": false,
+    "has_multicolumn_layout": false,
+    "document_type_guess": null,
+    "confidence": 0.9
+  },
+  "stats": {
+    "page_count": 1,
+    "element_count": 0,
+    "text_element_count": 0,
+    "ocr_element_count": 0,
+    "image_count": 0,
+    "table_count": 0,
+    "formula_count": 0,
+    "list_count": 0,
+    "total_chars": 0,
+    "total_words": 0
+  },
+  "coordinate_system": {
+    "origin": "top_left",
+    "unit": "synthetic",
+    "dpi": null,
+    "normalized_to_page": true
+  },
+  "assets": [],
+  "pages": [
+    {
+      "page_number": 1,
+      "page_type": "document_page",
+      "width": null,
+      "height": null,
+      "dpi": null,
+      "rotation_degrees": 0.0,
+      "page_image_asset_id": null,
+      "page_profile": {
+        "content_mode": "digital",
+        "has_native_text": true,
+        "has_ocr_required_regions": false,
+        "has_tables": false,
+        "has_images": false,
+        "has_formulas": false,
+        "has_handwriting": false,
+        "language": "ru",
+        "language_info": {
+          "primary": "ru",
+          "detected": [
+            {
+              "language": "ru",
+              "confidence": 0.2,
+              "source": "config_default"
+            }
+          ],
+          "hints": [
+            "ru",
+            "en"
+          ],
+          "is_mixed": false,
+          "confidence": 0.2
+        },
+        "confidence": 0.9
+      },
+      "elements": [],
+      "text": "",
+      "markdown": "",
+      "html": "",
+      "warnings": []
+    }
+  ],
+  "chunks": [],
+  "errors": [
+    {
+      "code": "RTF_NO_FALLBACK_AVAILABLE",
+      "severity": "error",
+      "scope": "document",
+      "page_number": null,
+      "element_id": null,
+      "message": "Все попытки fallback-конвертации завершились ошибкой: PANDOC_NOT_AVAILABLE: Pandoc не найден. Конвертация RTF через Pandoc невозможна.; LIBREOFFICE_NOT_AVAILABLE: LibreOffice не найден. Конвертация legacy-документа невозможна.; TIKA_DISABLED: Apache Tika отключен в конфигурации. Резервная конвертация недоступна.; LIBREOFFICE_NOT_AVAILABLE: LibreOffice не найден. Конвертация legacy-документа невозможна.; LIBREOFFICE_NOT_AVAILABLE: LibreOffice не найден. Конвертация legacy-документа невозможна.; TIKA_DISABLED: Apache Tika отключен в конфигурации. Резервная конвертация недоступна.",
+      "recoverable": true
+    }
+  ],
+  "warnings": [
+    {
+      "code": "PANDOC_NOT_AVAILABLE",
+      "severity": "warning",
+      "scope": "document",
+      "page_number": null,
+      "element_id": null,
+      "message": "Pandoc не найден. Конвертация RTF через Pandoc невозможна.",
+      "recoverable": true
+    },
+    {
+      "code": "LIBREOFFICE_NOT_AVAILABLE",
+      "severity": "warning",
+      "scope": "document",
+      "page_number": null,
+      "element_id": null,
+      "message": "LibreOffice не найден. Конвертация legacy-документа невозможна.",
+      "recoverable": true
+    },
+    {
+      "code": "TIKA_DISABLED",
+      "severity": "warning",
+      "scope": "document",
+      "page_number": null,
+      "element_id": null,
+      "message": "Apache Tika отключен в конфигурации. Резервная конвертация недоступна.",
+      "recoverable": true
+    },
+    {
+      "code": "LIBREOFFICE_NOT_AVAILABLE",
+      "severity": "warning",
+      "scope": "document",
+      "page_number": null,
+      "element_id": null,
+      "message": "LibreOffice не найден. Конвертация legacy-документа невозможна.",
+      "recoverable": true
+    },
+    {
+      "code": "LIBREOFFICE_NOT_AVAILABLE",
+      "severity": "warning",
+      "scope": "document",
+      "page_number": null,
+      "element_id": null,
+      "message": "LibreOffice не найден. Конвертация legacy-документа невозможна.",
+      "recoverable": true
+    },
+    {
+      "code": "TIKA_DISABLED",
+      "severity": "warning",
+      "scope": "document",
+      "page_number": null,
+      "element_id": null,
+      "message": "Apache Tika отключен в конфигурации. Резервная конвертация недоступна.",
+      "recoverable": true
+    }
+  ],
+  "processing": {
+    "pipeline_version": "1.0.0",
+    "status": "failed",
+    "stages": [
+      {
+        "name": "rtf_conversion_pipeline",
+        "status": "ok",
+        "tool": "conversion_pipeline",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "rtf_conversion_attempt_failed",
+        "status": "warning",
+        "tool": "pandoc",
+        "duration_ms": 0,
+        "metadata": {
+          "code": "PANDOC_NOT_AVAILABLE",
+          "target": "html"
+        }
+      },
+      {
+        "name": "rtf_conversion_attempt_failed",
+        "status": "warning",
+        "tool": "libreoffice",
+        "duration_ms": 0,
+        "metadata": {
+          "code": "LIBREOFFICE_NOT_AVAILABLE",
+          "target": "html"
+        }
+      },
+      {
+        "name": "rtf_external_command_start",
+        "status": "warning",
+        "tool": "tika",
+        "duration_ms": 0,
+        "metadata": {}
+      },
+      {
+        "name": "rtf_conversion_attempt_failed",
+        "status": "warning",
+        "tool": "tika",
+        "duration_ms": 0,
+        "metadata": {
+          "code": "TIKA_DISABLED",
+          "target": "html"
+        }
+      },
+      {
+        "name": "rtf_conversion_attempt_failed",
+        "status": "warning",
+        "tool": "libreoffice",
+        "duration_ms": 0,
+        "metadata": {
+          "code": "LIBREOFFICE_NOT_AVAILABLE",
+          "target": "docx"
+        }
+      },
+      {
+        "name": "rtf_conversion_attempt_failed",
+        "status": "warning",
+        "tool": "libreoffice",
+        "duration_ms": 0,
+        "metadata": {
+          "code": "LIBREOFFICE_NOT_AVAILABLE",
+          "target": "pdf"
+        }
+      },
+      {
+        "name": "rtf_external_command_start",
+        "status": "warning",
+        "tool": "tika",
+        "duration_ms": 0,
+        "metadata": {}
+      },
+      {
+        "name": "rtf_conversion_attempt_failed",
+        "status": "warning",
+        "tool": "tika",
+        "duration_ms": 0,
+        "metadata": {
+          "code": "TIKA_DISABLED",
+          "target": "text"
+        }
+      },
+      {
+        "name": "rtf_route_converted_document",
+        "status": "ok",
+        "tool": "router",
+        "duration_ms": 0,
+        "metadata": {}
+      },
+      {
+        "name": "chunking",
+        "status": "ok",
+        "tool": "semantic_chunker",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "output_write",
+        "status": "ok",
+        "tool": "output_writer",
+        "duration_ms": 1,
+        "metadata": {}
+      }
+    ],
+    "total_duration_ms": 10,
+    "runtime": {
+      "hostname": null,
+      "cpu": null,
+      "gpu": null,
+      "cuda_version": null,
+      "onnxruntime_version": null
+    }
+  },
+  "reading_order_strategy": "natural",
+  "locale": "ru",
+  "pipeline_mode": "bulk",
+  "routing_rules_count": 10
+}

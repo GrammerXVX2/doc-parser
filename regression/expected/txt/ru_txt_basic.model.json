@@ -1,0 +1,879 @@
+{
+  "schema_version": "1.0.0",
+  "document_id": "input_txt",
+  "job_id": null,
+  "source": {
+    "uri": "regression/corpus/txt/ru_txt_basic/input.txt",
+    "filename": "input.txt",
+    "extension": "txt",
+    "mime_type": "text/plain",
+    "size_bytes": 166,
+    "hashes": {
+      "sha256": "504cd4530eb38737225bd5de9ef366120c3fa716d22a6db0d454d5fe5a125ddb"
+    },
+    "uploaded_at": null,
+    "processed_at": "2026-06-19T08:59:21.167351855Z",
+    "container": {
+      "type": null,
+      "parent_uri": null,
+      "entry_path": null
+    }
+  },
+  "document_profile": {
+    "format": "txt",
+    "content_mode": "plain_text",
+    "languages": [
+      "ru"
+    ],
+    "language_info": {
+      "primary": "ru",
+      "detected": [
+        {
+          "language": "ru",
+          "confidence": 0.61764705,
+          "source": "text_detection"
+        },
+        {
+          "language": "en",
+          "confidence": 0.38235295,
+          "source": "text_detection"
+        }
+      ],
+      "hints": [
+        "ru",
+        "en"
+      ],
+      "is_mixed": true,
+      "confidence": 0.61764705
+    },
+    "has_native_text": true,
+    "has_images": false,
+    "has_tables": true,
+    "has_formulas": false,
+    "has_ocr_required_regions": false,
+    "has_handwriting": false,
+    "has_multicolumn_layout": false,
+    "document_type_guess": null,
+    "confidence": 0.9
+  },
+  "stats": {
+    "page_count": 1,
+    "element_count": 8,
+    "text_element_count": 7,
+    "ocr_element_count": 0,
+    "image_count": 0,
+    "table_count": 1,
+    "formula_count": 0,
+    "list_count": 0,
+    "total_chars": 124,
+    "total_words": 26
+  },
+  "coordinate_system": {
+    "origin": "top_left",
+    "unit": "synthetic",
+    "dpi": null,
+    "normalized_to_page": true
+  },
+  "assets": [],
+  "pages": [
+    {
+      "page_number": 1,
+      "page_type": "synthetic_text_page",
+      "width": null,
+      "height": null,
+      "dpi": null,
+      "rotation_degrees": 0.0,
+      "page_image_asset_id": null,
+      "page_profile": {
+        "content_mode": "plain_text",
+        "has_native_text": true,
+        "has_ocr_required_regions": false,
+        "has_tables": false,
+        "has_images": false,
+        "has_formulas": false,
+        "has_handwriting": false,
+        "language": "ru",
+        "language_info": {
+          "primary": "ru",
+          "detected": [
+            {
+              "language": "ru",
+              "confidence": 0.61764705,
+              "source": "text_detection"
+            },
+            {
+              "language": "en",
+              "confidence": 0.38235295,
+              "source": "text_detection"
+            }
+          ],
+          "hints": [
+            "ru",
+            "en"
+          ],
+          "is_mixed": true,
+          "confidence": 0.61764705
+        },
+        "confidence": 0.9
+      },
+      "elements": [
+        {
+          "element_id": "p1_e1",
+          "type": "table",
+          "tag": "txt_table",
+          "role": "data_table",
+          "reading_order": 1,
+          "global_order": 1,
+          "bbox": [
+            0.0,
+            0.0,
+            120.0,
+            1.0
+          ],
+          "polygon": null,
+          "content": {
+            "csv": "Ключ,Значение\nCPU,EPYC\nGPU,H200",
+            "html": "<table><tbody><tr><th>Ключ</th><th>Значение</th></tr><tr><td>CPU</td><td>EPYC</td></tr><tr><td>GPU</td><td>H200</td></tr></tbody></table>",
+            "markdown": "| Ключ | Значение |\n|---|---|\n| CPU | EPYC |\n| GPU | H200 |",
+            "normalized_text": "ключ | значение | cpu | epyc | gpu | h200",
+            "raw": "| Ключ | Значение |\n|---|---|\n| CPU | EPYC |\n| GPU | H200 |",
+            "text": "Ключ | Значение | CPU | EPYC | GPU | H200"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "line",
+              "value": "1"
+            },
+            "stage": "table_detection",
+            "tool": "txt_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "columns": 2,
+          "cells": [
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 0,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": true,
+              "markdown": null,
+              "row": 0,
+              "rowspan": 1,
+              "text": "Ключ"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 1,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": true,
+              "markdown": null,
+              "row": 0,
+              "rowspan": 1,
+              "text": "Значение"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 0,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 1,
+              "rowspan": 1,
+              "text": "CPU"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 1,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 1,
+              "rowspan": 1,
+              "text": "EPYC"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 0,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 2,
+              "rowspan": 1,
+              "text": "GPU"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 1,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 2,
+              "rowspan": 1,
+              "text": "H200"
+            }
+          ],
+          "table_structure": {
+            "extraction_method": "txt_pipe",
+            "has_header": true,
+            "has_merged_cells": false,
+            "orientation": "horizontal"
+          },
+          "rows": 3,
+          "language_info": {
+            "confidence": 0.52173912525177,
+            "detected": [
+              {
+                "confidence": 0.52173912525177,
+                "language": "ru",
+                "source": "text_detection"
+              },
+              {
+                "confidence": 0.47826087474823,
+                "language": "en",
+                "source": "text_detection"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": true,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e2",
+          "type": "paragraph",
+          "tag": null,
+          "role": "paragraph",
+          "reading_order": 2,
+          "global_order": 2,
+          "bbox": [
+            0.0,
+            1.0,
+            120.0,
+            2.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "Сводка",
+            "normalized_text": "сводка",
+            "raw": "Сводка",
+            "text": "Сводка"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "line",
+              "value": "2"
+            },
+            "stage": "structure_detection",
+            "tool": "txt_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e3",
+          "type": "paragraph",
+          "tag": null,
+          "role": "paragraph",
+          "reading_order": 3,
+          "global_order": 3,
+          "bbox": [
+            0.0,
+            2.0,
+            120.0,
+            3.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "Документ содержит API и code snippets.",
+            "normalized_text": "документ содержит api и code snippets.",
+            "raw": "Документ содержит API и code snippets.",
+            "text": "Документ содержит API и code snippets."
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "line",
+              "value": "3"
+            },
+            "stage": "structure_detection",
+            "tool": "txt_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e4",
+          "type": "paragraph",
+          "tag": null,
+          "role": "paragraph",
+          "reading_order": 4,
+          "global_order": 4,
+          "bbox": [
+            0.0,
+            3.0,
+            120.0,
+            4.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "Цена: 1200 руб.",
+            "normalized_text": "цена: 1200 руб.",
+            "raw": "Цена: 1200 руб.",
+            "text": "Цена: 1200 руб."
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "line",
+              "value": "4"
+            },
+            "stage": "structure_detection",
+            "tool": "txt_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e5",
+          "type": "paragraph",
+          "tag": null,
+          "role": "paragraph",
+          "reading_order": 5,
+          "global_order": 5,
+          "bbox": [
+            0.0,
+            4.0,
+            120.0,
+            5.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "| Ключ | Значение |",
+            "normalized_text": "| ключ | значение |",
+            "raw": "| Ключ | Значение |",
+            "text": "| Ключ | Значение |"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "line",
+              "value": "5"
+            },
+            "stage": "structure_detection",
+            "tool": "txt_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e6",
+          "type": "paragraph",
+          "tag": null,
+          "role": "paragraph",
+          "reading_order": 6,
+          "global_order": 6,
+          "bbox": [
+            0.0,
+            5.0,
+            120.0,
+            6.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "|---|---|",
+            "normalized_text": "|---|---|",
+            "raw": "|---|---|",
+            "text": "|---|---|"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "line",
+              "value": "6"
+            },
+            "stage": "structure_detection",
+            "tool": "txt_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e7",
+          "type": "heading",
+          "tag": null,
+          "role": "detected_heading",
+          "reading_order": 7,
+          "global_order": 7,
+          "bbox": [
+            0.0,
+            6.0,
+            120.0,
+            7.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "# | CPU | EPYC |",
+            "normalized_text": "| cpu | epyc |",
+            "raw": "| CPU | EPYC |",
+            "text": "| CPU | EPYC |"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "line",
+              "value": "7"
+            },
+            "stage": "structure_detection",
+            "tool": "txt_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e8",
+          "type": "heading",
+          "tag": null,
+          "role": "detected_heading",
+          "reading_order": 8,
+          "global_order": 8,
+          "bbox": [
+            0.0,
+            7.0,
+            120.0,
+            8.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "# | GPU | H200 |",
+            "normalized_text": "| gpu | h200 |",
+            "raw": "| GPU | H200 |",
+            "text": "| GPU | H200 |"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "line",
+              "value": "8"
+            },
+            "stage": "structure_detection",
+            "tool": "txt_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        }
+      ],
+      "text": "Сводка\n\nДокумент содержит API и code snippets.\nЦена: 1200 руб.\n\n| Ключ | Значение |\n|---|---|\n| CPU | EPYC |\n| GPU | H200 |\n",
+      "markdown": "Сводка\nДокумент содержит API и code snippets.\nЦена: 1200 руб.\n| Ключ | Значение |\n|---|---|\n| CPU | EPYC |\n| GPU | H200 |",
+      "html": "<pre>Сводка\n\nДокумент содержит API и code snippets.\nЦена: 1200 руб.\n\n| Ключ | Значение |\n|---|---|\n| CPU | EPYC |\n| GPU | H200 |\n</pre>",
+      "warnings": []
+    }
+  ],
+  "chunks": [
+    {
+      "chunk_id": "chunk_table_1",
+      "type": "table",
+      "title": "Таблица",
+      "section_path": [],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "p1_e1"
+      ],
+      "text": "Строка 2: Ключ = CPU; Значение = EPYC.\nСтрока 3: Ключ = GPU; Значение = H200.",
+      "markdown": "| Ключ | Значение |\n|---|---|\n| CPU | EPYC |\n| GPU | H200 |",
+      "token_estimate": 29,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": true,
+        "language": "ru"
+      }
+    },
+    {
+      "chunk_id": "chunk_2",
+      "type": "table",
+      "title": null,
+      "section_path": [],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "p1_e2",
+        "p1_e3",
+        "p1_e4",
+        "p1_e5",
+        "p1_e6"
+      ],
+      "text": "Сводка\nДокумент содержит API и code snippets.\nЦена: 1200 руб.\n| Ключ | Значение |\n|---|---|",
+      "markdown": "Сводка\n\nДокумент содержит API и code snippets.\n\nЦена: 1200 руб.\n\n| Ключ | Значение |\n\n|---|---|",
+      "token_estimate": 34,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": true,
+        "language": "ru"
+      }
+    },
+    {
+      "chunk_id": "chunk_3",
+      "type": "table",
+      "title": "| CPU | EPYC |",
+      "section_path": [
+        "| CPU | EPYC |"
+      ],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "p1_e7"
+      ],
+      "text": "| CPU | EPYC |",
+      "markdown": "# | CPU | EPYC |",
+      "token_estimate": 4,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": true,
+        "language": "ru"
+      }
+    },
+    {
+      "chunk_id": "chunk_4",
+      "type": "table",
+      "title": "| GPU | H200 |",
+      "section_path": [
+        "| GPU | H200 |"
+      ],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "p1_e8"
+      ],
+      "text": "| GPU | H200 |",
+      "markdown": "# | GPU | H200 |",
+      "token_estimate": 4,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": true,
+        "language": "ru"
+      }
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "processing": {
+    "pipeline_version": "1.0.0",
+    "status": "ok",
+    "stages": [
+      {
+        "name": "encoding_detection",
+        "status": "ok",
+        "tool": "utf8_lossy",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "structure_detection",
+        "status": "ok",
+        "tool": "line_rules",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "chunking",
+        "status": "ok",
+        "tool": "semantic_chunker",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "output_write",
+        "status": "ok",
+        "tool": "output_writer",
+        "duration_ms": 1,
+        "metadata": {}
+      }
+    ],
+    "total_duration_ms": 2,
+    "runtime": {
+      "hostname": null,
+      "cpu": null,
+      "gpu": null,
+      "cuda_version": null,
+      "onnxruntime_version": null
+    }
+  },
+  "routing_rules_count": 10,
+  "locale": "ru",
+  "reading_order_strategy": "natural",
+  "pipeline_mode": "bulk"
+}

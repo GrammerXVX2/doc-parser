@@ -1,0 +1,15 @@
+{
+  "case_id": "ru_docx_basic",
+  "format": "docx",
+  "language": "ru",
+  "description": "Базовый DOCX-документ на русском языке.",
+  "expected": {
+    "min_pages": 1,
+    "min_elements": 2,
+    "must_have_chunks": true,
+    "max_errors": 0
+  },
+  "tolerances": {
+    "ignore_fields": ["document_id", "job_id", "processed_at", "duration_ms", "sha256", "asset_id", "path"]
+  }
+}

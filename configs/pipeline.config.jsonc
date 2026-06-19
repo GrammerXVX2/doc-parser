@@ -1,0 +1,353 @@
+{
+  "pipeline": {
+    "version": "1.0.0",
+
+    "mode": "bulk",
+    // bulk | online
+
+    "limits": {
+      "max_document_size_mb": 512,
+      "max_pages_per_document": 5000,
+      "max_elements_per_page": 10000,
+      "max_processing_time_sec": 900,
+      "max_page_render_time_sec": 30,
+      "max_ocr_time_per_page_sec": 60
+    },
+
+    "queues": {
+      "ingest_queue_capacity": 1024,
+      "classification_queue_capacity": 1024,
+      "native_extraction_queue_capacity": 512,
+      "render_queue_capacity": 256,
+      "layout_queue_capacity": 256,
+      "ocr_detection_queue_capacity": 256,
+      "ocr_recognition_queue_capacity": 512,
+      "merge_queue_capacity": 512,
+      "output_queue_capacity": 512
+    },
+
+    "timeouts_ms": {
+      "file_detection": 5000,
+      "native_extraction": 60000,
+      "conversion": 120000,
+      "render_page": 30000,
+      "layout_detection": 30000,
+      "ocr_detection": 30000,
+      "ocr_recognition": 30000,
+      "table_recognition": 60000,
+      "formula_recognition": 60000,
+      "chunking": 30000,
+      "output_write": 30000
+    },
+
+    "rendering": {
+      "default_dpi": 144,
+      "ocr_dpi": 300,
+      "max_render_width_px": 3000,
+      "max_render_height_px": 4000,
+      "render_full_page_for_digital_docs": false,
+      "render_full_page_for_hybrid_docs": true,
+      "render_full_page_for_scanned_docs": true
+    },
+
+    "language": {
+      "default_language": "ru",
+      "fallback_languages": ["ru", "en"],
+      "detect_language": true,
+      "detect_language_min_chars": 40,
+      "mixed_language_mode": true
+    },
+
+    "locale": {
+      "default": "ru",
+      "include_machine_codes": true
+    },
+
+    "pdf": {
+      "native_text_min_chars_per_page": 20,
+      "scanned_image_area_ratio_threshold": 0.6,
+      "render_digital_pages": false,
+      "render_hybrid_pages": true,
+      "render_scanned_pages": true,
+      "renderer": "pdfium_or_mock",
+      "default_render_dpi": 144,
+      "ocr_render_dpi": 300,
+      "text_reconstruction": {
+        "enabled": true,
+        "merge_spans_into_lines": true,
+        "merge_lines_into_blocks": true,
+        "line_y_tolerance": 0.012,
+        "word_gap_ratio": 0.6,
+        "paragraph_gap_ratio": 1.8,
+        "detect_headings_by_font": true
+      }
+    },
+
+    "layout": {
+      "enabled": true,
+      "backend": "heuristic",
+      "save_debug_artifacts": false,
+      "detect_headers_footers": true,
+      "detect_watermarks": true,
+      "detect_columns": true,
+      "detect_figures": true,
+      "detect_tables": true,
+      "detect_formulas": true,
+      "reading_order": {
+        "strategy": "layout_aware",
+        "multi_column": true,
+        "header_footer_handling": "mark",
+        "y_tolerance": 0.02,
+        "column_gap_threshold": 0.08
+      }
+    },
+
+    "ocr": {
+      "enabled": true,
+      "backend": "mock",
+      "fallback_to_mock": true,
+      "mock": {
+        "fixture_based": true,
+        "deterministic_fallback": true
+      },
+      "save_crops": true,
+      "save_debug_artifacts": false,
+      "run_ocr_for_scanned_pages": true,
+      "run_ocr_for_embedded_images": true,
+      "run_ocr_for_low_confidence_native_text": true,
+      "languages": ["ru", "en"],
+      "language_hint": "ru",
+      "normalize_cyrillic": true,
+      "preserve_latin_terms": true,
+      "preserve_code_blocks": true,
+
+      "confidence": {
+        "min_text_confidence": 0.5,
+        "drop_low_confidence": false,
+        "mark_low_confidence": true
+      },
+
+      "detection": {
+        "model_path": "models/ocr/det.onnx",
+        "provider": "cpu",
+        "input_width": 1024,
+        "input_height": 1024,
+        "input_channels": 3,
+        "max_batch_size": 8,
+        "max_wait_ms": 15,
+        "confidence_threshold": 0.5,
+        "box_threshold": 0.5,
+        "unclip_ratio": 1.6
+      },
+
+      "recognition": {
+        "model_path": "models/ocr/rec.onnx",
+        "provider": "cpu",
+        "input_width": 320,
+        "input_height": 48,
+        "input_channels": 3,
+        "max_batch_size": 64,
+        "max_wait_ms": 15,
+        "confidence_threshold": 0.5,
+        "charset_path": "models/ocr/charset.txt",
+        "decoder": "ctc"
+      },
+
+      "preprocessing": {
+        "apply_exif_orientation": true,
+        "convert_to_rgb": true,
+        "deskew": true,
+        "denoise": false,
+        "normalize": true,
+        "preserve_aspect_ratio": true,
+        "padding_color": "white"
+      },
+
+      "layout": {
+        "sort_lines_top_to_bottom": true,
+        "merge_nearby_lines": true,
+        "paragraph_grouping": true,
+        "line_y_tolerance": 0.015,
+        "paragraph_gap_ratio": 1.8
+      }
+    },
+
+    "tables": {
+      "enabled": true,
+      "extract_native_tables": true,
+      "extract_markdown_tables": true,
+      "detect_txt_tables": true,
+      "normalize_tables": true,
+      "generate_markdown": true,
+      "generate_csv": true,
+      "generate_html": true,
+      "recognize_scanned_tables": true,
+      "linearize_tables": true,
+      "max_rows_per_linearized_chunk": 20,
+      "include_table_chunks": true
+    },
+
+    "formulas": {
+      "extract_native_formulas": true,
+      "recognize_scanned_formulas": true,
+      "enabled": true,
+      "detect_native": true,
+      "detect_scanned": true,
+      "recognize_scanned": false,
+      "backend": "mock",
+      "create_placeholder_formulas": true,
+      "output_format": "latex"
+    },
+
+    "scanned_tables": {
+      "enabled": true,
+      "backend": "mock",
+      "create_placeholder_tables": true,
+      "min_confidence": 0.5
+    },
+
+    "debug": {
+      "write_layout_json": false,
+      "write_overlay_images": false,
+      "write_intermediate_regions": false
+    },
+
+    "images": {
+      "extract_embedded_images": true,
+      "generate_descriptions": false,
+      "run_ocr_on_images_with_text": true
+    },
+
+    "merge": {
+      "deduplicate_native_and_ocr": true,
+      "bbox_iou_threshold": 0.5,
+      "text_similarity_threshold": 0.8,
+      "prefer_native_text": true
+    },
+
+    "chunking": {
+      "enabled": true,
+      "strategy": "semantic",
+      "max_tokens_per_chunk": 1000,
+      "overlap_tokens": 100,
+      "keep_tables_intact": true,
+      "keep_code_blocks_intact": true,
+      "include_image_descriptions": true
+    },
+
+    "office": {
+      "enabled": true,
+
+      "docx": {
+        "extract_paragraphs": true,
+        "extract_headings": true,
+        "extract_lists": true,
+        "extract_tables": true,
+        "extract_images": true,
+        "extract_footnotes": true,
+        "extract_endnotes": true,
+        "extract_comments": true,
+        "extract_headers": true,
+        "extract_footers": true,
+        "extract_formulas": true,
+        "synthetic_page_line_limit": 80
+      },
+
+      "xlsx": {
+        "extract_sheets": true,
+        "extract_cells": true,
+        "extract_formulas": true,
+        "extract_comments": true,
+        "extract_images": true,
+        "detect_tables": true,
+        "used_range_only": true,
+        "max_rows_per_table_element": 200,
+        "max_rows_per_linearized_chunk": 20
+      },
+
+      "embedded_images": {
+        "extract": true,
+        "run_ocr_if_enabled": false,
+        "max_image_size_mb": 50
+      }
+    },
+
+    "presentation": {
+      "pptx": {
+        "enabled": true,
+        "extract_slides": true,
+        "extract_text_boxes": true,
+        "extract_titles": true,
+        "extract_lists": true,
+        "extract_tables": true,
+        "extract_images": true,
+        "extract_notes": true,
+        "extract_shapes": true,
+        "extract_charts_metadata": true,
+        "synthetic_coordinates": true
+      }
+    },
+
+    "legacy": {
+      "rtf": {
+        "enabled": true,
+        "preferred_fallback": "pandoc",
+        "fallback_chain": ["pandoc_to_html", "libreoffice_to_docx", "libreoffice_to_pdf", "tika_text"]
+      },
+      "doc": {
+        "enabled": true,
+        "preferred_fallback": "libreoffice",
+        "fallback_chain": ["libreoffice_to_docx", "libreoffice_to_pdf", "tika_text"]
+      }
+    },
+
+    "converters": {
+      "enabled": true,
+      "sandbox": {
+        "enabled": true,
+        "timeout_sec": 120,
+        "max_output_size_mb": 512,
+        "max_stderr_size_mb": 10,
+        "use_isolated_temp_dir": true,
+        "disable_network_best_effort": true,
+        "cleanup_temp_dir": true
+      },
+      "libreoffice": {
+        "enabled": true,
+        "binary": "soffice",
+        "headless": true,
+        "convert_to_docx": true,
+        "convert_to_pdf": true,
+        "convert_to_html": true
+      },
+      "pandoc": {
+        "enabled": true,
+        "binary": "pandoc",
+        "convert_to_html": true,
+        "convert_to_markdown": true
+      },
+      "tika": {
+        "enabled": false,
+        "mode": "server_or_jar",
+        "endpoint": null,
+        "jar_path": null
+      }
+    },
+
+    "office_rendering": {
+      "enabled": false,
+      "backend": "libreoffice_to_pdf",
+      "render_to_pdf": true,
+      "render_to_images": false,
+      "default_dpi": 144
+    },
+
+    "output": {
+      "write_model_json": true,
+      "write_markdown": true,
+      "write_plain_text": true,
+      "write_debug_artifacts": false,
+      "pretty_json": true
+    }
+  }
+}

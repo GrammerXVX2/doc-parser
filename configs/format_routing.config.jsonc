@@ -1,0 +1,203 @@
+{
+  "routing": {
+    "pdf": {
+      "extensions": ["pdf"],
+      "mime_types": ["application/pdf"],
+      "primary_stages": [
+        "pdf_classification",
+        "pdf_native_extraction",
+        "pdf_render_if_needed",
+        "layout_analysis",
+        "selective_ocr",
+        "native_ocr_merge"
+      ],
+      "fallback_stages": [
+        "full_page_render",
+        "full_page_ocr"
+      ],
+      "tools": {
+        "native_extraction": ["lopdf", "pdfium", "pdfbox_optional"],
+        "rendering": ["pdfium", "poppler_optional"],
+        "ocr": ["onnxruntime_cuda"]
+      }
+    },
+
+    "docx": {
+      "extensions": ["docx"],
+      "mime_types": [
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ],
+      "primary_stages": [
+        "ooxml_parse",
+        "docx_native_extraction",
+        "media_extraction",
+        "optional_render",
+        "selective_ocr_for_images"
+      ],
+      "fallback_stages": [
+        "libreoffice_to_pdf",
+        "pdf_pipeline"
+      ],
+      "tools": {
+        "native_extraction": ["zip", "quick_xml"],
+        "conversion": ["libreoffice"],
+        "ocr": ["onnxruntime_cuda"]
+      }
+    },
+
+    "doc": {
+      "extensions": ["doc"],
+      "mime_types": ["application/msword"],
+      "primary_stages": [
+        "libreoffice_to_docx_or_pdf",
+        "converted_document_pipeline"
+      ],
+      "fallback_stages": [
+        "tika_text_extraction",
+        "full_render_ocr"
+      ],
+      "tools": {
+        "conversion": ["libreoffice"],
+        "fallback": ["apache_tika"]
+      }
+    },
+
+    "html": {
+      "extensions": ["html", "htm"],
+      "mime_types": ["text/html"],
+      "primary_stages": [
+        "html_parse",
+        "dom_extraction",
+        "asset_resolution",
+        "optional_browser_render"
+      ],
+      "fallback_stages": [
+        "plain_text_extraction"
+      ],
+      "tools": {
+        "native_extraction": ["html5ever", "scraper"],
+        "sanitization": ["ammonia"],
+        "rendering": ["chromium_optional"]
+      }
+    },
+
+    "md": {
+      "extensions": ["md", "markdown"],
+      "mime_types": ["text/markdown", "text/plain"],
+      "primary_stages": [
+        "markdown_ast_parse",
+        "markdown_native_extraction",
+        "optional_html_render"
+      ],
+      "fallback_stages": [
+        "pandoc_to_html",
+        "html_pipeline"
+      ],
+      "tools": {
+        "native_extraction": ["pulldown_cmark", "comrak"],
+        "conversion": ["pandoc_optional"]
+      }
+    },
+
+    "rtf": {
+      "extensions": ["rtf"],
+      "mime_types": ["application/rtf", "text/rtf"],
+      "primary_stages": [
+        "libreoffice_or_pandoc_to_html",
+        "html_pipeline"
+      ],
+      "fallback_stages": [
+        "tika_text_extraction"
+      ],
+      "tools": {
+        "conversion": ["libreoffice", "pandoc"],
+        "fallback": ["apache_tika"]
+      }
+    },
+
+    "image": {
+      "extensions": ["jpg", "jpeg", "png", "tif", "tiff", "webp", "bmp"],
+      "mime_types": [
+        "image/jpeg",
+        "image/png",
+        "image/tiff",
+        "image/webp",
+        "image/bmp"
+      ],
+      "primary_stages": [
+        "image_decode",
+        "exif_orientation",
+        "image_preprocessing",
+        "layout_analysis",
+        "ocr",
+        "table_formula_detection"
+      ],
+      "fallback_stages": [
+        "basic_ocr"
+      ],
+      "tools": {
+        "image": ["image", "fast_image_resize"],
+        "ocr": ["onnxruntime_cuda"]
+      }
+    },
+
+    "pptx": {
+      "extensions": ["pptx"],
+      "mime_types": [
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+      ],
+      "primary_stages": [
+        "ooxml_pptx_parse",
+        "slide_extraction",
+        "media_extraction",
+        "slide_render_optional",
+        "selective_ocr_for_images"
+      ],
+      "fallback_stages": [
+        "libreoffice_to_pdf",
+        "pdf_pipeline"
+      ],
+      "tools": {
+        "native_extraction": ["zip", "quick_xml"],
+        "conversion": ["libreoffice"]
+      }
+    },
+
+    "txt": {
+      "extensions": ["txt", "log"],
+      "mime_types": ["text/plain"],
+      "primary_stages": [
+        "encoding_detection",
+        "text_decode",
+        "structure_detection",
+        "synthetic_pagination"
+      ],
+      "fallback_stages": [],
+      "tools": {
+        "text": ["encoding_rs", "chardetng_optional"]
+      }
+    },
+
+    "xlsx": {
+      "extensions": ["xlsx"],
+      "mime_types": [
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      ],
+      "primary_stages": [
+        "xlsx_parse",
+        "sheet_extraction",
+        "table_range_detection",
+        "media_extraction",
+        "selective_ocr_for_images"
+      ],
+      "fallback_stages": [
+        "libreoffice_to_pdf_or_html",
+        "converted_document_pipeline"
+      ],
+      "tools": {
+        "native_extraction": ["calamine", "zip", "quick_xml"],
+        "conversion": ["libreoffice"]
+      }
+    }
+  }
+}

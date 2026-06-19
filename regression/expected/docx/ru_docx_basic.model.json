@@ -1,0 +1,1140 @@
+{
+  "schema_version": "1.0.0",
+  "document_id": "input_docx",
+  "job_id": null,
+  "source": {
+    "uri": "regression/corpus/docx/ru_docx_basic/input.docx",
+    "filename": "input.docx",
+    "extension": "docx",
+    "mime_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "size_bytes": 3957,
+    "hashes": {
+      "sha256": "a0e7c104c6db27d47c999a1e9ca2cdfe67a8607baac2d4a441a18687d745be66"
+    },
+    "uploaded_at": null,
+    "processed_at": "2026-06-19T08:59:19.666431801Z",
+    "container": {
+      "type": null,
+      "parent_uri": null,
+      "entry_path": null
+    }
+  },
+  "document_profile": {
+    "format": "docx",
+    "content_mode": "digital",
+    "languages": [
+      "ru"
+    ],
+    "language_info": {
+      "primary": "ru",
+      "detected": [
+        {
+          "language": "ru",
+          "confidence": 0.71631205,
+          "source": "text_detection"
+        },
+        {
+          "language": "en",
+          "confidence": 0.35,
+          "source": "text_detection"
+        }
+      ],
+      "hints": [
+        "ru",
+        "en"
+      ],
+      "is_mixed": true,
+      "confidence": 0.71631205
+    },
+    "has_native_text": true,
+    "has_images": true,
+    "has_tables": true,
+    "has_formulas": true,
+    "has_ocr_required_regions": false,
+    "has_handwriting": false,
+    "has_multicolumn_layout": false,
+    "document_type_guess": "word_document",
+    "confidence": 0.9
+  },
+  "stats": {
+    "page_count": 1,
+    "element_count": 11,
+    "text_element_count": 3,
+    "ocr_element_count": 0,
+    "image_count": 1,
+    "table_count": 1,
+    "formula_count": 1,
+    "list_count": 1,
+    "total_chars": 185,
+    "total_words": 32
+  },
+  "coordinate_system": {
+    "origin": "top_left",
+    "unit": "synthetic",
+    "dpi": null,
+    "normalized_to_page": true
+  },
+  "assets": [
+    {
+      "asset_id": "asset_8cb68d8bafd34922b2d8fcc7ed2d9ada",
+      "type": "embedded_image",
+      "path": "assets/images/asset_8cb68d8bafd34922b2d8fcc7ed2d9ada_image1.png",
+      "mime_type": "image/png",
+      "page_number": null,
+      "width": null,
+      "height": null,
+      "dpi": null,
+      "sha256": "23aa7bd9d8550e5dfd69fe1da92326c16c328da12d1ca281a18118beb0b8d284",
+      "provenance": {
+        "source": "docx_embedded_image",
+        "source_ref": {
+          "kind": "relationship",
+          "value": "rIdImage1"
+        },
+        "stage": "docx_media_extraction",
+        "tool": "docx_ooxml_parser"
+      }
+    }
+  ],
+  "pages": [
+    {
+      "page_number": 1,
+      "page_type": "document_page",
+      "width": 1000.0,
+      "height": 1400.0,
+      "dpi": null,
+      "rotation_degrees": 0.0,
+      "page_image_asset_id": null,
+      "page_profile": {
+        "content_mode": "digital",
+        "has_native_text": true,
+        "has_ocr_required_regions": false,
+        "has_tables": true,
+        "has_images": true,
+        "has_formulas": true,
+        "has_handwriting": false,
+        "language": "ru",
+        "language_info": {
+          "primary": "ru",
+          "detected": [
+            {
+              "language": "ru",
+              "confidence": 0.71631205,
+              "source": "text_detection"
+            },
+            {
+              "language": "en",
+              "confidence": 0.35,
+              "source": "text_detection"
+            }
+          ],
+          "hints": [
+            "ru",
+            "en"
+          ],
+          "is_mixed": true,
+          "confidence": 0.71631205
+        },
+        "confidence": 0.92
+      },
+      "elements": [
+        {
+          "element_id": "p1_e1",
+          "type": "heading",
+          "tag": "h1",
+          "role": "section_title",
+          "reading_order": 1,
+          "global_order": 1,
+          "bbox": [
+            0.0,
+            0.0,
+            1000.0,
+            16.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "# Заголовок 1",
+            "normalized_text": "Заголовок 1",
+            "raw": "Заголовок 1",
+            "text": "Заголовок 1"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "xml",
+              "value": "word/document.xml"
+            },
+            "stage": "docx_paragraph_extraction",
+            "tool": "docx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e2",
+          "type": "heading",
+          "tag": "h1",
+          "role": "section_title",
+          "reading_order": 2,
+          "global_order": 2,
+          "bbox": [
+            0.0,
+            16.0,
+            1000.0,
+            32.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "# Это русский абзац с API и HTTP.",
+            "normalized_text": "Это русский абзац с API и HTTP.",
+            "raw": "Это русский абзац с API и HTTP.",
+            "text": "Это русский абзац с API и HTTP."
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "xml",
+              "value": "word/document.xml"
+            },
+            "stage": "docx_paragraph_extraction",
+            "tool": "docx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e3",
+          "type": "list",
+          "tag": "w:numPr",
+          "role": "ordered_list",
+          "reading_order": 3,
+          "global_order": 3,
+          "bbox": [
+            0.0,
+            32.0,
+            1000.0,
+            64.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "items": [
+              "Первый пункт",
+              "Второй пункт"
+            ],
+            "markdown": "1. Первый пункт\n2. Второй пункт",
+            "normalized_text": "Первый пункт Второй пункт",
+            "raw": "Первый пункт\nВторой пункт",
+            "text": "Первый пункт\nВторой пункт"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "xml",
+              "value": "word/document.xml"
+            },
+            "stage": "docx_list_extraction",
+            "tool": "docx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          },
+          "list_type": "ol"
+        },
+        {
+          "element_id": "p1_e4",
+          "type": "table",
+          "tag": "w:tbl",
+          "role": "data_table",
+          "reading_order": 4,
+          "global_order": 4,
+          "bbox": [
+            0.0,
+            64.0,
+            1000.0,
+            112.0
+          ],
+          "polygon": null,
+          "content": {
+            "csv": "Метрика,Значение\nВыручка,100000",
+            "html": "<table><tbody><tr><th>Метрика</th><th>Значение</th></tr><tr><td>Выручка</td><td>100000</td></tr></tbody></table>",
+            "markdown": "| Метрика | Значение |\n|---|---|\n| Выручка | 100000 |",
+            "normalized_text": "Метрика | Значение | Выручка | 100000",
+            "raw": "<w:tbl>\n      <w:tr><w:tc><w:p><w:r><w:t>Метрика</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t>Значение</w:t></w:r></w:p></w:tc></w:tr>\n      <w:tr><w:tc><w:p><w:r><w:t>Выручка</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t>100000</w:t></w:r></w:p></w:tc></w:tr>\n    </w:tbl>",
+            "text": "Метрика | Значение | Выручка | 100000"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "xml",
+              "value": "word/document.xml"
+            },
+            "stage": "docx_table_extraction",
+            "tool": "docx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "rows": 2,
+          "columns": 2,
+          "linearized_chunks": [
+            {
+              "markdown": "",
+              "row_end": 1,
+              "row_start": 1,
+              "text": "Строка 2: Метрика = Выручка; Значение = 100000.",
+              "title": "Таблица"
+            }
+          ],
+          "cells": [
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 0,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": true,
+              "markdown": null,
+              "row": 0,
+              "rowspan": 1,
+              "text": "Метрика"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 1,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": true,
+              "markdown": null,
+              "row": 0,
+              "rowspan": 1,
+              "text": "Значение"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 0,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 1,
+              "rowspan": 1,
+              "text": "Выручка"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 1,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 1,
+              "rowspan": 1,
+              "text": "100000"
+            }
+          ],
+          "table_structure": {
+            "extraction_method": "docx_native",
+            "has_header": true,
+            "has_merged_cells": false,
+            "orientation": "horizontal"
+          },
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e5",
+          "type": "image",
+          "tag": "w:drawing",
+          "role": "embedded_image",
+          "reading_order": 5,
+          "global_order": 5,
+          "bbox": [
+            0.0,
+            112.0,
+            1000.0,
+            208.0
+          ],
+          "polygon": null,
+          "content": {
+            "alt": null,
+            "description": {
+              "method": null,
+              "short": null
+            },
+            "html": null,
+            "markdown": "![DOCX image]",
+            "normalized_text": "",
+            "raw": null,
+            "text": ""
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "stage": "docx_media_extraction",
+            "tool": "docx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          },
+          "asset_id": "asset_8cb68d8bafd34922b2d8fcc7ed2d9ada"
+        },
+        {
+          "element_id": "p1_e6",
+          "type": "formula",
+          "tag": "m:oMath",
+          "role": "equation",
+          "reading_order": 6,
+          "global_order": 6,
+          "bbox": [
+            0.0,
+            208.0,
+            1000.0,
+            240.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "latex": null,
+            "markdown": "x+1",
+            "normalized_text": "x+1",
+            "raw": "<m:oMath><m:r><m:t>x+1</m:t></m:r></m:oMath>",
+            "text": "x+1"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "xml",
+              "value": "word/document.xml"
+            },
+            "stage": "docx_formula_extraction",
+            "tool": "docx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          },
+          "format": "omml"
+        },
+        {
+          "element_id": "p1_e7",
+          "type": "footnote",
+          "tag": "w:p",
+          "role": "footnote",
+          "reading_order": 7,
+          "global_order": 7,
+          "bbox": [
+            0.0,
+            240.0,
+            1000.0,
+            256.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "Сноска DOCX",
+            "normalized_text": "Сноска DOCX",
+            "raw": "word/footnotes.xml",
+            "text": "Сноска DOCX"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "xml",
+              "value": "word/footnotes.xml"
+            },
+            "stage": "docx_extract_notes_comments",
+            "tool": "docx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e8",
+          "type": "footnote",
+          "tag": "w:p",
+          "role": "endnote",
+          "reading_order": 8,
+          "global_order": 8,
+          "bbox": [
+            0.0,
+            256.0,
+            1000.0,
+            272.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "Концевая сноска DOCX",
+            "normalized_text": "Концевая сноска DOCX",
+            "raw": "word/endnotes.xml",
+            "text": "Концевая сноска DOCX"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "xml",
+              "value": "word/endnotes.xml"
+            },
+            "stage": "docx_extract_notes_comments",
+            "tool": "docx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e9",
+          "type": "footnote",
+          "tag": "w:comment",
+          "role": "comment",
+          "reading_order": 9,
+          "global_order": 9,
+          "bbox": [
+            0.0,
+            272.0,
+            1000.0,
+            288.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "Комментарий DOCX",
+            "normalized_text": "Комментарий DOCX",
+            "raw": "word/comments.xml",
+            "text": "Комментарий DOCX"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "xml",
+              "value": "word/comments.xml"
+            },
+            "stage": "docx_extract_notes_comments",
+            "tool": "docx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e10",
+          "type": "header",
+          "tag": "w:p",
+          "role": "header",
+          "reading_order": 10,
+          "global_order": 10,
+          "bbox": [
+            0.0,
+            288.0,
+            1000.0,
+            304.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "Header text",
+            "normalized_text": "Header text",
+            "raw": "word/header1.xml",
+            "text": "Header text"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "xml",
+              "value": "word/header1.xml"
+            },
+            "stage": "docx_extract_notes_comments",
+            "tool": "docx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e11",
+          "type": "footer",
+          "tag": "w:p",
+          "role": "footer",
+          "reading_order": 11,
+          "global_order": 11,
+          "bbox": [
+            0.0,
+            304.0,
+            1000.0,
+            320.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "Footer text",
+            "normalized_text": "Footer text",
+            "raw": "word/footer1.xml",
+            "text": "Footer text"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "xml",
+              "value": "word/footer1.xml"
+            },
+            "stage": "docx_extract_notes_comments",
+            "tool": "docx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        }
+      ],
+      "text": "Заголовок 1\nЭто русский абзац с API и HTTP.\nПервый пункт\nВторой пункт\nМетрика | Значение | Выручка | 100000\nx+1\nСноска DOCX\nКонцевая сноска DOCX\nКомментарий DOCX\nHeader text\nFooter text",
+      "markdown": "# Заголовок 1\n\n# Это русский абзац с API и HTTP.\n\n1. Первый пункт\n2. Второй пункт\n\n| Метрика | Значение |\n|---|---|\n| Выручка | 100000 |\n\n![DOCX image]\n\nx+1\n\nСноска DOCX\n\nКонцевая сноска DOCX\n\nКомментарий DOCX\n\nHeader text\n\nFooter text",
+      "html": "",
+      "warnings": []
+    }
+  ],
+  "chunks": [
+    {
+      "chunk_id": "chunk_1",
+      "type": "section",
+      "title": "Заголовок 1",
+      "section_path": [
+        "Заголовок 1"
+      ],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "p1_e1"
+      ],
+      "text": "Заголовок 1",
+      "markdown": "# Заголовок 1",
+      "token_estimate": 6,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": false,
+        "language": "ru"
+      }
+    },
+    {
+      "chunk_id": "chunk_2",
+      "type": "section",
+      "title": "Это русский абзац с API и HTTP.",
+      "section_path": [
+        "Это русский абзац с API и HTTP."
+      ],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "p1_e2",
+        "p1_e3"
+      ],
+      "text": "Это русский абзац с API и HTTP.\nПервый пункт\nВторой пункт",
+      "markdown": "# Это русский абзац с API и HTTP.\n\n1. Первый пункт\n2. Второй пункт",
+      "token_estimate": 25,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": false,
+        "language": "ru"
+      }
+    },
+    {
+      "chunk_id": "chunk_table_3",
+      "type": "table",
+      "title": "Таблица",
+      "section_path": [],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "p1_e4"
+      ],
+      "text": "Строка 2: Метрика = Выручка; Значение = 100000.",
+      "markdown": "| Метрика | Значение |\n|---|---|\n| Выручка | 100000 |",
+      "token_estimate": 19,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": true,
+        "language": "ru"
+      }
+    },
+    {
+      "chunk_id": "chunk_4",
+      "type": "section",
+      "title": "Это русский абзац с API и HTTP.",
+      "section_path": [
+        "Это русский абзац с API и HTTP."
+      ],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "p1_e5",
+        "p1_e6",
+        "p1_e7",
+        "p1_e8",
+        "p1_e9",
+        "p1_e10",
+        "p1_e11"
+      ],
+      "text": "x+1\nСноска DOCX\nКонцевая сноска DOCX\nКомментарий DOCX\nHeader text\nFooter text",
+      "markdown": "![DOCX image]\n\nx+1\n\nСноска DOCX\n\nКонцевая сноска DOCX\n\nКомментарий DOCX\n\nHeader text\n\nFooter text",
+      "token_estimate": 28,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": true,
+        "contains_ocr": false,
+        "contains_table": false,
+        "language": "ru"
+      }
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "processing": {
+    "pipeline_version": "1.0.0",
+    "status": "ok",
+    "stages": [
+      {
+        "name": "docx_open_package",
+        "status": "ok",
+        "tool": "docx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "docx_parse_relationships",
+        "status": "ok",
+        "tool": "docx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "docx_parse_styles",
+        "status": "ok",
+        "tool": "docx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "docx_parse_numbering",
+        "status": "ok",
+        "tool": "docx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "docx_extract_paragraphs",
+        "status": "ok",
+        "tool": "docx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "docx_extract_lists",
+        "status": "ok",
+        "tool": "docx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "docx_extract_tables",
+        "status": "ok",
+        "tool": "docx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "docx_extract_media",
+        "status": "ok",
+        "tool": "docx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "docx_extract_notes_comments",
+        "status": "ok",
+        "tool": "docx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "docx_chunking",
+        "status": "ok",
+        "tool": "semantic_chunker",
+        "duration_ms": 0,
+        "metadata": {}
+      },
+      {
+        "name": "chunking",
+        "status": "ok",
+        "tool": "semantic_chunker",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "output_write",
+        "status": "ok",
+        "tool": "output_writer",
+        "duration_ms": 1,
+        "metadata": {}
+      }
+    ],
+    "total_duration_ms": 10,
+    "runtime": {
+      "hostname": null,
+      "cpu": null,
+      "gpu": null,
+      "cuda_version": null,
+      "onnxruntime_version": null
+    }
+  },
+  "reading_order_strategy": "natural",
+  "routing_rules_count": 10,
+  "pipeline_mode": "bulk",
+  "locale": "ru"
+}

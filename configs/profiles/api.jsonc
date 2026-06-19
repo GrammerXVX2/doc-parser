@@ -1,0 +1,36 @@
+{
+  "service": {
+    "enabled": true,
+    "host": "127.0.0.1",
+    "port": 8080,
+    "locale": "ru",
+    "default_language": "ru",
+    "max_concurrent_jobs": 2,
+    "job_queue_capacity": 100
+  },
+  "storage": {
+    "backend": "local",
+    "input_dir": "data/input",
+    "output_dir": "data/output",
+    "metadata_backend": "memory",
+    "object_store_backend": "local"
+  },
+  "security": {
+    "max_file_size_mb": 512,
+    "max_pages_per_document": 5000,
+    "max_extracted_assets_mb": 2048,
+    "max_image_width_px": 10000,
+    "max_image_height_px": 10000,
+    "max_archive_entries": 10000,
+    "max_archive_total_uncompressed_mb": 2048,
+    "max_processing_time_sec": 900,
+    "allow_external_converters": true,
+    "allow_network_for_converters": false
+  },
+  "observability": {
+    "tracing_enabled": true,
+    "metrics_enabled": true,
+    "prometheus_enabled": true,
+    "prometheus_path": "/metrics"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "case_id": "ru_rtf_basic",
+  "format": "legacy",
+  "language": "ru",
+  "description": "Базовый RTF-документ (legacy fallback).",
+  "expected": {
+    "min_pages": 1,
+    "min_elements": 1,
+    "must_have_chunks": true
+  },
+  "tolerances": {
+    "ignore_fields": ["document_id", "job_id", "processed_at", "duration_ms", "sha256", "asset_id", "path"]
+  }
+}

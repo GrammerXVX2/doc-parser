@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  document-parser:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+      - ./configs:/app/configs
+    environment:
+      RUST_LOG: info

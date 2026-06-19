@@ -1,0 +1,598 @@
+{
+  "schema_version": "1.0.0",
+  "document_id": "input_xlsx",
+  "job_id": null,
+  "source": {
+    "uri": "regression/corpus/xlsx/ru_xlsx_basic/input.xlsx",
+    "filename": "input.xlsx",
+    "extension": "xlsx",
+    "mime_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "size_bytes": 1958,
+    "hashes": {
+      "sha256": "077d71615a5bf2b82e3a6d4b69c12fb3762837ed0623fc2538f0b54cb5ca8f5f"
+    },
+    "uploaded_at": null,
+    "processed_at": "2026-06-19T08:59:21.358529403Z",
+    "container": {
+      "type": null,
+      "parent_uri": null,
+      "entry_path": null
+    }
+  },
+  "document_profile": {
+    "format": "xlsx",
+    "content_mode": "spreadsheet",
+    "languages": [
+      "ru"
+    ],
+    "language_info": {
+      "primary": "ru",
+      "detected": [
+        {
+          "language": "ru",
+          "confidence": 1.0,
+          "source": "text_detection"
+        }
+      ],
+      "hints": [
+        "ru",
+        "en"
+      ],
+      "is_mixed": false,
+      "confidence": 0.9
+    },
+    "has_native_text": true,
+    "has_images": true,
+    "has_tables": true,
+    "has_formulas": false,
+    "has_ocr_required_regions": false,
+    "has_handwriting": false,
+    "has_multicolumn_layout": false,
+    "document_type_guess": "spreadsheet",
+    "confidence": 0.9
+  },
+  "stats": {
+    "page_count": 1,
+    "element_count": 2,
+    "text_element_count": 0,
+    "ocr_element_count": 0,
+    "image_count": 1,
+    "table_count": 1,
+    "formula_count": 0,
+    "list_count": 0,
+    "total_chars": 103,
+    "total_words": 23
+  },
+  "coordinate_system": {
+    "origin": "top_left",
+    "unit": "synthetic",
+    "dpi": null,
+    "normalized_to_page": true
+  },
+  "assets": [
+    {
+      "asset_id": "asset_18a096d61e1f47d2b08aec2b73b125ea",
+      "type": "embedded_image",
+      "path": "assets/images/asset_18a096d61e1f47d2b08aec2b73b125ea_image1.png",
+      "mime_type": "image/png",
+      "page_number": null,
+      "width": null,
+      "height": null,
+      "dpi": null,
+      "sha256": "23aa7bd9d8550e5dfd69fe1da92326c16c328da12d1ca281a18118beb0b8d284",
+      "provenance": {
+        "source": "xlsx_embedded_media",
+        "source_ref": {
+          "kind": "zip_entry",
+          "value": "xl/media/image1.png"
+        },
+        "stage": "xlsx_extract_media",
+        "tool": "xlsx_ooxml_parser"
+      }
+    }
+  ],
+  "pages": [
+    {
+      "page_number": 1,
+      "page_type": "sheet",
+      "width": null,
+      "height": null,
+      "dpi": null,
+      "rotation_degrees": 0.0,
+      "page_image_asset_id": null,
+      "page_profile": {
+        "content_mode": "sheet",
+        "has_native_text": true,
+        "has_ocr_required_regions": false,
+        "has_tables": true,
+        "has_images": true,
+        "has_formulas": false,
+        "has_handwriting": false,
+        "language": "ru",
+        "language_info": {
+          "primary": "ru",
+          "detected": [
+            {
+              "language": "ru",
+              "confidence": 1.0,
+              "source": "text_detection"
+            }
+          ],
+          "hints": [
+            "ru",
+            "en"
+          ],
+          "is_mixed": false,
+          "confidence": 0.9
+        },
+        "confidence": 0.95
+      },
+      "elements": [
+        {
+          "element_id": "sheet1_table1_1",
+          "type": "table",
+          "tag": "sheet_range",
+          "role": "spreadsheet_range",
+          "reading_order": 1,
+          "global_order": 1,
+          "bbox": [
+            0.0,
+            0.0,
+            1000.0,
+            54.0
+          ],
+          "polygon": null,
+          "content": {
+            "csv": "Метрика,Доход,Расход,Прибыль\nЯнварь,100000,40000,60000\nФевраль,120000,50000,70000",
+            "html": "<table><tbody><tr><th>Метрика</th><th>Доход</th><th>Расход</th><th>Прибыль</th></tr><tr><td>Январь</td><td>100000</td><td>40000</td><td>60000</td></tr><tr><td>Февраль</td><td>120000</td><td>50000</td><td>70000</td></tr></tbody></table>",
+            "markdown": "| Метрика | Доход | Расход | Прибыль |\n|---|---|---|---|\n| Январь | 100000 | 40000 | 60000 |\n| Февраль | 120000 | 50000 | 70000 |",
+            "normalized_text": "Метрика | Доход | Расход | Прибыль | Январь | 100000 | 40000 | 60000 | Февраль | 120000 | 50000 | 70000",
+            "raw": "Лист1!A1:D3",
+            "text": "Метрика | Доход | Расход | Прибыль | Январь | 100000 | 40000 | 60000 | Февраль | 120000 | 50000 | 70000"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "sheet_range",
+              "value": "Лист1!A1:D3"
+            },
+            "stage": "xlsx_extract_tables",
+            "tool": "xlsx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "columns": 4,
+          "rows": 3,
+          "linearized_chunks": [
+            {
+              "markdown": "",
+              "row_end": 2,
+              "row_start": 1,
+              "text": "Строка 2: Метрика = Январь; Доход = 100000; Расход = 40000; Прибыль = 60000.\nСтрока 3: Метрика = Февраль; Доход = 120000; Расход = 50000; Прибыль = 70000.",
+              "title": "Таблица"
+            }
+          ],
+          "table_structure": {
+            "extraction_method": "xlsx_used_range",
+            "has_header": true,
+            "has_merged_cells": false,
+            "orientation": "horizontal"
+          },
+          "language_info": {
+            "confidence": 0.8999999761581421,
+            "detected": [
+              {
+                "confidence": 1.0,
+                "language": "ru",
+                "source": "text_detection"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          },
+          "cells": [
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 0,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": true,
+              "markdown": null,
+              "row": 0,
+              "rowspan": 1,
+              "text": "Метрика"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 1,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": true,
+              "markdown": null,
+              "row": 0,
+              "rowspan": 1,
+              "text": "Доход"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 2,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": true,
+              "markdown": null,
+              "row": 0,
+              "rowspan": 1,
+              "text": "Расход"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 3,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": true,
+              "markdown": null,
+              "row": 0,
+              "rowspan": 1,
+              "text": "Прибыль"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 0,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 1,
+              "rowspan": 1,
+              "text": "Январь"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 1,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 1,
+              "rowspan": 1,
+              "text": "100000"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 2,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 1,
+              "rowspan": 1,
+              "text": "40000"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 3,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 1,
+              "rowspan": 1,
+              "text": "60000"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 0,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 2,
+              "rowspan": 1,
+              "text": "Февраль"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 1,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 2,
+              "rowspan": 1,
+              "text": "120000"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 2,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 2,
+              "rowspan": 1,
+              "text": "50000"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 3,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 2,
+              "rowspan": 1,
+              "text": "70000"
+            }
+          ]
+        },
+        {
+          "element_id": "sheet1_image_1",
+          "type": "image",
+          "tag": "xdr:pic",
+          "role": "embedded_image",
+          "reading_order": 2,
+          "global_order": 2,
+          "bbox": [
+            0.0,
+            0.0,
+            200.0,
+            120.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "![XLSX image]",
+            "normalized_text": "",
+            "raw": "xl/media/image1.png",
+            "text": ""
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "zip_entry",
+              "value": "xl/media/image1.png"
+            },
+            "stage": "xlsx_extract_media",
+            "tool": "xlsx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [
+            {
+              "code": "XLSX_IMAGE_POSITION_APPROXIMATE",
+              "severity": "warning",
+              "scope": "element",
+              "page_number": 1,
+              "element_id": null,
+              "message": "Позиция изображения XLSX задана приближенно (synthetic bbox).",
+              "recoverable": true
+            }
+          ],
+          "asset_id": "asset_18a096d61e1f47d2b08aec2b73b125ea",
+          "language": "ru",
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        }
+      ],
+      "text": "Метрика | Доход | Расход | Прибыль | Январь | 100000 | 40000 | 60000 | Февраль | 120000 | 50000 | 70000",
+      "markdown": "# Лист1\n\n| Метрика | Доход | Расход | Прибыль |\n|---|---|---|---|\n| Январь | 100000 | 40000 | 60000 |\n| Февраль | 120000 | 50000 | 70000 |",
+      "html": "",
+      "warnings": [],
+      "sheet": {
+        "index": 0,
+        "name": "Лист1",
+        "used_range": "A1:D3"
+      }
+    }
+  ],
+  "chunks": [
+    {
+      "chunk_id": "chunk_table_1",
+      "type": "table",
+      "title": "Таблица",
+      "section_path": [],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "sheet1_table1_1"
+      ],
+      "text": "Строка 2: Метрика = Январь; Доход = 100000; Расход = 40000; Прибыль = 60000.\nСтрока 3: Метрика = Февраль; Доход = 120000; Расход = 50000; Прибыль = 70000.",
+      "markdown": "| Метрика | Доход | Расход | Прибыль |\n|---|---|---|---|\n| Январь | 100000 | 40000 | 60000 |\n| Февраль | 120000 | 50000 | 70000 |",
+      "token_estimate": 58,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": true,
+        "language": "ru"
+      }
+    },
+    {
+      "chunk_id": "chunk_2",
+      "type": "section",
+      "title": null,
+      "section_path": [],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "sheet1_image_1"
+      ],
+      "text": "",
+      "markdown": "![XLSX image]",
+      "token_estimate": 1,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": true,
+        "contains_ocr": false,
+        "contains_table": false,
+        "language": "ru"
+      }
+    }
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "code": "XLSX_COMMENTS_SKIPPED",
+      "severity": "warning",
+      "scope": "document",
+      "page_number": null,
+      "element_id": null,
+      "message": "Комментарии XLSX пока пропущены: текущий backend не извлекает comments.xml",
+      "recoverable": true
+    }
+  ],
+  "processing": {
+    "pipeline_version": "1.0.0",
+    "status": "ok",
+    "stages": [
+      {
+        "name": "xlsx_open_workbook",
+        "status": "ok",
+        "tool": "calamine",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "xlsx_extract_sheets",
+        "status": "ok",
+        "tool": "xlsx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "xlsx_detect_ranges",
+        "status": "ok",
+        "tool": "xlsx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "xlsx_extract_tables",
+        "status": "ok",
+        "tool": "xlsx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "xlsx_extract_formulas",
+        "status": "ok",
+        "tool": "xlsx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "xlsx_extract_media",
+        "status": "ok",
+        "tool": "xlsx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "xlsx_chunking",
+        "status": "ok",
+        "tool": "semantic_chunker",
+        "duration_ms": 0,
+        "metadata": {}
+      },
+      {
+        "name": "chunking",
+        "status": "ok",
+        "tool": "semantic_chunker",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "output_write",
+        "status": "ok",
+        "tool": "output_writer",
+        "duration_ms": 1,
+        "metadata": {}
+      }
+    ],
+    "total_duration_ms": 7,
+    "runtime": {
+      "hostname": null,
+      "cpu": null,
+      "gpu": null,
+      "cuda_version": null,
+      "onnxruntime_version": null
+    }
+  },
+  "routing_rules_count": 10,
+  "reading_order_strategy": "natural",
+  "locale": "ru",
+  "pipeline_mode": "bulk"
+}

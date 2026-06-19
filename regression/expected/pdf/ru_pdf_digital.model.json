@@ -1,0 +1,568 @@
+{
+  "schema_version": "1.0.0",
+  "document_id": "input_pdf",
+  "job_id": null,
+  "source": {
+    "uri": "regression/corpus/pdf/ru_pdf_digital/input.pdf",
+    "filename": "input.pdf",
+    "extension": "pdf",
+    "mime_type": "application/pdf",
+    "size_bytes": 605,
+    "hashes": {
+      "sha256": "f03a88b83e1e0683dcf14ded08dbc1837f4d1abdb6fcccb52a0e196375359f20"
+    },
+    "uploaded_at": null,
+    "processed_at": "2026-06-19T08:59:20.738854553Z",
+    "container": {
+      "type": null,
+      "parent_uri": null,
+      "entry_path": null
+    }
+  },
+  "document_profile": {
+    "format": "pdf",
+    "content_mode": "digital",
+    "languages": [
+      "ru"
+    ],
+    "language_info": {
+      "primary": "ru",
+      "detected": [
+        {
+          "language": "ru",
+          "confidence": 0.2,
+          "source": "config_default"
+        }
+      ],
+      "hints": [
+        "ru",
+        "en"
+      ],
+      "is_mixed": false,
+      "confidence": 0.2
+    },
+    "has_native_text": true,
+    "has_images": false,
+    "has_tables": false,
+    "has_formulas": false,
+    "has_ocr_required_regions": false,
+    "has_handwriting": false,
+    "has_multicolumn_layout": false,
+    "document_type_guess": null,
+    "confidence": 0.9
+  },
+  "stats": {
+    "page_count": 1,
+    "element_count": 1,
+    "text_element_count": 1,
+    "ocr_element_count": 0,
+    "image_count": 0,
+    "table_count": 0,
+    "formula_count": 0,
+    "list_count": 0,
+    "total_chars": 30,
+    "total_words": 5
+  },
+  "coordinate_system": {
+    "origin": "top_left",
+    "unit": "synthetic",
+    "dpi": null,
+    "normalized_to_page": true
+  },
+  "assets": [],
+  "pages": [
+    {
+      "page_number": 1,
+      "page_type": "document_page",
+      "width": null,
+      "height": null,
+      "dpi": null,
+      "rotation_degrees": 0.0,
+      "page_image_asset_id": null,
+      "page_profile": {
+        "content_mode": "digital",
+        "has_native_text": true,
+        "has_ocr_required_regions": false,
+        "has_tables": false,
+        "has_images": false,
+        "has_formulas": false,
+        "has_handwriting": false,
+        "language": "ru",
+        "language_info": {
+          "primary": "ru",
+          "detected": [
+            {
+              "language": "ru",
+              "confidence": 0.2,
+              "source": "config_default"
+            }
+          ],
+          "hints": [
+            "ru",
+            "en"
+          ],
+          "is_mixed": false,
+          "confidence": 0.2
+        },
+        "confidence": 0.9
+      },
+      "elements": [
+        {
+          "element_id": "pdf_block_1",
+          "type": "paragraph",
+          "tag": "p",
+          "role": null,
+          "reading_order": 1,
+          "global_order": 1,
+          "bbox": [
+            40.0,
+            40.0,
+            250.0,
+            54.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "Stage2 Digital PDF Native Text",
+            "normalized_text": "Stage2 Digital PDF Native Text",
+            "raw": "Stage2 Digital PDF Native Text",
+            "text": "Stage2 Digital PDF Native Text"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "stage": "pdf_text_reconstruction",
+            "tool": "pdf_block_reconstructor"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.85,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_table_placeholder_table_mock_1",
+          "type": "table",
+          "tag": "table_placeholder",
+          "role": "scanned_table_placeholder",
+          "reading_order": 2,
+          "global_order": 2,
+          "bbox": [
+            120.0,
+            392.0,
+            880.0,
+            1008.00006
+          ],
+          "polygon": null,
+          "content": {
+            "csv": "",
+            "html": "",
+            "markdown": "",
+            "normalized_text": "[Таблица обнаружена на скане, структура еще не распознана]",
+            "raw": null,
+            "text": "[Таблица обнаружена на скане, структура еще не распознана]"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "inferred",
+            "source_ref": {
+              "kind": "region",
+              "value": "table_mock_1"
+            },
+            "stage": "scanned_table_detection",
+            "tool": "mock_scanned_table_detector"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.8199999928474426,
+            "structure": 0.0,
+            "text": 0.99
+          },
+          "warnings": [
+            {
+              "code": "TABLE_PLACEHOLDER_CREATED",
+              "severity": "warning",
+              "scope": "element",
+              "page_number": 1,
+              "element_id": null,
+              "message": "На странице обнаружена таблица, но структура таблицы пока не распознана.",
+              "recoverable": true
+            }
+          ],
+          "detector_source": "mock_scanned_table_detector",
+          "columns": 0,
+          "detected_region_id": "table_mock_1",
+          "rows": 0,
+          "language_info": {
+            "confidence": 0.8999999761581421,
+            "detected": [
+              {
+                "confidence": 1.0,
+                "language": "ru",
+                "source": "text_detection"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          },
+          "table_structure": {
+            "extraction_method": "detected_placeholder"
+          }
+        },
+        {
+          "element_id": "p1_formula_placeholder_formula_mock_1",
+          "type": "formula",
+          "tag": "formula_placeholder",
+          "role": "formula_placeholder",
+          "reading_order": 3,
+          "global_order": 3,
+          "bbox": [
+            200.0,
+            1008.00006,
+            820.0,
+            1176.0
+          ],
+          "polygon": null,
+          "content": {
+            "latex": null,
+            "markdown": "[Формула обнаружена, распознавание еще не выполнено]",
+            "mathml": null,
+            "normalized_text": "[Формула обнаружена, распознавание еще не выполнено]",
+            "raw": null,
+            "text": "[Формула обнаружена, распознавание еще не выполнено]"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "inferred",
+            "source_ref": {
+              "kind": "region",
+              "value": "formula_mock_1"
+            },
+            "stage": "formula_detection",
+            "tool": "mock_formula_detector"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.8500000238418579,
+            "text": 0.99
+          },
+          "warnings": [
+            {
+              "code": "FORMULA_PLACEHOLDER_CREATED",
+              "severity": "warning",
+              "scope": "element",
+              "page_number": 1,
+              "element_id": null,
+              "message": "Формула обнаружена, но распознавание пока не выполнено.",
+              "recoverable": true
+            }
+          ],
+          "format": "unknown",
+          "detected_region_id": "formula_mock_1",
+          "latex_source": null,
+          "language_info": {
+            "confidence": 0.8999999761581421,
+            "detected": [
+              {
+                "confidence": 1.0,
+                "language": "ru",
+                "source": "text_detection"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        }
+      ],
+      "text": "Stage2 Digital PDF Native Text",
+      "markdown": "Stage2 Digital PDF Native Text",
+      "html": "",
+      "warnings": [],
+      "pdf_page_classification": {
+        "confidence": 0.8999999761581421,
+        "content_mode": "digital",
+        "has_images": false,
+        "has_native_text": true,
+        "image_area_ratio": null,
+        "native_text_chars": 26,
+        "page_number": 1,
+        "requires_ocr": false
+      }
+    }
+  ],
+  "chunks": [
+    {
+      "chunk_id": "chunk_1",
+      "type": "section",
+      "title": null,
+      "section_path": [],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "pdf_block_1"
+      ],
+      "text": "Stage2 Digital PDF Native Text",
+      "markdown": "Stage2 Digital PDF Native Text",
+      "token_estimate": 8,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": false,
+        "language": "ru"
+      }
+    },
+    {
+      "chunk_id": "chunk_table_2",
+      "type": "table",
+      "title": "Таблица",
+      "section_path": [],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "p1_table_placeholder_table_mock_1"
+      ],
+      "text": "[Таблица обнаружена на скане, структура еще не распознана]",
+      "markdown": "",
+      "token_estimate": 27,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": true,
+        "language": "ru"
+      }
+    },
+    {
+      "chunk_id": "chunk_3",
+      "type": "section",
+      "title": null,
+      "section_path": [],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "p1_formula_placeholder_formula_mock_1"
+      ],
+      "text": "[Формула обнаружена, распознавание еще не выполнено]",
+      "markdown": "[Формула обнаружена, распознавание еще не выполнено]",
+      "token_estimate": 25,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": false,
+        "language": "ru"
+      }
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "processing": {
+    "pipeline_version": "1.0.0",
+    "status": "ok",
+    "stages": [
+      {
+        "name": "pdf_classification",
+        "status": "ok",
+        "tool": "pdf_page_classifier",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "pdf_native_extraction",
+        "status": "ok",
+        "tool": "pdf_native_extractor",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "pdf_render",
+        "status": "skipped",
+        "tool": "pdf_renderer",
+        "duration_ms": 0,
+        "metadata": {
+          "reason": "digital_page_render_disabled"
+        }
+      },
+      {
+        "name": "ocr_recognition",
+        "status": "skipped",
+        "tool": "mock_ocr",
+        "duration_ms": 0,
+        "metadata": {
+          "reason": "ocr_not_required"
+        }
+      },
+      {
+        "name": "native_ocr_merge",
+        "status": "ok",
+        "tool": "native_ocr_merger",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "pdf_text_reconstruction",
+        "status": "ok",
+        "tool": "pdf_block_reconstructor",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "layout_detection",
+        "status": "ok",
+        "tool": "heuristic_layout_detector",
+        "duration_ms": 1,
+        "metadata": {
+          "regions": 1
+        }
+      },
+      {
+        "name": "scanned_table_detection",
+        "status": "ok",
+        "tool": "mock_scanned_table_detector",
+        "duration_ms": 1,
+        "metadata": {
+          "regions": 1
+        }
+      },
+      {
+        "name": "table_structure_recognition",
+        "status": "ok",
+        "tool": "mock_table_structure_recognizer",
+        "duration_ms": 1,
+        "metadata": {
+          "placeholder": true,
+          "regions": 1
+        }
+      },
+      {
+        "name": "formula_detection",
+        "status": "ok",
+        "tool": "mock_formula_detector",
+        "duration_ms": 1,
+        "metadata": {
+          "regions": 1
+        }
+      },
+      {
+        "name": "formula_recognition",
+        "status": "ok",
+        "tool": "mock_formula_recognizer",
+        "duration_ms": 1,
+        "metadata": {
+          "placeholder": true,
+          "regions": 1
+        }
+      },
+      {
+        "name": "header_footer_detection",
+        "status": "ok",
+        "tool": "header_footer_detector",
+        "duration_ms": 1,
+        "metadata": {
+          "footers": 0,
+          "headers": 0
+        }
+      },
+      {
+        "name": "layout_aware_reading_order",
+        "status": "ok",
+        "tool": "layout_reading_order",
+        "duration_ms": 1,
+        "metadata": {
+          "regions": 1
+        }
+      },
+      {
+        "name": "chunking",
+        "status": "ok",
+        "tool": "semantic_chunker",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "output_write",
+        "status": "ok",
+        "tool": "output_writer",
+        "duration_ms": 1,
+        "metadata": {}
+      }
+    ],
+    "total_duration_ms": 5,
+    "runtime": {
+      "hostname": null,
+      "cpu": null,
+      "gpu": null,
+      "cuda_version": null,
+      "onnxruntime_version": null
+    }
+  },
+  "validation_issues": [
+    {
+      "code": "PAGE_LANGUAGE_EMPTY",
+      "message": "page_profile.language should be set",
+      "severity": "warning"
+    }
+  ],
+  "locale": "ru",
+  "routing_rules_count": 10,
+  "pipeline_mode": "bulk"
+}

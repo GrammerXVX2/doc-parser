@@ -1,0 +1,357 @@
+{
+  "schema_version": "1.0.0",
+  "document_id": "finance_report_2026",
+  "job_id": "job_xlsx_001",
+
+  "source": {
+    "uri": "s3://documents/reports/finance_report_2026.xlsx",
+    "filename": "finance_report_2026.xlsx",
+    "extension": "xlsx",
+    "mime_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "size_bytes": 2097152,
+    "hashes": {
+      "sha256": "example_sha256"
+    },
+    "uploaded_at": "2026-06-18T10:00:00Z",
+    "processed_at": "2026-06-18T10:00:03Z",
+    "container": {
+      "type": null,
+      "parent_uri": null,
+      "entry_path": null
+    }
+  },
+
+  "document_profile": {
+    "format": "xlsx",
+    "content_mode": "spreadsheet",
+    "languages": ["en"],
+    "language_info": {
+      "primary": "en",
+      "detected": [{"language": "en", "confidence": 0.95, "source": "text_detection"}],
+      "hints": ["ru", "en"],
+      "is_mixed": false,
+      "confidence": 0.95
+    },
+    "has_native_text": true,
+    "has_images": true,
+    "has_tables": true,
+    "has_formulas": true,
+    "has_ocr_required_regions": true,
+    "has_handwriting": false,
+    "has_multicolumn_layout": false,
+    "document_type_guess": "financial_report",
+    "confidence": 0.95
+  },
+
+  "stats": {
+    "page_count": 2,
+    "element_count": 8,
+    "text_element_count": 2,
+    "ocr_element_count": 1,
+    "image_count": 1,
+    "table_count": 2,
+    "formula_count": 3,
+    "list_count": 0,
+    "total_chars": 8000,
+    "total_words": 1200
+  },
+
+  "coordinate_system": {
+    "origin": "top_left",
+    "unit": "synthetic",
+    "dpi": null,
+    "normalized_to_page": true
+  },
+
+  "assets": [
+    {
+      "asset_id": "asset_xlsx_img_1",
+      "type": "embedded_image",
+      "path": "assets/images/sheet1_image1.png",
+      "mime_type": "image/png",
+      "page_number": 1,
+      "width": 900,
+      "height": 400,
+      "dpi": null,
+      "sha256": "image_sha",
+      "provenance": {
+        "source": "xlsx_embedded_media",
+        "tool": "xlsx_media_extractor",
+        "stage": "asset_extraction"
+      }
+    },
+    {
+      "asset_id": "asset_table_sheet1_a1_d10_html",
+      "type": "table_html",
+      "path": "assets/tables/sheet1_a1_d10.html",
+      "mime_type": "text/html",
+      "page_number": 1,
+      "width": null,
+      "height": null,
+      "dpi": null,
+      "sha256": "table_sha",
+      "provenance": {
+        "source": "xlsx_sheet_range",
+        "tool": "calamine",
+        "stage": "table_extraction"
+      }
+    }
+  ],
+
+  "pages": [
+    {
+      "page_number": 1,
+      "page_type": "sheet",
+      "width": null,
+      "height": null,
+      "dpi": null,
+      "rotation_degrees": 0,
+      "page_image_asset_id": null,
+
+      "sheet": {
+        "name": "Revenue",
+        "index": 0,
+        "used_range": "A1:H200"
+      },
+
+      "page_profile": {
+        "content_mode": "sheet",
+        "has_native_text": true,
+        "has_ocr_required_regions": true,
+        "has_tables": true,
+        "has_images": true,
+        "has_formulas": true,
+        "has_handwriting": false,
+        "language": "en",
+        "language_info": {
+          "primary": "en",
+          "detected": [{"language": "en", "confidence": 0.95, "source": "text_detection"}],
+          "hints": ["ru", "en"],
+          "is_mixed": false,
+          "confidence": 0.95
+        },
+        "confidence": 0.95
+      },
+
+      "elements": [
+        {
+          "element_id": "sheet1_title",
+          "type": "heading",
+          "tag": null,
+          "role": "sheet_title",
+          "reading_order": 1,
+          "global_order": 1,
+          "bbox": [0, 0, 8, 1],
+          "polygon": null,
+          "content": {
+            "text": "Revenue Report 2026",
+            "html": "<h1>Revenue Report 2026</h1>",
+            "markdown": "# Revenue Report 2026",
+            "normalized_text": "Revenue Report 2026",
+            "raw": "A1:D1"
+          },
+          "style": {
+            "font_size": 16,
+            "font_family": null,
+            "bold": true,
+            "italic": false,
+            "monospace": false,
+            "color": null,
+            "background_color": null,
+            "alignment": "center"
+          },
+          "provenance": {
+            "method": "native",
+            "tool": "calamine",
+            "stage": "xlsx_sheet_extraction",
+            "source_ref": {
+              "kind": "xlsx_range",
+              "value": "Revenue!A1:D1"
+            }
+          },
+          "confidence": {
+            "overall": 0.99,
+            "text": 1,
+            "layout": 0.9,
+            "language": 0.9
+          },
+          "warnings": []
+        },
+        {
+          "element_id": "sheet1_table_a3_d10",
+          "type": "table",
+          "role": "data_table",
+          "reading_order": 2,
+          "global_order": 2,
+          "bbox": [0, 2, 4, 10],
+          "asset_id": "asset_table_sheet1_a1_d10_html",
+          "rows": 8,
+          "columns": 4,
+          "content": {
+            "html": "<table><tr><th>Month</th><th>Revenue</th><th>Cost</th><th>Profit</th></tr></table>",
+            "markdown": "| Month | Revenue | Cost | Profit |\n|---|---:|---:|---:|\n| Jan | 100000 | 40000 | 60000 |",
+            "csv": "Month,Revenue,Cost,Profit\nJan,100000,40000,60000",
+            "text": "Month Revenue Cost Profit\nJan 100000 40000 60000"
+          },
+          "cells": [
+            {
+              "row": 0,
+              "column": 0,
+              "rowspan": 1,
+              "colspan": 1,
+              "bbox": [0, 2, 1, 3],
+              "text": "Month",
+              "html": "<th>Month</th>",
+              "formula": null,
+              "is_header": true,
+              "confidence": 1
+            }
+          ],
+          "description": "Revenue, cost and profit by month.",
+          "linearized_chunks": [
+            {
+              "chunk_id": "sheet1_table_a3_d10_chunk_1",
+              "text": "Revenue table. Row Jan: Revenue=100000, Cost=40000, Profit=60000.",
+              "row_start": 0,
+              "row_end": 8
+            }
+          ],
+          "table_structure": {
+            "has_header": true,
+            "has_merged_cells": false,
+            "orientation": "normal",
+            "extraction_method": "native"
+          },
+          "provenance": {
+            "method": "native",
+            "tool": "calamine",
+            "stage": "xlsx_table_extraction",
+            "source_ref": {
+              "kind": "xlsx_range",
+              "value": "Revenue!A3:D10"
+            }
+          },
+          "confidence": {
+            "overall": 0.99,
+            "structure": 0.99,
+            "text": 1
+          }
+        },
+        {
+          "element_id": "sheet1_img_1",
+          "type": "image",
+          "role": "embedded_chart_or_screenshot",
+          "reading_order": 3,
+          "global_order": 3,
+          "bbox": [5, 3, 8, 12],
+          "asset_id": "asset_xlsx_img_1",
+          "alt": null,
+          "caption": null,
+          "description": {
+            "short": "Embedded image in spreadsheet.",
+            "long": null,
+            "method": null,
+            "confidence": null
+          },
+          "image_analysis": {
+            "contains_text": true,
+            "ocr_required": true,
+            "detected_objects": [],
+            "width": 900,
+            "height": 400
+          },
+          "provenance": {
+            "method": "native",
+            "tool": "xlsx_media_extractor",
+            "stage": "asset_extraction",
+            "source_ref": {
+              "kind": "xlsx_drawing",
+              "value": "Revenue drawing 1"
+            }
+          },
+          "confidence": {
+            "overall": 0.95
+          }
+        }
+      ],
+
+      "text": "Revenue Report 2026\nMonth Revenue Cost Profit\nJan 100000 40000 60000",
+      "markdown": "# Revenue Report 2026\n\n| Month | Revenue | Cost | Profit |\n|---|---:|---:|---:|\n| Jan | 100000 | 40000 | 60000 |",
+      "html": "<h1>Revenue Report 2026</h1><table></table>",
+      "warnings": []
+    }
+  ],
+
+  "chunks": [
+    {
+      "chunk_id": "chunk_revenue_sheet",
+      "type": "table",
+      "title": "Revenue Report 2026",
+      "section_path": ["Revenue"],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": ["sheet1_title", "sheet1_table_a3_d10"],
+      "text": "Revenue Report 2026\nMonth Revenue Cost Profit\nJan 100000 40000 60000",
+      "markdown": "# Revenue Report 2026\n\n| Month | Revenue | Cost | Profit |\n|---|---:|---:|---:|\n| Jan | 100000 | 40000 | 60000 |",
+      "token_estimate": 200,
+      "metadata": {
+        "language": "en",
+        "contains_table": true,
+        "contains_image": false,
+        "contains_formula": true,
+        "contains_code": false,
+        "contains_ocr": false
+      }
+    }
+  ],
+
+  "errors": [],
+  "warnings": [],
+
+  "processing": {
+    "pipeline_version": "synapbase-doc-parser-1.0.0",
+    "status": "ok",
+    "stages": [
+      {
+        "name": "detect_file_type",
+        "status": "ok",
+        "tool": "infer",
+        "duration_ms": 2,
+        "metadata": {}
+      },
+      {
+        "name": "xlsx_parse",
+        "status": "ok",
+        "tool": "calamine",
+        "duration_ms": 80,
+        "metadata": {
+          "sheet_count": 2
+        }
+      },
+      {
+        "name": "xlsx_media_extraction",
+        "status": "ok",
+        "tool": "zip/quick_xml",
+        "duration_ms": 30,
+        "metadata": {
+          "images": 1
+        }
+      },
+      {
+        "name": "chunking",
+        "status": "ok",
+        "tool": "semantic_chunker",
+        "duration_ms": 10,
+        "metadata": {}
+      }
+    ],
+    "total_duration_ms": 122,
+    "runtime": {
+      "hostname": "worker-1",
+      "cpu": "AMD EPYC",
+      "gpu": null,
+      "cuda_version": null,
+      "onnxruntime_version": null
+    }
+  }
+}

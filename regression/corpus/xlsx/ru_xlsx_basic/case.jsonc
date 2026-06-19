@@ -1,0 +1,16 @@
+{
+  "case_id": "ru_xlsx_basic",
+  "format": "xlsx",
+  "language": "ru",
+  "description": "Базовый XLSX-документ.",
+  "expected": {
+    "min_pages": 1,
+    "min_elements": 1,
+    "must_have_tables": true,
+    "must_have_chunks": true,
+    "max_errors": 0
+  },
+  "tolerances": {
+    "ignore_fields": ["document_id", "job_id", "processed_at", "duration_ms", "sha256", "asset_id", "path"]
+  }
+}

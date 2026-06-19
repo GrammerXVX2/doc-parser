@@ -1,0 +1,16 @@
+{
+  "case_id": "ru_image_scan",
+  "format": "images",
+  "language": "ru",
+  "description": "Скан-изображение с OCR.",
+  "expected": {
+    "min_pages": 1,
+    "min_elements": 1,
+    "must_have_element_types": ["image"],
+    "must_have_chunks": false,
+    "must_have_ocr": true
+  },
+  "tolerances": {
+    "ignore_fields": ["document_id", "job_id", "processed_at", "duration_ms", "sha256", "asset_id", "path"]
+  }
+}

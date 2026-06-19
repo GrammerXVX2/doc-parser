@@ -1,0 +1,227 @@
+{
+  "$schema_note": "Element contracts for document model.",
+
+  "common_element_fields": {
+    "element_id": "string",
+    "type": "text|text_ocr|heading|paragraph|blockquote|list|code|image|page_image|table|formula|caption|header|footer|footnote|watermark|chart|shape|unknown",
+    "tag": "string|null",
+    "role": "string|null",
+    "reading_order": "integer|null",
+    "global_order": "integer|null",
+    "bbox": ["number", "number", "number", "number"],
+    "polygon": [
+      ["number", "number"]
+    ],
+    "style": {},
+    "provenance": {},
+    "confidence": {},
+    "warnings": []
+  },
+
+  "content_object": {
+    "text": "string|null",
+    "html": "string|null",
+    "markdown": "string|null",
+    "normalized_text": "string|null",
+    "raw": "string|null"
+  },
+
+  "text_element": {
+    "element_id": "p1_e1",
+    "type": "text",
+    "tag": "p",
+    "role": "paragraph",
+    "reading_order": 1,
+    "bbox": [40, 72, 555, 90],
+    "content": {
+      "text": "Plain text",
+      "html": "<p>Plain text</p>",
+      "markdown": "Plain text",
+      "normalized_text": "plain text",
+      "raw": "<p class=\"x\">Plain text</p>"
+    },
+    "style": {
+      "font_size": 12,
+      "font_family": null,
+      "bold": false,
+      "italic": false,
+      "monospace": false,
+      "color": null,
+      "background_color": null,
+      "alignment": "left"
+    },
+    "provenance": {
+      "method": "native",
+      "tool": "html_dom_parser",
+      "stage": "html_extraction",
+      "source_ref": {
+        "kind": "css_selector",
+        "value": "body > p:nth-of-type(1)"
+      }
+    },
+    "confidence": {
+      "overall": 0.99,
+      "text": 1.0,
+      "layout": 0.98,
+      "language": 0.95
+    }
+  },
+
+  "ocr_text_element": {
+    "element_id": "p1_ocr_1",
+    "type": "text_ocr",
+    "tag": "p",
+    "role": "paragraph",
+    "reading_order": 1,
+    "bbox": [100, 200, 800, 240],
+    "polygon": [[100, 200], [800, 200], [800, 240], [100, 240]],
+    "content": {
+      "text": "Recognized text",
+      "html": "<p>Recognized text</p>",
+      "markdown": "Recognized text",
+      "normalized_text": "recognized text",
+      "raw": null
+    },
+    "ocr": {
+      "engine": "paddleocr",
+      "det_model": "text_detection.onnx",
+      "rec_model": "text_recognition.onnx",
+      "language_hint": ["en"],
+      "det_confidence": 0.96,
+      "rec_confidence": 0.93,
+      "orientation_degrees": 0,
+      "crop_asset_id": "asset_crop_1"
+    },
+    "provenance": {
+      "method": "ocr",
+      "tool": "onnxruntime_cuda",
+      "stage": "ocr_recognition"
+    },
+    "confidence": {
+      "overall": 0.93,
+      "text": 0.93,
+      "layout": 0.96
+    },
+    "deduplication": {
+      "status": "kept|duplicate_removed|duplicate_of_native|not_checked",
+      "duplicate_of": null,
+      "iou": null,
+      "text_similarity": null
+    }
+  },
+
+  "list_element": {
+    "element_id": "p1_list_1",
+    "type": "list",
+    "list_type": "ul",
+    "role": "bullet_list",
+    "reading_order": 5,
+    "bbox": [40, 100, 555, 180],
+    "content": {
+      "text": "Item 1\nItem 2",
+      "html": "<ul><li>Item 1</li><li>Item 2</li></ul>",
+      "markdown": "- Item 1\n- Item 2",
+      "normalized_text": "Item 1\nItem 2",
+      "raw": "<ul><li>Item 1</li><li>Item 2</li></ul>"
+    },
+    "items": [
+      {
+        "item_id": "p1_list_1_i1",
+        "level": 1,
+        "marker": "bullet",
+        "text": "Item 1",
+        "bbox": [55, 100, 555, 120]
+      }
+    ]
+  },
+
+  "image_element": {
+    "element_id": "p1_img_1",
+    "type": "image",
+    "role": "figure",
+    "reading_order": 8,
+    "bbox": [80, 200, 500, 500],
+    "asset_id": "asset_img_1",
+    "alt": "Image alt text",
+    "caption": "Image caption",
+    "description": {
+      "short": "Short image description.",
+      "long": "Detailed image description.",
+      "method": "native_alt|vlm_captioning|manual|null",
+      "confidence": 0.88
+    },
+    "image_analysis": {
+      "contains_text": true,
+      "ocr_required": true,
+      "detected_objects": [],
+      "width": 1024,
+      "height": 768
+    }
+  },
+
+  "table_element": {
+    "element_id": "p1_table_1",
+    "type": "table",
+    "role": "data_table",
+    "reading_order": 10,
+    "bbox": [50, 120, 550, 420],
+    "asset_id": "asset_table_1_html",
+    "rows": 5,
+    "columns": 3,
+    "content": {
+      "html": "<table></table>",
+      "markdown": "| A | B |\n|---|---|\n| 1 | 2 |",
+      "csv": "A,B\n1,2",
+      "text": "A B\n1 2"
+    },
+    "cells": [
+      {
+        "row": 0,
+        "column": 0,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [50, 120, 100, 150],
+        "text": "A",
+        "html": "<th>A</th>",
+        "is_header": true,
+        "confidence": 0.99
+      }
+    ],
+    "description": "Table description.",
+    "linearized_chunks": [
+      {
+        "chunk_id": "table_1_chunk_1",
+        "text": "Row 1: A=1, B=2",
+        "row_start": 0,
+        "row_end": 1
+      }
+    ],
+    "table_structure": {
+      "has_header": true,
+      "has_merged_cells": false,
+      "orientation": "normal",
+      "extraction_method": "native|table_recognition|ocr"
+    }
+  },
+
+  "formula_element": {
+    "element_id": "p1_formula_1",
+    "type": "formula",
+    "role": "display_math",
+    "reading_order": 12,
+    "bbox": [100, 300, 500, 350],
+    "content": {
+      "text": "x = (-b ± sqrt(b^2 - 4ac)) / 2a",
+      "latex": "\\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}",
+      "mathml": null
+    },
+    "latex_source": "\\[\\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}\\]",
+    "format": "latex",
+    "description": "Quadratic formula.",
+    "formula_analysis": {
+      "is_inline": false,
+      "recognition_method": "native_latex|formula_ocr",
+      "confidence": 0.94
+    }
+  }
+}

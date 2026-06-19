@@ -1,0 +1,1539 @@
+{
+  "schema_version": "1.0.0",
+  "document_id": "input_pptx",
+  "job_id": null,
+  "source": {
+    "uri": "regression/corpus/pptx/ru_pptx_basic/input.pptx",
+    "filename": "input.pptx",
+    "extension": "pptx",
+    "mime_type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "size_bytes": 3944,
+    "hashes": {
+      "sha256": "cd485c41e7b507526e99af7ce3b4d6e8c8e346faa7a4cb51fc304ece79f013b1"
+    },
+    "uploaded_at": null,
+    "processed_at": "2026-06-19T08:59:20.942062632Z",
+    "container": {
+      "type": null,
+      "parent_uri": null,
+      "entry_path": null
+    }
+  },
+  "document_profile": {
+    "format": "pptx",
+    "content_mode": "presentation",
+    "languages": [
+      "ru"
+    ],
+    "language_info": {
+      "primary": "ru",
+      "detected": [
+        {
+          "language": "ru",
+          "confidence": 0.7173913,
+          "source": "text_detection"
+        },
+        {
+          "language": "en",
+          "confidence": 0.35,
+          "source": "text_detection"
+        }
+      ],
+      "hints": [
+        "ru",
+        "en"
+      ],
+      "is_mixed": true,
+      "confidence": 0.7173913
+    },
+    "has_native_text": true,
+    "has_images": true,
+    "has_tables": true,
+    "has_formulas": false,
+    "has_ocr_required_regions": false,
+    "has_handwriting": false,
+    "has_multicolumn_layout": false,
+    "document_type_guess": null,
+    "confidence": 0.9
+  },
+  "stats": {
+    "page_count": 3,
+    "element_count": 13,
+    "text_element_count": 9,
+    "ocr_element_count": 0,
+    "image_count": 2,
+    "table_count": 2,
+    "formula_count": 0,
+    "list_count": 2,
+    "total_chars": 540,
+    "total_words": 55
+  },
+  "coordinate_system": {
+    "origin": "top_left",
+    "unit": "synthetic",
+    "dpi": null,
+    "normalized_to_page": true
+  },
+  "assets": [
+    {
+      "asset_id": "asset_c97beb916f974ad3a55e2c3105be6b92",
+      "type": "embedded_image",
+      "path": "assets/images/asset_c97beb916f974ad3a55e2c3105be6b92_pptx_slide_1_image1.png",
+      "mime_type": "image/png",
+      "page_number": null,
+      "width": null,
+      "height": null,
+      "dpi": null,
+      "sha256": "d014edc031656dd8a5cb7740ed900d658ba3108ff6fcb977fc3ff4f758c10f0b",
+      "provenance": {
+        "source": "pptx_embedded_image",
+        "source_ref": {
+          "kind": "relationship",
+          "value": "rIdImg1"
+        },
+        "stage": "pptx_extract_media",
+        "tool": "pptx_ooxml_parser"
+      }
+    },
+    {
+      "asset_id": "asset_a2ffe4ccb1a64b14a5828300abe93480",
+      "type": "embedded_image",
+      "path": "assets/images/asset_a2ffe4ccb1a64b14a5828300abe93480_pptx_slide_2_image1.png",
+      "mime_type": "image/png",
+      "page_number": null,
+      "width": null,
+      "height": null,
+      "dpi": null,
+      "sha256": "d014edc031656dd8a5cb7740ed900d658ba3108ff6fcb977fc3ff4f758c10f0b",
+      "provenance": {
+        "source": "pptx_embedded_image",
+        "source_ref": {
+          "kind": "relationship",
+          "value": "rIdImg1"
+        },
+        "stage": "pptx_extract_media",
+        "tool": "pptx_ooxml_parser"
+      }
+    }
+  ],
+  "pages": [
+    {
+      "page_number": 1,
+      "page_type": "slide",
+      "width": null,
+      "height": null,
+      "dpi": null,
+      "rotation_degrees": 0.0,
+      "page_image_asset_id": null,
+      "page_profile": {
+        "content_mode": "slide",
+        "has_native_text": true,
+        "has_ocr_required_regions": false,
+        "has_tables": true,
+        "has_images": true,
+        "has_formulas": false,
+        "has_handwriting": false,
+        "language": "ru",
+        "language_info": {
+          "primary": "ru",
+          "detected": [
+            {
+              "language": "ru",
+              "confidence": 0.70454544,
+              "source": "text_detection"
+            },
+            {
+              "language": "en",
+              "confidence": 0.35,
+              "source": "text_detection"
+            }
+          ],
+          "hints": [
+            "ru",
+            "en"
+          ],
+          "is_mixed": true,
+          "confidence": 0.70454544
+        },
+        "confidence": 0.93
+      },
+      "elements": [
+        {
+          "element_id": "p1_e1",
+          "type": "heading",
+          "tag": "a:t",
+          "role": "slide_title",
+          "reading_order": 1,
+          "global_order": 1,
+          "bbox": [
+            0.0,
+            16.0,
+            1000.0,
+            44.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "# Отчет по продажам",
+            "normalized_text": "Отчет по продажам",
+            "raw": "Отчет по продажам",
+            "text": "Отчет по продажам"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "slide",
+              "value": "ppt/slides/slide1.xml"
+            },
+            "stage": "pptx_extract_text",
+            "tool": "pptx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e2",
+          "type": "list",
+          "tag": "a:p",
+          "role": "slide_list",
+          "reading_order": 2,
+          "global_order": 2,
+          "bbox": [
+            0.0,
+            48.0,
+            1000.0,
+            76.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "- Выручка выросла на 12%\n- Маржа стабильна",
+            "normalized_text": "Основные показатели за квартал Выручка выросла на 12% Маржа стабильна",
+            "raw": "Основные показатели за квартал\nВыручка выросла на 12%\nМаржа стабильна",
+            "text": "Выручка выросла на 12%\nМаржа стабильна"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "slide",
+              "value": "ppt/slides/slide1.xml"
+            },
+            "stage": "pptx_extract_text",
+            "tool": "pptx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "list_type": "ul",
+          "items": [
+            "Выручка выросла на 12%",
+            "Маржа стабильна"
+          ],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e3",
+          "type": "text",
+          "tag": "a:t",
+          "role": "slide_text",
+          "reading_order": 3,
+          "global_order": 3,
+          "bbox": [
+            0.0,
+            88.0,
+            1000.0,
+            116.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "Основные показатели за квартал Выручка выросла на 12% Маржа стабильна",
+            "normalized_text": "Основные показатели за квартал Выручка выросла на 12% Маржа стабильна",
+            "raw": "Основные показатели за квартал\nВыручка выросла на 12%\nМаржа стабильна",
+            "text": "Основные показатели за квартал Выручка выросла на 12% Маржа стабильна"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "slide",
+              "value": "ppt/slides/slide1.xml"
+            },
+            "stage": "pptx_extract_text",
+            "tool": "pptx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.8999999761581421,
+            "detected": [
+              {
+                "confidence": 1.0,
+                "language": "ru",
+                "source": "text_detection"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p1_e4",
+          "type": "image",
+          "tag": "a:blip",
+          "role": "embedded_image",
+          "reading_order": 4,
+          "global_order": 4,
+          "bbox": [
+            0.0,
+            120.0,
+            300.0,
+            300.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "![PPTX image]",
+            "normalized_text": "",
+            "raw": "ppt/media/image1.png",
+            "text": ""
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "zip_entry",
+              "value": "ppt/media/image1.png"
+            },
+            "stage": "pptx_extract_media",
+            "tool": "pptx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          },
+          "asset_id": "asset_c97beb916f974ad3a55e2c3105be6b92"
+        },
+        {
+          "element_id": "p1_e5",
+          "type": "table",
+          "tag": "a:tbl",
+          "role": "slide_table",
+          "reading_order": 5,
+          "global_order": 5,
+          "bbox": [
+            0.0,
+            176.0,
+            1000.0,
+            224.0
+          ],
+          "polygon": null,
+          "content": {
+            "csv": "<a:txBody><a:p><a:r><a:t>Метрика,<a:txBody><a:p><a:r><a:t>Значение\n<a:txBody><a:p><a:r><a:t>Выручка,<a:txBody><a:p><a:r><a:t>120",
+            "html": "<table><tbody><tr><th>&lt;a:txBody&gt;&lt;a:p&gt;&lt;a:r&gt;&lt;a:t&gt;Метрика</th><th>&lt;a:txBody&gt;&lt;a:p&gt;&lt;a:r&gt;&lt;a:t&gt;Значение</th></tr><tr><td>&lt;a:txBody&gt;&lt;a:p&gt;&lt;a:r&gt;&lt;a:t&gt;Выручка</td><td>&lt;a:txBody&gt;&lt;a:p&gt;&lt;a:r&gt;&lt;a:t&gt;120</td></tr></tbody></table>",
+            "markdown": "| <a:txBody><a:p><a:r><a:t>Метрика | <a:txBody><a:p><a:r><a:t>Значение |\n|---|---|\n| <a:txBody><a:p><a:r><a:t>Выручка | <a:txBody><a:p><a:r><a:t>120 |",
+            "normalized_text": "<a:txBody><a:p><a:r><a:t>Метрика | <a:txBody><a:p><a:r><a:t>Значение | <a:txBody><a:p><a:r><a:t>Выручка | <a:txBody><a:p><a:r><a:t>120",
+            "raw": "table_1",
+            "text": "<a:txBody><a:p><a:r><a:t>Метрика | <a:txBody><a:p><a:r><a:t>Значение | <a:txBody><a:p><a:r><a:t>Выручка | <a:txBody><a:p><a:r><a:t>120"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "slide",
+              "value": "ppt/slides/slide1.xml"
+            },
+            "stage": "pptx_extract_tables",
+            "tool": "pptx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "cells": [
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 0,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": true,
+              "markdown": null,
+              "row": 0,
+              "rowspan": 1,
+              "text": "<a:txBody><a:p><a:r><a:t>Метрика"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 1,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": true,
+              "markdown": null,
+              "row": 0,
+              "rowspan": 1,
+              "text": "<a:txBody><a:p><a:r><a:t>Значение"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 0,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 1,
+              "rowspan": 1,
+              "text": "<a:txBody><a:p><a:r><a:t>Выручка"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 1,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 1,
+              "rowspan": 1,
+              "text": "<a:txBody><a:p><a:r><a:t>120"
+            }
+          ],
+          "columns": 2,
+          "rows": 2,
+          "linearized_chunks": [
+            {
+              "markdown": "",
+              "row_end": 1,
+              "row_start": 1,
+              "text": "Строка 2: <a:txBody><a:p><a:r><a:t>Метрика = <a:txBody><a:p><a:r><a:t>Выручка; <a:txBody><a:p><a:r><a:t>Значение = <a:txBody><a:p><a:r><a:t>120.",
+              "title": "Таблица"
+            }
+          ],
+          "table_structure": {
+            "extraction_method": "pptx_native",
+            "has_header": true,
+            "has_merged_cells": false,
+            "orientation": "horizontal"
+          },
+          "language_info": {
+            "confidence": 0.7027027010917664,
+            "detected": [
+              {
+                "confidence": 0.3499999940395355,
+                "language": "ru",
+                "source": "text_detection"
+              },
+              {
+                "confidence": 0.7027027010917664,
+                "language": "en",
+                "source": "text_detection"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": true,
+            "primary": "en"
+          }
+        },
+        {
+          "element_id": "p1_e6",
+          "type": "text",
+          "tag": "p:notes",
+          "role": "speaker_notes",
+          "reading_order": 6,
+          "global_order": 6,
+          "bbox": [
+            0.0,
+            240.0,
+            1000.0,
+            340.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "Комментарий докладчика: подчеркнуть рост.",
+            "normalized_text": "Комментарий докладчика: подчеркнуть рост.",
+            "raw": "ppt/notesSlides/notesSlide1.xml",
+            "text": "Комментарий докладчика: подчеркнуть рост."
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "notes",
+              "value": "ppt/notesSlides/notesSlide1.xml"
+            },
+            "stage": "pptx_extract_notes",
+            "tool": "pptx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.8999999761581421,
+            "detected": [
+              {
+                "confidence": 1.0,
+                "language": "ru",
+                "source": "text_detection"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        }
+      ],
+      "text": "Отчет по продажам\nВыручка выросла на 12%\nМаржа стабильна\nОсновные показатели за квартал Выручка выросла на 12% Маржа стабильна\n<a:txBody><a:p><a:r><a:t>Метрика | <a:txBody><a:p><a:r><a:t>Значение | <a:txBody><a:p><a:r><a:t>Выручка | <a:txBody><a:p><a:r><a:t>120",
+      "markdown": "# Отчет по продажам\n\n- Выручка выросла на 12%\n- Маржа стабильна\n\nОсновные показатели за квартал Выручка выросла на 12% Маржа стабильна\n\n| <a:txBody><a:p><a:r><a:t>Метрика | <a:txBody><a:p><a:r><a:t>Значение |\n|---|---|\n| <a:txBody><a:p><a:r><a:t>Выручка | <a:txBody><a:p><a:r><a:t>120 |",
+      "html": "",
+      "warnings": [],
+      "slide_ref_id": "rId1"
+    },
+    {
+      "page_number": 2,
+      "page_type": "slide",
+      "width": null,
+      "height": null,
+      "dpi": null,
+      "rotation_degrees": 0.0,
+      "page_image_asset_id": null,
+      "page_profile": {
+        "content_mode": "slide",
+        "has_native_text": true,
+        "has_ocr_required_regions": false,
+        "has_tables": true,
+        "has_images": true,
+        "has_formulas": false,
+        "has_handwriting": false,
+        "language": "ru",
+        "language_info": {
+          "primary": "ru",
+          "detected": [
+            {
+              "language": "ru",
+              "confidence": 0.70454544,
+              "source": "text_detection"
+            },
+            {
+              "language": "en",
+              "confidence": 0.35,
+              "source": "text_detection"
+            }
+          ],
+          "hints": [
+            "ru",
+            "en"
+          ],
+          "is_mixed": true,
+          "confidence": 0.70454544
+        },
+        "confidence": 0.93
+      },
+      "elements": [
+        {
+          "element_id": "p2_e1",
+          "type": "heading",
+          "tag": "a:t",
+          "role": "slide_title",
+          "reading_order": 1,
+          "global_order": 7,
+          "bbox": [
+            0.0,
+            16.0,
+            1000.0,
+            44.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "# Отчет по продажам",
+            "normalized_text": "Отчет по продажам",
+            "raw": "Отчет по продажам",
+            "text": "Отчет по продажам"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "slide",
+              "value": "ppt/slides/slide1.xml"
+            },
+            "stage": "pptx_extract_text",
+            "tool": "pptx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p2_e2",
+          "type": "list",
+          "tag": "a:p",
+          "role": "slide_list",
+          "reading_order": 2,
+          "global_order": 8,
+          "bbox": [
+            0.0,
+            48.0,
+            1000.0,
+            76.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "- Выручка выросла на 12%\n- Маржа стабильна",
+            "normalized_text": "Основные показатели за квартал Выручка выросла на 12% Маржа стабильна",
+            "raw": "Основные показатели за квартал\nВыручка выросла на 12%\nМаржа стабильна",
+            "text": "Выручка выросла на 12%\nМаржа стабильна"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "slide",
+              "value": "ppt/slides/slide1.xml"
+            },
+            "stage": "pptx_extract_text",
+            "tool": "pptx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "items": [
+            "Выручка выросла на 12%",
+            "Маржа стабильна"
+          ],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          },
+          "list_type": "ul"
+        },
+        {
+          "element_id": "p2_e3",
+          "type": "text",
+          "tag": "a:t",
+          "role": "slide_text",
+          "reading_order": 3,
+          "global_order": 9,
+          "bbox": [
+            0.0,
+            88.0,
+            1000.0,
+            116.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "Основные показатели за квартал Выручка выросла на 12% Маржа стабильна",
+            "normalized_text": "Основные показатели за квартал Выручка выросла на 12% Маржа стабильна",
+            "raw": "Основные показатели за квартал\nВыручка выросла на 12%\nМаржа стабильна",
+            "text": "Основные показатели за квартал Выручка выросла на 12% Маржа стабильна"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "slide",
+              "value": "ppt/slides/slide1.xml"
+            },
+            "stage": "pptx_extract_text",
+            "tool": "pptx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.8999999761581421,
+            "detected": [
+              {
+                "confidence": 1.0,
+                "language": "ru",
+                "source": "text_detection"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p2_e4",
+          "type": "image",
+          "tag": "a:blip",
+          "role": "embedded_image",
+          "reading_order": 4,
+          "global_order": 10,
+          "bbox": [
+            0.0,
+            120.0,
+            300.0,
+            300.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "![PPTX image]",
+            "normalized_text": "",
+            "raw": "ppt/media/image1.png",
+            "text": ""
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "zip_entry",
+              "value": "ppt/media/image1.png"
+            },
+            "stage": "pptx_extract_media",
+            "tool": "pptx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "asset_id": "asset_a2ffe4ccb1a64b14a5828300abe93480",
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        },
+        {
+          "element_id": "p2_e5",
+          "type": "table",
+          "tag": "a:tbl",
+          "role": "slide_table",
+          "reading_order": 5,
+          "global_order": 11,
+          "bbox": [
+            0.0,
+            176.0,
+            1000.0,
+            224.0
+          ],
+          "polygon": null,
+          "content": {
+            "csv": "<a:txBody><a:p><a:r><a:t>Метрика,<a:txBody><a:p><a:r><a:t>Значение\n<a:txBody><a:p><a:r><a:t>Выручка,<a:txBody><a:p><a:r><a:t>120",
+            "html": "<table><tbody><tr><th>&lt;a:txBody&gt;&lt;a:p&gt;&lt;a:r&gt;&lt;a:t&gt;Метрика</th><th>&lt;a:txBody&gt;&lt;a:p&gt;&lt;a:r&gt;&lt;a:t&gt;Значение</th></tr><tr><td>&lt;a:txBody&gt;&lt;a:p&gt;&lt;a:r&gt;&lt;a:t&gt;Выручка</td><td>&lt;a:txBody&gt;&lt;a:p&gt;&lt;a:r&gt;&lt;a:t&gt;120</td></tr></tbody></table>",
+            "markdown": "| <a:txBody><a:p><a:r><a:t>Метрика | <a:txBody><a:p><a:r><a:t>Значение |\n|---|---|\n| <a:txBody><a:p><a:r><a:t>Выручка | <a:txBody><a:p><a:r><a:t>120 |",
+            "normalized_text": "<a:txBody><a:p><a:r><a:t>Метрика | <a:txBody><a:p><a:r><a:t>Значение | <a:txBody><a:p><a:r><a:t>Выручка | <a:txBody><a:p><a:r><a:t>120",
+            "raw": "table_1",
+            "text": "<a:txBody><a:p><a:r><a:t>Метрика | <a:txBody><a:p><a:r><a:t>Значение | <a:txBody><a:p><a:r><a:t>Выручка | <a:txBody><a:p><a:r><a:t>120"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "slide",
+              "value": "ppt/slides/slide1.xml"
+            },
+            "stage": "pptx_extract_tables",
+            "tool": "pptx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "rows": 2,
+          "linearized_chunks": [
+            {
+              "markdown": "",
+              "row_end": 1,
+              "row_start": 1,
+              "text": "Строка 2: <a:txBody><a:p><a:r><a:t>Метрика = <a:txBody><a:p><a:r><a:t>Выручка; <a:txBody><a:p><a:r><a:t>Значение = <a:txBody><a:p><a:r><a:t>120.",
+              "title": "Таблица"
+            }
+          ],
+          "table_structure": {
+            "extraction_method": "pptx_native",
+            "has_header": true,
+            "has_merged_cells": false,
+            "orientation": "horizontal"
+          },
+          "language_info": {
+            "confidence": 0.7027027010917664,
+            "detected": [
+              {
+                "confidence": 0.3499999940395355,
+                "language": "ru",
+                "source": "text_detection"
+              },
+              {
+                "confidence": 0.7027027010917664,
+                "language": "en",
+                "source": "text_detection"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": true,
+            "primary": "en"
+          },
+          "cells": [
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 0,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": true,
+              "markdown": null,
+              "row": 0,
+              "rowspan": 1,
+              "text": "<a:txBody><a:p><a:r><a:t>Метрика"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 1,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": true,
+              "markdown": null,
+              "row": 0,
+              "rowspan": 1,
+              "text": "<a:txBody><a:p><a:r><a:t>Значение"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 0,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 1,
+              "rowspan": 1,
+              "text": "<a:txBody><a:p><a:r><a:t>Выручка"
+            },
+            {
+              "bbox": null,
+              "colspan": 1,
+              "column": 1,
+              "confidence": null,
+              "formula": null,
+              "html": null,
+              "is_header": false,
+              "markdown": null,
+              "row": 1,
+              "rowspan": 1,
+              "text": "<a:txBody><a:p><a:r><a:t>120"
+            }
+          ],
+          "columns": 2
+        },
+        {
+          "element_id": "p2_e6",
+          "type": "text",
+          "tag": "p:notes",
+          "role": "speaker_notes",
+          "reading_order": 6,
+          "global_order": 12,
+          "bbox": [
+            0.0,
+            240.0,
+            1000.0,
+            340.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "Комментарий докладчика: подчеркнуть рост.",
+            "normalized_text": "Комментарий докладчика: подчеркнуть рост.",
+            "raw": "ppt/notesSlides/notesSlide1.xml",
+            "text": "Комментарий докладчика: подчеркнуть рост."
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "notes",
+              "value": "ppt/notesSlides/notesSlide1.xml"
+            },
+            "stage": "pptx_extract_notes",
+            "tool": "pptx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.8999999761581421,
+            "detected": [
+              {
+                "confidence": 1.0,
+                "language": "ru",
+                "source": "text_detection"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        }
+      ],
+      "text": "Отчет по продажам\nВыручка выросла на 12%\nМаржа стабильна\nОсновные показатели за квартал Выручка выросла на 12% Маржа стабильна\n<a:txBody><a:p><a:r><a:t>Метрика | <a:txBody><a:p><a:r><a:t>Значение | <a:txBody><a:p><a:r><a:t>Выручка | <a:txBody><a:p><a:r><a:t>120",
+      "markdown": "# Отчет по продажам\n\n- Выручка выросла на 12%\n- Маржа стабильна\n\nОсновные показатели за квартал Выручка выросла на 12% Маржа стабильна\n\n| <a:txBody><a:p><a:r><a:t>Метрика | <a:txBody><a:p><a:r><a:t>Значение |\n|---|---|\n| <a:txBody><a:p><a:r><a:t>Выручка | <a:txBody><a:p><a:r><a:t>120 |",
+      "html": "",
+      "warnings": [],
+      "slide_ref_id": "rId1"
+    },
+    {
+      "page_number": 3,
+      "page_type": "slide",
+      "width": null,
+      "height": null,
+      "dpi": null,
+      "rotation_degrees": 0.0,
+      "page_image_asset_id": null,
+      "page_profile": {
+        "content_mode": "slide",
+        "has_native_text": true,
+        "has_ocr_required_regions": false,
+        "has_tables": true,
+        "has_images": true,
+        "has_formulas": false,
+        "has_handwriting": false,
+        "language": "ru",
+        "language_info": {
+          "primary": "ru",
+          "detected": [
+            {
+              "language": "ru",
+              "confidence": 0.2,
+              "source": "config_default"
+            }
+          ],
+          "hints": [
+            "ru",
+            "en"
+          ],
+          "is_mixed": false,
+          "confidence": 0.2
+        },
+        "confidence": 0.93
+      },
+      "elements": [
+        {
+          "element_id": "p3_e1",
+          "type": "heading",
+          "tag": "a:t",
+          "role": "slide_title",
+          "reading_order": 1,
+          "global_order": 13,
+          "bbox": [
+            0.0,
+            16.0,
+            1000.0,
+            44.0
+          ],
+          "polygon": null,
+          "content": {
+            "html": null,
+            "markdown": "# Слайд с диаграммой",
+            "normalized_text": "Слайд с диаграммой",
+            "raw": "Слайд с диаграммой",
+            "text": "Слайд с диаграммой"
+          },
+          "style": {
+            "alignment": "left",
+            "background_color": null,
+            "bold": false,
+            "color": null,
+            "font_family": null,
+            "font_size": null,
+            "italic": false,
+            "monospace": false
+          },
+          "provenance": {
+            "method": "native",
+            "source_ref": {
+              "kind": "slide",
+              "value": "ppt/slides/slide2.xml"
+            },
+            "stage": "pptx_extract_text",
+            "tool": "pptx_ooxml_parser"
+          },
+          "confidence": {
+            "language": 0.9,
+            "layout": 0.9,
+            "overall": 0.99,
+            "text": 0.99
+          },
+          "warnings": [],
+          "language_info": {
+            "confidence": 0.20000000298023224,
+            "detected": [
+              {
+                "confidence": 0.20000000298023224,
+                "language": "ru",
+                "source": "config_default"
+              }
+            ],
+            "hints": [
+              "ru",
+              "en"
+            ],
+            "is_mixed": false,
+            "primary": "ru"
+          }
+        }
+      ],
+      "text": "Слайд с диаграммой",
+      "markdown": "# Слайд с диаграммой",
+      "html": "",
+      "warnings": [],
+      "slide_ref_id": "rId2"
+    }
+  ],
+  "chunks": [
+    {
+      "chunk_id": "chunk_1",
+      "type": "section",
+      "title": "Отчет по продажам",
+      "section_path": [
+        "Отчет по продажам"
+      ],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "p1_e1",
+        "p1_e2",
+        "p1_e3",
+        "p1_e4"
+      ],
+      "text": "Отчет по продажам\nВыручка выросла на 12%\nМаржа стабильна\nОсновные показатели за квартал Выручка выросла на 12% Маржа стабильна",
+      "markdown": "# Отчет по продажам\n\n- Выручка выросла на 12%\n- Маржа стабильна\n\nОсновные показатели за квартал Выручка выросла на 12% Маржа стабильна\n\n![PPTX image]",
+      "token_estimate": 58,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": true,
+        "contains_ocr": false,
+        "contains_table": false,
+        "language": "ru"
+      }
+    },
+    {
+      "chunk_id": "chunk_table_2",
+      "type": "table",
+      "title": "Таблица",
+      "section_path": [],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "p1_e5"
+      ],
+      "text": "Строка 2: <a:txBody><a:p><a:r><a:t>Метрика = <a:txBody><a:p><a:r><a:t>Выручка; <a:txBody><a:p><a:r><a:t>Значение = <a:txBody><a:p><a:r><a:t>120.",
+      "markdown": "| <a:txBody><a:p><a:r><a:t>Метрика | <a:txBody><a:p><a:r><a:t>Значение |\n|---|---|\n| <a:txBody><a:p><a:r><a:t>Выручка | <a:txBody><a:p><a:r><a:t>120 |",
+      "token_estimate": 44,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": true,
+        "language": "ru"
+      }
+    },
+    {
+      "chunk_id": "chunk_3",
+      "type": "section",
+      "title": "Отчет по продажам",
+      "section_path": [
+        "Отчет по продажам"
+      ],
+      "page_start": 1,
+      "page_end": 1,
+      "element_ids": [
+        "p1_e6"
+      ],
+      "text": "Комментарий докладчика: подчеркнуть рост.",
+      "markdown": "Комментарий докладчика: подчеркнуть рост.",
+      "token_estimate": 20,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": false,
+        "language": "ru"
+      }
+    },
+    {
+      "chunk_id": "chunk_4",
+      "type": "section",
+      "title": "Отчет по продажам",
+      "section_path": [
+        "Отчет по продажам"
+      ],
+      "page_start": 2,
+      "page_end": 2,
+      "element_ids": [
+        "p2_e1",
+        "p2_e2",
+        "p2_e3",
+        "p2_e4"
+      ],
+      "text": "Отчет по продажам\nВыручка выросла на 12%\nМаржа стабильна\nОсновные показатели за квартал Выручка выросла на 12% Маржа стабильна",
+      "markdown": "# Отчет по продажам\n\n- Выручка выросла на 12%\n- Маржа стабильна\n\nОсновные показатели за квартал Выручка выросла на 12% Маржа стабильна\n\n![PPTX image]",
+      "token_estimate": 58,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": true,
+        "contains_ocr": false,
+        "contains_table": false,
+        "language": "ru"
+      }
+    },
+    {
+      "chunk_id": "chunk_table_5",
+      "type": "table",
+      "title": "Таблица",
+      "section_path": [],
+      "page_start": 2,
+      "page_end": 2,
+      "element_ids": [
+        "p2_e5"
+      ],
+      "text": "Строка 2: <a:txBody><a:p><a:r><a:t>Метрика = <a:txBody><a:p><a:r><a:t>Выручка; <a:txBody><a:p><a:r><a:t>Значение = <a:txBody><a:p><a:r><a:t>120.",
+      "markdown": "| <a:txBody><a:p><a:r><a:t>Метрика | <a:txBody><a:p><a:r><a:t>Значение |\n|---|---|\n| <a:txBody><a:p><a:r><a:t>Выручка | <a:txBody><a:p><a:r><a:t>120 |",
+      "token_estimate": 44,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": true,
+        "language": "ru"
+      }
+    },
+    {
+      "chunk_id": "chunk_6",
+      "type": "section",
+      "title": "Отчет по продажам",
+      "section_path": [
+        "Отчет по продажам"
+      ],
+      "page_start": 2,
+      "page_end": 2,
+      "element_ids": [
+        "p2_e6"
+      ],
+      "text": "Комментарий докладчика: подчеркнуть рост.",
+      "markdown": "Комментарий докладчика: подчеркнуть рост.",
+      "token_estimate": 20,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": false,
+        "language": "ru"
+      }
+    },
+    {
+      "chunk_id": "chunk_7",
+      "type": "section",
+      "title": "Слайд с диаграммой",
+      "section_path": [
+        "Слайд с диаграммой"
+      ],
+      "page_start": 3,
+      "page_end": 3,
+      "element_ids": [
+        "p3_e1"
+      ],
+      "text": "Слайд с диаграммой",
+      "markdown": "# Слайд с диаграммой",
+      "token_estimate": 9,
+      "metadata": {
+        "contains_code": false,
+        "contains_formula": false,
+        "contains_image": false,
+        "contains_ocr": false,
+        "contains_table": false,
+        "language": "ru"
+      }
+    }
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "code": "PPTX_CHART_EXTRACTION_PARTIAL",
+      "severity": "warning",
+      "scope": "page",
+      "page_number": null,
+      "element_id": null,
+      "message": "Извлечение метаданных диаграмм PPTX выполнено частично (MVP).",
+      "recoverable": true
+    },
+    {
+      "code": "PPTX_CHART_EXTRACTION_PARTIAL",
+      "severity": "warning",
+      "scope": "page",
+      "page_number": null,
+      "element_id": null,
+      "message": "Извлечение метаданных диаграмм PPTX выполнено частично (MVP).",
+      "recoverable": true
+    }
+  ],
+  "processing": {
+    "pipeline_version": "1.0.0",
+    "status": "ok",
+    "stages": [
+      {
+        "name": "pptx_open_package",
+        "status": "ok",
+        "tool": "pptx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "pptx_parse_presentation",
+        "status": "ok",
+        "tool": "pptx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "pptx_parse_slides",
+        "status": "ok",
+        "tool": "pptx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "pptx_extract_text",
+        "status": "ok",
+        "tool": "pptx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "pptx_extract_tables",
+        "status": "ok",
+        "tool": "pptx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "pptx_extract_media",
+        "status": "ok",
+        "tool": "pptx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "pptx_extract_notes",
+        "status": "ok",
+        "tool": "pptx_ooxml_parser",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "pptx_chunking",
+        "status": "ok",
+        "tool": "semantic_chunker",
+        "duration_ms": 0,
+        "metadata": {}
+      },
+      {
+        "name": "chunking",
+        "status": "ok",
+        "tool": "semantic_chunker",
+        "duration_ms": 1,
+        "metadata": {}
+      },
+      {
+        "name": "output_write",
+        "status": "ok",
+        "tool": "output_writer",
+        "duration_ms": 1,
+        "metadata": {}
+      }
+    ],
+    "total_duration_ms": 8,
+    "runtime": {
+      "hostname": null,
+      "cpu": null,
+      "gpu": null,
+      "cuda_version": null,
+      "onnxruntime_version": null
+    }
+  },
+  "locale": "ru",
+  "routing_rules_count": 10,
+  "reading_order_strategy": "natural",
+  "pipeline_mode": "bulk"
+}
