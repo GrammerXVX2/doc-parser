@@ -13,6 +13,7 @@ pub mod merge;
 pub mod metrics;
 pub mod ml;
 pub mod model;
+pub mod models;
 pub mod ocr;
 pub mod office;
 pub mod observability;

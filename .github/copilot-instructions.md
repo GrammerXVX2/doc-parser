@@ -1,785 +1,1167 @@
-# Задача: Dev launch fixes для `GrammerXVX2/doc-parser`
+# Задача: Real Model Runtime Phase 1 — подготовить развёртывание и подключить первые реальные backends
+
+## Репозиторий
+
+```text
+GrammerXVX2/doc-parser
+```
 
 ## Контекст
 
-Репозиторий: `GrammerXVX2/doc-parser`.
-
-Система уже содержит CLI/API/job queue/storage/security/pipeline skeleton. Сейчас планируется запустить её в dev-режиме для 3 разработчиков, чтобы они могли загружать документы через API и получать:
+В проекте уже должна быть архитектура model stack:
 
 ```text
-model.json
-markdown.md
-plain_text.txt
-assets/
+configs/model_stack.config.jsonc
+model routing
+domain detection
+model_outputs
+domain_profile
+legal/book outputs
+slow_path decision
+mock/fixture model backends
 ```
 
-По аудиту обнаружены критичные нюансы, которые нужно исправить перед запуском.
+Теперь нужно перейти от mock/fixture backends к **первому реальному dev-развёртыванию моделей**.
 
 ---
 
 # Главная цель
 
-Подготовить проект к безопасному и удобному dev-запуску для 3 разработчиков.
+Подготовить runtime-интеграцию и подключить первые реальные модели/backends:
 
-После выполнения должно работать:
-
-```bash
-cargo run -- serve --config configs/profiles/dev_team.jsonc
+```text
+1. PaddleOCR PP-OCRv6 medium det/rec
+2. Surya OCR/layout/table
+3. Docling structured document parsing
 ```
 
-И сценарий:
+На этом этапе НЕ подключать пока:
 
-```bash
-curl -F "file=@testdata/ru/sample_ru.html" \
-     -F "language=ru" \
-     -F "extract_tables=true" \
-     -F "table_chunks=true" \
-     http://127.0.0.1:8080/v1/documents
+```text
+PaddleOCR-VL-1.6
+Qwen3-VL
+Granite Docling 258M
+GLiNER
+BGE-M3 / USER-bge-m3
+pix2tex / Pix2Text
+Kraken / eScriptorium / Calamari
 ```
 
-должен возвращать `job_id` и `document_id`.
+Но оставить для них placeholders/config.
 
-После завершения job должны открываться:
+---
 
-```bash
-GET /v1/jobs/{job_id}
-GET /v1/documents/{document_id}/model
-GET /v1/documents/{document_id}/markdown
-GET /v1/documents/{document_id}/text
+# Почему только эти backends
+
+## PP-OCRv6
+
+Это быстрый OCR fast path:
+
+```text
+scanned PDF
+image documents
+embedded images
+hybrid PDFs
+```
+
+## Surya
+
+Это layout/OCR/table helper:
+
+```text
+layout analysis
+reading order
+OCR fallback
+table detection/recognition helper
+```
+
+## Docling
+
+Это structured document parser:
+
+```text
+complex PDFs
+mixed documents
+RAG-ready Markdown/JSON fallback
+tables/layout/formulas where supported
+```
+
+Эти три дают максимальную пользу для dev-команды и являются фундаментом для тяжёлых VLM/Legal/Formula backends.
+
+---
+
+# Важное требование
+
+В dev режиме real backend failures не должны ломать pipeline.
+
+Если backend недоступен:
+
+```text
+- записать structured warning;
+- использовать mock/fixture fallback;
+- model.json должен создаться;
+- API job не должен падать без необходимости.
 ```
 
 ---
 
-# P0. Исправить `document_id` mismatch в `JobWorker`
+# Архитектурный подход
 
-## Проблема
-
-В `src/jobs/worker.rs` worker получает `job.document_id`, но после `run_pipeline` модель может иметь собственный `model.document_id`.
-
-Сейчас output пишется через:
-
-```rust
-write_document_outputs(&model, &self.output_dir, true)?;
-```
-
-А `write_document_outputs` пишет в:
+Реальные модели подключать через один из типов backend:
 
 ```text
-output_dir / model.document_id / model.json
+1. HTTP service backend
+2. external command backend
+3. local library backend where practical
 ```
 
-API же ищет результат по:
+Для dev предпочтительно:
 
 ```text
-output_dir / job.document_id / model.json
+HTTP service backend
 ```
 
-Из-за этого возможен сценарий:
+Почему:
 
 ```text
-POST /v1/documents -> document_id = doc_abc
-GET /v1/jobs/job_xyz -> completed
-GET /v1/documents/doc_abc/model -> DOCUMENT_NOT_FOUND
+- Rust parser не тащит Python ML dependencies;
+- модели можно обновлять независимо;
+- проще Docker Compose;
+- проще health checks;
+- проще fallback.
 ```
-
-## Требование
-
-В `src/jobs/worker.rs` перед `write_document_outputs` обязательно выставить:
-
-```rust
-model.document_id = job.document_id.clone();
-model.job_id = Some(job.job_id.clone());
-```
-
-Примерно здесь:
-
-```rust
-let (_classification, mut model) = run_pipeline(&job.input_path, &context)?;
-
-if model.pages.len() > self.max_pages_per_document {
-    return Err(anyhow::anyhow!("MAX_PAGES_LIMIT_EXCEEDED"));
-}
-
-model.document_id = job.document_id.clone();
-model.job_id = Some(job.job_id.clone());
-
-write_document_outputs(&model, &self.output_dir, true)?;
-```
-
-## Тест
-
-Добавить/обновить тест, который проверяет:
-
-1. Создаётся job с `document_id = doc_test`.
-2. Worker обрабатывает input.
-3. Output появляется именно в:
-
-```text
-output/doc_test/model.json
-```
-
-4. Внутри `model.json`:
-
-```json
-"document_id": "doc_test"
-```
-
-5. API `GET /v1/documents/doc_test/model` находит результат.
 
 ---
 
-# P0. Добавить dev-team service profile
+# Новые директории
 
-## Создать файл
+Добавить:
 
 ```text
-configs/profiles/dev_team.jsonc
+model_services/
+  paddleocr_service/
+    Dockerfile
+    requirements.txt
+    app.py
+    README.md
+
+  surya_service/
+    Dockerfile
+    requirements.txt
+    app.py
+    README.md
+
+  docling_service/
+    Dockerfile
+    requirements.txt
+    app.py
+    README.md
+
+docker-compose.models.dev.yml
+
+docs/
+  MODEL_SERVICES_DEV.md
+  REAL_MODEL_RUNTIME.md
 ```
 
-## Содержимое
+---
+
+# Этап 1. Обновить model_stack config для HTTP services
+
+В `configs/model_stack.config.jsonc` обновить backends:
 
 ```jsonc
 {
-  "service": {
-    "enabled": true,
-    "host": "0.0.0.0",
-    "port": 8080,
-    "locale": "ru",
-    "default_language": "ru",
-    "max_concurrent_jobs": 2,
-    "job_queue_capacity": 30
-  },
-  "storage": {
-    "backend": "local",
-    "input_dir": "data/input",
-    "output_dir": "data/output",
-    "metadata_backend": "local_json",
-    "object_store_backend": "local"
-  },
-  "security": {
-    "max_file_size_mb": 100,
-    "max_pages_per_document": 300,
-    "max_extracted_assets_mb": 512,
-    "max_image_width_px": 8000,
-    "max_image_height_px": 8000,
-    "max_archive_entries": 3000,
-    "max_archive_total_uncompressed_mb": 1024,
-    "max_processing_time_sec": 300,
-    "allow_external_converters": false,
-    "allow_network_for_converters": false
-  },
-  "observability": {
-    "tracing_enabled": true,
-    "metrics_enabled": true,
-    "prometheus_enabled": true,
-    "prometheus_path": "/metrics"
-  },
-  "auth": {
-    "enabled": false,
-    "dev_token_env": "DOC_PARSER_DEV_TOKEN"
+  "model_stack": {
+    "global": {
+      "enable_real_models": true,
+      "fallback_to_mock": true,
+      "fallback_to_fixture": true,
+      "fail_on_missing_required_model": false
+    },
+
+    "backends": {
+      "paddleocr_ppocrv6_medium": {
+        "kind": "ocr",
+        "enabled": true,
+        "backend_type": "http",
+        "required": false,
+        "languages": ["ru", "en"],
+        "detection_model": "PaddlePaddle/PP-OCRv6_medium_det",
+        "recognition_model": "PaddlePaddle/PP-OCRv6_medium_rec",
+        "url": "http://127.0.0.1:8101",
+        "health_path": "/healthz",
+        "ocr_path": "/v1/ocr",
+        "timeout_sec": 120,
+        "fallback_to_mock": true
+      },
+
+      "surya_ocr": {
+        "kind": "ocr",
+        "enabled": true,
+        "backend_type": "http",
+        "required": false,
+        "languages": ["ru", "en"],
+        "url": "http://127.0.0.1:8102",
+        "health_path": "/healthz",
+        "ocr_path": "/v1/ocr",
+        "layout_path": "/v1/layout",
+        "table_path": "/v1/tables",
+        "timeout_sec": 120,
+        "fallback_to_mock": true
+      },
+
+      "surya_layout": {
+        "kind": "layout",
+        "enabled": true,
+        "backend_type": "http",
+        "required": false,
+        "url": "http://127.0.0.1:8102",
+        "health_path": "/healthz",
+        "layout_path": "/v1/layout",
+        "timeout_sec": 120,
+        "fallback_to_heuristic": true
+      },
+
+      "surya_table": {
+        "kind": "table_structure",
+        "enabled": true,
+        "backend_type": "http",
+        "required": false,
+        "url": "http://127.0.0.1:8102",
+        "health_path": "/healthz",
+        "table_path": "/v1/tables",
+        "timeout_sec": 120,
+        "fallback_to_placeholder": true
+      },
+
+      "docling": {
+        "kind": "structured_document_parse",
+        "enabled": true,
+        "backend_type": "http",
+        "required": false,
+        "url": "http://127.0.0.1:8103",
+        "health_path": "/healthz",
+        "parse_path": "/v1/parse",
+        "timeout_sec": 300,
+        "fallback_to_mock": true
+      },
+
+      "docling_layout": {
+        "kind": "layout",
+        "enabled": true,
+        "backend_type": "http",
+        "required": false,
+        "url": "http://127.0.0.1:8103",
+        "health_path": "/healthz",
+        "layout_path": "/v1/layout",
+        "timeout_sec": 300,
+        "fallback_to_heuristic": true
+      },
+
+      "docling_tableformer": {
+        "kind": "table_structure",
+        "enabled": true,
+        "backend_type": "http",
+        "required": false,
+        "url": "http://127.0.0.1:8103",
+        "health_path": "/healthz",
+        "table_path": "/v1/tables",
+        "timeout_sec": 300,
+        "fallback_to_placeholder": true
+      }
+    }
   }
 }
 ```
 
-## Почему
-
-Для 3 разработчиков нельзя использовать только in-memory metadata, потому что после рестарта сервера все job statuses потеряются.
-
-`metadata_backend` должен быть:
-
-```jsonc
-"local_json"
-```
-
 ---
 
-# P0. Исправить Docker/dev запуск
+# Этап 2. Добавить HTTP model backend client в Rust
 
-## Проблема
-
-Сейчас `docker-compose.yml` запускает one-shot parse:
-
-```yaml
-command: ["cargo", "run", "--", "parse", "testdata/sample.html", "--output", "output"]
-```
-
-Для dev-команды нужен API server.
-
-## Требование
-
-Создать отдельный файл:
+Создать:
 
 ```text
-docker-compose.dev.yml
+src/models/backends/http.rs
 ```
 
-Сервис должен запускать:
-
-```bash
-cargo run -- serve --config configs/profiles/dev_team.jsonc
-```
-
-## Содержимое
-
-```yaml
-services:
-  document_parser:
-    build:
-      context: .
-      dockerfile: docker/document-parser.Dockerfile
-    image: document_parser:dev
-    container_name: document_parser_dev
-    environment:
-      RUST_LOG: info
-    volumes:
-      - ./:/workspace
-    working_dir: /workspace
-    command: ["cargo", "run", "--", "serve", "--config", "configs/profiles/dev_team.jsonc"]
-    ports:
-      - "8080:8080"
-```
-
-## Важно
-
-Не подключать `ocr_service` и GPU в dev compose по умолчанию.
-
-GPU/OCR compose можно оставить отдельно для будущего.
-
----
-
-# P0. Добавить dev smoke script
-
-## Создать файл
-
-```text
-scripts/dev_smoke_api.sh
-```
-
-## Требования
-
-Скрипт должен:
-
-1. Проверить `/healthz`.
-2. Проверить `/readyz`.
-3. Загрузить тестовый документ.
-4. Получить `job_id` и `document_id`.
-5. Poll job status до:
-
-```text
-completed | partial | failed
-```
-
-6. Если статус:
-
-```text
-completed | partial
-```
-
-проверить:
-
-```text
-/v1/documents/{document_id}/model
-/v1/documents/{document_id}/markdown
-/v1/documents/{document_id}/text
-```
-
-7. Вернуть non-zero exit code при ошибке.
-
-## Пример запуска
-
-```bash
-scripts/dev_smoke_api.sh http://127.0.0.1:8080 testdata/ru/sample_ru.html
-```
-
-Если аргументы не переданы:
-
-```bash
-BASE_URL=http://127.0.0.1:8080
-INPUT_FILE=testdata/ru/sample_ru.html
-```
-
-## Dependencies
-
-Можно использовать:
-
-```text
-bash
-curl
-python3
-```
-
-Если не хочется Python — использовать `jq`, но Python предпочтительнее, потому что `jq` может быть не установлен.
-
----
-
-# P1. Добавить optional dev API token middleware
-
-## Цель
-
-Если API будет доступен не только локально, нужен простой dev-token.
-
-## Config
-
-В `ServiceProfile` добавить optional auth config:
+Реализовать общий клиент:
 
 ```rust
-pub struct AuthProfile {
-    pub enabled: bool,
-    pub dev_token_env: String,
+pub struct HttpModelBackendClient {
+    pub name: String,
+    pub base_url: String,
+    pub timeout: Duration,
 }
 ```
 
-Config:
+Методы:
 
-```jsonc
-"auth": {
-  "enabled": false,
-  "dev_token_env": "DOC_PARSER_DEV_TOKEN"
+```rust
+impl HttpModelBackendClient {
+    pub async fn health_check(&self, health_path: &str) -> ModelBackendHealth;
+
+    pub async fn post_json<TReq, TResp>(
+        &self,
+        path: &str,
+        payload: &TReq
+    ) -> anyhow::Result<TResp>
+    where
+        TReq: Serialize + ?Sized,
+        TResp: DeserializeOwned;
 }
 ```
 
-## Поведение
-
-Если:
+Требования:
 
 ```text
-auth.enabled = false
+- reqwest async client;
+- timeout;
+- structured errors;
+- no panic;
+- fallback hooks.
 ```
 
-middleware ничего не требует.
+---
 
-Если:
+# Этап 3. Добавить shared HTTP schemas
+
+Создать:
 
 ```text
-auth.enabled = true
+src/models/backends/http_schemas.rs
 ```
 
-API должен требовать header:
+Общие request/response:
 
-```http
-Authorization: Bearer <token>
+```rust
+pub struct OcrHttpRequest {
+    pub document_id: String,
+    pub page_number: u32,
+    pub image_path: String,
+    pub languages: Vec<String>,
+    pub options: serde_json::Value,
+}
 ```
 
-Token брать из env var:
+```rust
+pub struct OcrHttpResponse {
+    pub backend: String,
+    pub regions: Vec<OcrHttpRegion>,
+    pub text: Option<String>,
+    pub confidence: Option<f32>,
+    pub metadata: serde_json::Value,
+}
+```
+
+```rust
+pub struct OcrHttpRegion {
+    pub text: String,
+    pub bbox: [f32; 4],
+    pub confidence: f32,
+    pub language: Option<String>,
+}
+```
+
+```rust
+pub struct LayoutHttpRequest {
+    pub document_id: String,
+    pub page_number: u32,
+    pub image_path: Option<String>,
+    pub width: Option<f32>,
+    pub height: Option<f32>,
+    pub options: serde_json::Value,
+}
+```
+
+```rust
+pub struct LayoutHttpResponse {
+    pub backend: String,
+    pub regions: Vec<LayoutHttpRegion>,
+    pub metadata: serde_json::Value,
+}
+```
+
+```rust
+pub struct LayoutHttpRegion {
+    pub region_type: String,
+    pub bbox: [f32; 4],
+    pub confidence: f32,
+    pub text: Option<String>,
+}
+```
+
+```rust
+pub struct StructuredParseHttpRequest {
+    pub document_id: String,
+    pub input_path: String,
+    pub format: String,
+    pub language: String,
+    pub options: serde_json::Value,
+}
+```
+
+```rust
+pub struct StructuredParseHttpResponse {
+    pub backend: String,
+    pub markdown: Option<String>,
+    pub text: Option<String>,
+    pub elements: serde_json::Value,
+    pub tables: serde_json::Value,
+    pub metadata: serde_json::Value,
+    pub confidence: Option<f32>,
+}
+```
+
+---
+
+# Этап 4. Реализовать Rust adapters
+
+Добавить:
 
 ```text
-DOC_PARSER_DEV_TOKEN
+src/models/ocr/paddleocr.rs
+src/models/ocr/surya.rs
+src/models/layout/surya_layout.rs
+src/models/structured/docling.rs
+src/models/tables/surya_table.rs
+src/models/tables/docling_tableformer.rs
 ```
 
-Если env var отсутствует при `enabled=true`:
+## PaddleOCR adapter
+
+```rust
+pub struct PaddleOcrV6HttpBackend {
+    client: HttpModelBackendClient,
+    config: ModelBackendConfig,
+}
+```
+
+Реализовать:
+
+```rust
+ExtendedOcrBackend for PaddleOcrV6HttpBackend
+```
+
+Поведение:
 
 ```text
-readyz should be failed/degraded
-requests should return 500/503 with AUTH_TOKEN_NOT_CONFIGURED
+call /v1/ocr
+map OcrHttpResponse -> text_ocr Elements
+provenance.tool = paddleocr_ppocrv6_medium
+confidence from response
+fallback to mock if unavailable
 ```
 
-## Какие endpoints можно оставить public
+## Surya adapter
+
+Реализовать:
+
+```text
+SuryaOcrHttpBackend
+SuryaLayoutHttpBackend
+SuryaTableHttpBackend
+```
+
+## Docling adapter
+
+Реализовать:
+
+```text
+DoclingStructuredParseHttpBackend
+DoclingLayoutHttpBackend
+DoclingTableFormerHttpBackend
+```
+
+На первом этапе `DoclingStructuredParseHttpBackend` может:
+
+```text
+получать markdown/text/elements JSON;
+нормализовать в DocumentModel extra или Elements;
+если не удаётся — warning + fallback.
+```
+
+---
+
+# Этап 5. Добавить model service health checks в `doctor`
+
+Расширить:
+
+```bash
+cargo run -- doctor
+```
+
+Проверять:
+
+```text
+paddleocr service health
+surya service health
+docling service health
+```
+
+Если service недоступен:
+
+```text
+WARN, если fallback_to_mock=true
+ERROR, если required=true
+```
+
+Пример вывода:
+
+```text
+OK: Конфигурация model stack загружена
+WARN: PaddleOCR service недоступен, будет использован mock fallback
+WARN: Surya service недоступен, будет использован heuristic fallback
+WARN: Docling service недоступен, будет использован native/mock fallback
+```
+
+JSON output тоже обновить.
+
+---
+
+# Этап 6. Создать PaddleOCR service
+
+Создать:
+
+```text
+model_services/paddleocr_service/
+  Dockerfile
+  requirements.txt
+  app.py
+  README.md
+```
+
+## requirements.txt
+
+```text
+fastapi
+uvicorn[standard]
+pillow
+python-multipart
+pydantic
+numpy
+```
+
+Если сразу используем PaddleOCR Python package:
+
+```text
+paddleocr
+paddlepaddle
+```
+
+Но если это слишком тяжело для CI/dev, сервис должен поддерживать mock mode.
+
+## ENV
+
+```text
+PADDLEOCR_BACKEND=mock|real
+PADDLEOCR_DEVICE=cpu|gpu
+PADDLEOCR_LANG=ru,en
+PADDLEOCR_DET_MODEL=PaddlePaddle/PP-OCRv6_medium_det
+PADDLEOCR_REC_MODEL=PaddlePaddle/PP-OCRv6_medium_rec
+```
+
+## Endpoints
 
 ```text
 GET /healthz
-GET /readyz
-GET /metrics optional
+POST /v1/ocr
 ```
 
-Для dev можно защитить всё, кроме `healthz`/`readyz`.
-
-## Ошибка
+## `/v1/ocr` request
 
 ```json
 {
-  "error": {
-    "code": "UNAUTHORIZED",
-    "message": "Необходим корректный Authorization Bearer token.",
-    "recoverable": false,
-    "details": {}
+  "document_id": "doc_1",
+  "page_number": 1,
+  "image_path": "/workspace/data/output/doc_1/assets/renders/page_1.png",
+  "languages": ["ru", "en"],
+  "options": {}
+}
+```
+
+## `/v1/ocr` response
+
+```json
+{
+  "backend": "paddleocr_ppocrv6_medium",
+  "regions": [
+    {
+      "text": "Тестовый OCR текст",
+      "bbox": [100, 100, 500, 140],
+      "confidence": 0.95,
+      "language": "ru"
+    }
+  ],
+  "text": "Тестовый OCR текст",
+  "confidence": 0.95,
+  "metadata": {
+    "mode": "mock"
   }
 }
 ```
 
-## Тесты
+## Mock mode
 
-Добавить tests:
-
-```text
-auth disabled -> upload works without token
-auth enabled without token -> 401
-auth enabled wrong token -> 401
-auth enabled correct token -> upload accepted
-```
-
-Если middleware слишком большой для одного PR — можно сделать config field и тесты пропустить, но желательно реализовать.
+Если real PaddleOCR не установлен или `PADDLEOCR_BACKEND=mock`, сервис должен возвращать deterministic OCR.
 
 ---
 
-# P1. Добавить документацию для dev-запуска
+# Этап 7. Создать Surya service
 
-## Создать файл
-
-```text
-docs/DEV_LAUNCH.md
-```
-
-Документ должен быть на русском.
-
-## Описать
+Создать:
 
 ```text
-1. Как запустить локально через cargo.
-2. Как запустить через docker compose.
-3. Как проверить health/ready.
-4. Как загрузить документ через curl.
-5. Как проверить job status.
-6. Как получить model/markdown/text.
-7. Где лежат input/output/metadata.
-8. Как очистить dev data.
-9. Какие форматы разрешены в первом dev-цикле.
-10. Что нельзя коммитить в репозиторий.
+model_services/surya_service/
+  Dockerfile
+  requirements.txt
+  app.py
+  README.md
 ```
 
-## Важное предупреждение
-
-Добавить явно:
+## ENV
 
 ```text
-Запрещено коммитить реальные юридические документы, персональные данные,
-договоры, сканы паспортов, финансовые документы и OCR/debug artifacts.
+SURYA_BACKEND=mock|real
+SURYA_DEVICE=cpu|gpu
 ```
 
-## Разрешённые форматы первого dev-цикла
+## Endpoints
 
 ```text
-.html
-.md
-.txt
-.pdf
-.png
-.jpg
-.jpeg
-.docx
-.xlsx
+GET /healthz
+POST /v1/ocr
+POST /v1/layout
+POST /v1/tables
 ```
 
-## Форматы второго dev-цикла
+## Mock responses
 
-```text
-.pptx
-.rtf
-.doc
-.tiff
-.webp
-```
-
----
-
-# P1. Добавить cleanup script
-
-## Создать файл
-
-```text
-scripts/dev_clean_data.sh
-```
-
-## Поведение
-
-Удалять:
-
-```text
-data/input/*
-data/output/*
-data/metadata/jobs/*
-```
-
-Но сохранять `.gitkeep`, если они есть.
-
-Пример:
-
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-
-rm -rf data/input/* data/output/* data/metadata/jobs/*
-mkdir -p data/input data/output data/metadata/jobs
-touch data/input/.gitkeep data/output/.gitkeep data/metadata/jobs/.gitkeep
-
-echo "Dev data cleaned."
-```
-
----
-
-# P1. Уменьшить риск memory spike на dev upload
-
-## Проблема
-
-`upload_document` читает весь файл в память:
-
-```rust
-field.bytes().await?.to_vec()
-```
-
-Для dev это допустимо, но лимит `512 MB` слишком большой.
-
-## Требование
-
-В `dev_team.jsonc` поставить:
-
-```jsonc
-"max_file_size_mb": 100
-```
-
-Также в `docs/DEV_LAUNCH.md` указать:
-
-```text
-На dev upload файл читается в память целиком, поэтому не загружайте большие архивы/сканы.
-```
-
-Streaming upload пока не реализовывать.
-
----
-
-# P1. External converters disabled by default in dev
-
-В `dev_team.jsonc` должно быть:
-
-```jsonc
-"allow_external_converters": false
-```
-
-В docs объяснить:
-
-```text
-RTF/DOC и некоторые fallback-конверсии могут не работать в dev_team profile,
-потому что внешние конвертеры выключены для безопасности и стабильности.
-```
-
----
-
-# P1. Добавить простой список dev curl-команд
-
-В `docs/DEV_LAUNCH.md` добавить:
-
-```bash
-# Запуск
-cargo run -- serve --config configs/profiles/dev_team.jsonc
-
-# Health
-curl -s http://127.0.0.1:8080/healthz
-
-# Ready
-curl -s http://127.0.0.1:8080/readyz
-
-# Upload
-curl -s \
-  -F "file=@testdata/ru/sample_ru.html" \
-  -F "language=ru" \
-  -F "extract_tables=true" \
-  -F "table_chunks=true" \
-  http://127.0.0.1:8080/v1/documents
-
-# Job
-curl -s http://127.0.0.1:8080/v1/jobs/<job_id>
-
-# Model
-curl -s http://127.0.0.1:8080/v1/documents/<document_id>/model
-
-# Markdown
-curl -s http://127.0.0.1:8080/v1/documents/<document_id>/markdown
-
-# Text
-curl -s http://127.0.0.1:8080/v1/documents/<document_id>/text
-```
-
----
-
-# P2. Добавить list endpoints, если быстро
-
-Опционально, если не сильно увеличит PR:
-
-```text
-GET /v1/jobs
-GET /v1/documents
-```
-
-Для dev-команды это удобно.
-
-MVP response:
+### `/v1/layout`
 
 ```json
 {
-  "jobs": [
+  "backend": "surya_layout",
+  "regions": [
     {
-      "job_id": "...",
-      "document_id": "...",
-      "status": "completed",
-      "created_at": "...",
-      "updated_at": "..."
+      "region_type": "title",
+      "bbox": [50, 40, 900, 100],
+      "confidence": 0.95,
+      "text": null
+    },
+    {
+      "region_type": "text",
+      "bbox": [50, 120, 900, 500],
+      "confidence": 0.90,
+      "text": null
     }
-  ]
+  ],
+  "metadata": {
+    "mode": "mock"
+  }
 }
 ```
 
-Если `MetadataStore` не умеет list — добавить только для:
+### `/v1/tables`
 
-```text
-InMemoryMetadataStore
-LocalJsonMetadataStore
-```
-
-Если это слишком большой объём — не делать в этом PR.
-
----
-
-# Тесты, которые обязательно добавить/обновить
-
-## 1. Worker document_id test
-
-Файл:
-
-```text
-tests/job_worker_output_tests.rs
-```
-
-Проверить:
-
-```text
-worker writes output to job.document_id directory
-model.json contains job.document_id
+```json
+{
+  "backend": "surya_table",
+  "regions": [
+    {
+      "region_type": "table",
+      "bbox": [100, 300, 900, 700],
+      "confidence": 0.88,
+      "text": null
+    }
+  ],
+  "metadata": {
+    "mode": "mock"
+  }
+}
 ```
 
 ---
 
-## 2. Dev profile loads
+# Этап 8. Создать Docling service
 
-Файл:
+Создать:
 
 ```text
-tests/dev_profile_tests.rs
+model_services/docling_service/
+  Dockerfile
+  requirements.txt
+  app.py
+  README.md
 ```
 
-Проверить:
+## ENV
 
 ```text
-configs/profiles/dev_team.jsonc loads
-metadata_backend == local_json
-max_file_size_mb <= 100
-allow_external_converters == false
-locale == ru
+DOCLING_BACKEND=mock|real
+DOCLING_DEVICE=cpu|gpu
+```
+
+## Endpoints
+
+```text
+GET /healthz
+POST /v1/parse
+POST /v1/layout
+POST /v1/tables
+```
+
+## `/v1/parse` response
+
+```json
+{
+  "backend": "docling",
+  "markdown": "# Документ\n\nТекст документа.",
+  "text": "Документ\n\nТекст документа.",
+  "elements": [],
+  "tables": [],
+  "metadata": {
+    "mode": "mock"
+  },
+  "confidence": 0.9
+}
+```
+
+Mock mode обязателен.
+
+Real mode можно сделать best-effort, но не блокировать PR.
+
+---
+
+# Этап 9. Docker compose для моделей
+
+Создать:
+
+```text
+docker-compose.models.dev.yml
+```
+
+Содержимое:
+
+```yaml
+services:
+  paddleocr_service:
+    build:
+      context: .
+      dockerfile: model_services/paddleocr_service/Dockerfile
+    image: doc_parser_paddleocr_service:dev
+    container_name: doc_parser_paddleocr_service
+    environment:
+      PADDLEOCR_BACKEND: mock
+      PADDLEOCR_DEVICE: cpu
+      PADDLEOCR_LANG: ru,en
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    ports:
+      - "8101:8101"
+    command: ["uvicorn", "model_services.paddleocr_service.app:app", "--host", "0.0.0.0", "--port", "8101"]
+
+  surya_service:
+    build:
+      context: .
+      dockerfile: model_services/surya_service/Dockerfile
+    image: doc_parser_surya_service:dev
+    container_name: doc_parser_surya_service
+    environment:
+      SURYA_BACKEND: mock
+      SURYA_DEVICE: cpu
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    ports:
+      - "8102:8102"
+    command: ["uvicorn", "model_services.surya_service.app:app", "--host", "0.0.0.0", "--port", "8102"]
+
+  docling_service:
+    build:
+      context: .
+      dockerfile: model_services/docling_service/Dockerfile
+    image: doc_parser_docling_service:dev
+    container_name: doc_parser_docling_service
+    environment:
+      DOCLING_BACKEND: mock
+      DOCLING_DEVICE: cpu
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    ports:
+      - "8103:8103"
+    command: ["uvicorn", "model_services.docling_service.app:app", "--host", "0.0.0.0", "--port", "8103"]
 ```
 
 ---
 
-## 3. API end-to-end test
+# Этап 10. Интеграция с dev API compose
 
-Если есть test harness для API:
-
-```text
-upload -> job complete -> get model by returned document_id
-```
-
-Если полный worker test тяжёлый, можно сделать более простой test вокруг worker/output.
-
----
-
-## 4. Auth tests
-
-Если реализован optional token middleware:
+Обновить или создать:
 
 ```text
-auth disabled accepts request
-auth enabled rejects missing/wrong token
-auth enabled accepts correct token
+docker-compose.full.dev.yml
 ```
 
----
-
-## 5. Script presence test optional
-
-Не обязательно, но можно проверить, что файлы существуют:
+Который поднимает:
 
 ```text
-scripts/dev_smoke_api.sh
-scripts/dev_clean_data.sh
-docker-compose.dev.yml
-docs/DEV_LAUNCH.md
+document_parser API
+paddleocr_service
+surya_service
+docling_service
 ```
 
----
+API service должен зависеть от model services:
 
-# Acceptance criteria
+```yaml
+depends_on:
+  - paddleocr_service
+  - surya_service
+  - docling_service
+```
 
-Задача считается выполненной, если:
-
-1. `model.document_id` в worker принудительно синхронизируется с `job.document_id`.
-2. После API upload result можно получить по `document_id`, возвращенному в upload response.
-3. Добавлен файл:
+И использовать:
 
 ```text
 configs/profiles/dev_team.jsonc
+configs/model_stack.config.jsonc
 ```
 
-4. `dev_team.jsonc` использует:
+---
+
+# Этап 11. Runtime fallback behavior
+
+Если HTTP service недоступен:
 
 ```text
-metadata_backend = local_json
-max_file_size_mb = 100
-max_pages_per_document = 300
-allow_external_converters = false
-locale = ru
+- MODEL_BACKEND_NOT_AVAILABLE warning
+- MODEL_BACKEND_FALLBACK_USED warning
+- use mock backend
+- continue pipeline
 ```
 
-5. Добавлен `docker-compose.dev.yml`, который запускает API server, а не one-shot parse.
-6. Добавлен `scripts/dev_smoke_api.sh`.
-7. Добавлен `scripts/dev_clean_data.sh`.
-8. Добавлен `docs/DEV_LAUNCH.md`.
-9. В docs явно написано, что нельзя коммитить реальные документы и персональные данные.
-10. Если реализован auth:
-    - config поддерживает `auth.enabled`;
-    - `Authorization: Bearer` проверяется;
-    - tests добавлены.
-11. Все тесты проходят:
+Если service вернул invalid response:
+
+```text
+- MODEL_BACKEND_RESPONSE_INVALID
+- fallback
+```
+
+Если timeout:
+
+```text
+- MODEL_BACKEND_TIMEOUT
+- fallback
+```
+
+Добавить warning codes:
+
+```text
+MODEL_BACKEND_TIMEOUT
+MODEL_BACKEND_RESPONSE_INVALID
+MODEL_BACKEND_HTTP_ERROR
+PADDLEOCR_SERVICE_UNAVAILABLE
+SURYA_SERVICE_UNAVAILABLE
+DOCLING_SERVICE_UNAVAILABLE
+```
+
+---
+
+# Этап 12. Обновить processing trace
+
+Добавлять stages:
+
+```text
+model_backend_health_check
+paddleocr_http_ocr
+surya_http_layout
+surya_http_table
+docling_http_parse
+model_backend_fallback
+```
+
+Пример:
+
+```json
+{
+  "name": "paddleocr_http_ocr",
+  "status": "ok",
+  "tool": "paddleocr_ppocrv6_medium_http",
+  "duration_ms": 120,
+  "metadata": {
+    "backend_url": "http://127.0.0.1:8101",
+    "regions": 15,
+    "fallback_used": false
+  }
+}
+```
+
+---
+
+# Этап 13. Обновить `model_outputs`
+
+Записывать:
+
+```jsonc
+{
+  "model_outputs": {
+    "ocr": {
+      "backend": "paddleocr_ppocrv6_medium",
+      "backend_type": "http",
+      "url": "http://127.0.0.1:8101",
+      "fallback_used": false,
+      "fallback_backend": null,
+      "detection_model": "PaddlePaddle/PP-OCRv6_medium_det",
+      "recognition_model": "PaddlePaddle/PP-OCRv6_medium_rec",
+      "languages": ["ru", "en"],
+      "pages_processed": 1,
+      "elements_created": 12
+    },
+    "layout": {
+      "backend": "surya_layout",
+      "backend_type": "http",
+      "url": "http://127.0.0.1:8102",
+      "fallback_used": false,
+      "regions_detected": 8
+    },
+    "structured_document_parse": {
+      "backend": "docling",
+      "backend_type": "http",
+      "url": "http://127.0.0.1:8103",
+      "executed": true,
+      "fallback_used": false
+    }
+  }
+}
+```
+
+---
+
+# Этап 14. Документация
+
+Создать:
+
+```text
+docs/MODEL_SERVICES_DEV.md
+docs/REAL_MODEL_RUNTIME.md
+```
+
+## `MODEL_SERVICES_DEV.md`
+
+Описать:
+
+```text
+- как поднять model services в mock mode;
+- как проверить health;
+- как переключить service в real mode;
+- какие ports:
+  - 8101 PaddleOCR
+  - 8102 Surya
+  - 8103 Docling
+- как API использует эти services;
+- что делать, если service недоступен.
+```
+
+## `REAL_MODEL_RUNTIME.md`
+
+Описать:
+
+```text
+Phase 1:
+  PP-OCRv6 + Surya + Docling
+
+Phase 2:
+  GLiNER + USER-bge-m3/BGE-M3
+
+Phase 3:
+  PaddleOCR-VL-1.6 + Qwen3-VL + Granite Docling
+
+Phase 4:
+  pix2tex/Pix2Text
+
+Phase 5:
+  Kraken/eScriptorium/Calamari
+```
+
+---
+
+# Этап 15. Tests
+
+Добавить:
+
+```text
+tests/http_model_backend_tests.rs
+tests/paddleocr_http_adapter_tests.rs
+tests/surya_http_adapter_tests.rs
+tests/docling_http_adapter_tests.rs
+tests/model_service_fallback_tests.rs
+tests/doctor_model_services_tests.rs
+```
+
+## http_model_backend_tests
+
+Проверить:
+
+```text
+health_check handles unavailable service
+post_json handles timeout
+post_json handles invalid response
+```
+
+## adapter tests
+
+Использовать mock HTTP server или fake client.
+
+Проверить:
+
+```text
+PaddleOCR response -> text_ocr elements
+Surya layout response -> layout regions
+Docling parse response -> structured output
+```
+
+## fallback tests
+
+Проверить:
+
+```text
+PaddleOCR unavailable -> mock fallback
+Surya unavailable -> heuristic fallback
+Docling unavailable -> native/mock fallback
+```
+
+## doctor tests
+
+Проверить:
+
+```text
+doctor reports service unavailable as WARN if required=false
+doctor reports ERROR if required=true
+```
+
+---
+
+# Этап 16. Smoke scripts
+
+Создать:
+
+```text
+scripts/dev_start_model_services.sh
+scripts/dev_check_model_services.sh
+scripts/dev_smoke_real_runtime_phase1.sh
+```
+
+## `dev_check_model_services.sh`
+
+Проверяет:
 
 ```bash
-cargo test
+curl http://127.0.0.1:8101/healthz
+curl http://127.0.0.1:8102/healthz
+curl http://127.0.0.1:8103/healthz
 ```
 
-12. Проект компилируется:
+## `dev_smoke_real_runtime_phase1.sh`
+
+Проверяет:
+
+```text
+1. model services health
+2. parser API health
+3. upload image/pdf
+4. job completed/partial
+5. model.json contains model_outputs.ocr/layout/structured_document_parse
+```
+
+---
+
+# Этап 17. Acceptance criteria
+
+Задача считается выполненной, если:
+
+1. Добавлен HTTP model backend client в Rust.
+2. Добавлены HTTP schemas.
+3. Добавлен PaddleOCR PP-OCRv6 HTTP adapter.
+4. Добавлен Surya OCR/layout/table HTTP adapter.
+5. Добавлен Docling structured/layout/table HTTP adapter.
+6. Добавлены Python service skeletons:
+   - `model_services/paddleocr_service`
+   - `model_services/surya_service`
+   - `model_services/docling_service`
+7. Все services поддерживают mock mode.
+8. Добавлен `docker-compose.models.dev.yml`.
+9. Добавлен full dev compose или документация, как запускать API + services.
+10. `doctor` проверяет model services.
+11. Если service недоступен — pipeline делает fallback, а не падает.
+12. `model_outputs` отражает backend, url, fallback_used.
+13. Processing trace содержит model backend stages.
+14. Документация добавлена.
+15. Tests добавлены.
+16. Existing tests не сломаны.
+17. Проект компилируется:
 
 ```bash
 cargo check
 ```
 
-13. Existing CLI parse mode не сломан:
+18. Tests проходят:
 
 ```bash
-cargo run -- parse testdata/ru/sample_ru.html --output output
+cargo test
 ```
 
-14. Dev server запускается:
+19. Mock services поднимаются:
 
 ```bash
-cargo run -- serve --config configs/profiles/dev_team.jsonc
+docker compose -f docker-compose.models.dev.yml up --build
 ```
 
-15. Smoke script проходит:
+20. Health работает:
 
 ```bash
-scripts/dev_smoke_api.sh http://127.0.0.1:8080 testdata/ru/sample_ru.html
+curl http://127.0.0.1:8101/healthz
+curl http://127.0.0.1:8102/healthz
+curl http://127.0.0.1:8103/healthz
 ```
 
 ---
 
-# Не делать в этом PR
+# 18. Не делать в этом PR
 
-Не нужно сейчас:
+Не нужно:
 
 ```text
-real OCR model integration
-PostgreSQL
-S3
-Kubernetes
-streaming upload
-full auth/users/roles
-web UI
+поднимать реальные PaddleOCR weights
+поднимать реальные Surya models
+поднимать реальные Docling pipeline
+подключать PaddleOCR-VL-1.6
+подключать Qwen3-VL
+подключать Granite Docling
+подключать GLiNER
+подключать BGE-M3/USER-bge-m3
+подключать pix2tex/Pix2Text
+подключать Kraken/eScriptorium/Calamari
 GPU/TensorRT/Triton
+Kubernetes
+production auth
 ```
 
-Главная цель — стабильный dev-запуск для 3 разработчиков.
+Этот PR — Phase 1 runtime foundation.
+
+---
+
+# 19. После этого PR
+
+Следующий этап:
+
+```text
+Real Model Runtime Phase 2:
+  - включить реальные PP-OCRv6 weights/service
+  - включить real Surya service
+  - включить real Docling service
+  - benchmark на dev corpus
+  - quality report
+```

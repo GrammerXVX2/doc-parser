@@ -1,0 +1,528 @@
+{
+  "model_stack": {
+    "schema_version": "1.0.0",
+
+    "default_language": "ru",
+    "fallback_languages": ["ru", "en"],
+    "locale": "ru",
+
+    "mode": "dev",
+
+    "global": {
+      "enable_real_models": true,
+      "fallback_to_mock": true,
+      "fallback_to_fixture": true,
+      "fail_on_missing_required_model": false,
+      "save_model_debug_artifacts": false
+    },
+
+    "routing": {
+      "default_profile": "mixed_enterprise",
+      "auto_detect_domain": true,
+      "allow_slow_path": true,
+      "slow_path_confidence_threshold": 0.65,
+      "legal_required_fields_check": true,
+      "prefer_native_extraction": true
+    },
+
+    "profiles": {
+      "fast_ocr_ru_en": {
+        "description": "Быстрый OCR ru/en через PP-OCRv6 medium det/rec.",
+        "ocr": {
+          "primary": {
+            "backend": "paddleocr_ppocrv6_medium",
+            "detection": "PaddlePaddle/PP-OCRv6_medium_det",
+            "recognition": "PaddlePaddle/PP-OCRv6_medium_rec"
+          },
+          "fallback": ["surya_ocr", "mock_ocr"]
+        },
+        "layout": {
+          "primary": "surya_layout",
+          "fallback": ["heuristic_layout"]
+        },
+        "tables": {
+          "native": true,
+          "scanned": "table_transformer",
+          "fallback": ["surya_table", "placeholder_table"]
+        },
+        "formulas": {
+          "native": true,
+          "scanned": "disabled"
+        },
+        "slow_path": {
+          "enabled": false
+        }
+      },
+
+      "structured_docling": {
+        "description": "Structured document parsing через Docling.",
+        "structured_document_parse": {
+          "primary": "docling",
+          "fallback": ["paddleocr_vl_1_6", "mock_structured_parser"]
+        },
+        "ocr": {
+          "primary": "paddleocr_ppocrv6_medium",
+          "fallback": ["surya_ocr", "mock_ocr"]
+        },
+        "layout": {
+          "primary": "docling_layout",
+          "fallback": ["surya_layout", "heuristic_layout"]
+        },
+        "tables": {
+          "native": true,
+          "scanned": "docling_tableformer",
+          "fallback": ["table_transformer", "surya_table", "placeholder_table"]
+        },
+        "formulas": {
+          "native": true,
+          "scanned": "paddleocr_vl_1_6",
+          "fallback": ["pix2tex", "placeholder_formula"]
+        },
+        "slow_path": {
+          "enabled": true,
+          "backend": "paddleocr_vl_1_6"
+        }
+      },
+
+      "legal_fast": {
+        "description": "Быстрый юридический профиль.",
+        "ocr": {
+          "primary": "paddleocr_ppocrv6_medium",
+          "fallback": ["surya_ocr", "mock_ocr"]
+        },
+        "layout": {
+          "primary": "surya_layout",
+          "fallback": ["docling_layout", "heuristic_layout"]
+        },
+        "tables": {
+          "native": true,
+          "scanned": "table_transformer",
+          "fallback": ["surya_table", "placeholder_table"]
+        },
+        "legal": {
+          "enabled": true,
+          "ner": {
+            "primary": "gliner_large_v2_5",
+            "fallback": ["gliner_medium_v2_5", "gliner_small_v2_5", "rule_based_legal_extractor"]
+          },
+          "embeddings": {
+            "primary": "deepvk_user_bge_m3",
+            "fallback": ["baai_bge_m3"]
+          },
+          "classifiers": [
+            "document_type_classifier",
+            "clause_classifier",
+            "risk_classifier"
+          ]
+        },
+        "slow_path": {
+          "enabled": true,
+          "backend": "paddleocr_vl_1_6",
+          "alternatives": ["qwen3_vl", "granite_docling_258m"],
+          "trigger_on_low_confidence": true,
+          "trigger_on_missing_legal_fields": true
+        }
+      },
+
+      "legal_high_accuracy": {
+        "description": "Точный юридический профиль.",
+        "structured_document_parse": {
+          "primary": "docling",
+          "fallback": ["paddleocr_vl_1_6"]
+        },
+        "ocr": {
+          "primary": "paddleocr_ppocrv6_medium",
+          "fallback": ["surya_ocr"]
+        },
+        "layout": {
+          "primary": "docling_layout",
+          "fallback": ["surya_layout", "heuristic_layout"]
+        },
+        "tables": {
+          "native": true,
+          "scanned": "docling_tableformer",
+          "fallback": ["table_transformer", "surya_table", "placeholder_table"]
+        },
+        "legal": {
+          "enabled": true,
+          "ner": {
+            "primary": "gliner_large_v2_5",
+            "fallback": ["gliner_medium_v2_5", "gliner_small_v2_5", "rule_based_legal_extractor"]
+          },
+          "embeddings": {
+            "primary": "deepvk_user_bge_m3",
+            "fallback": ["baai_bge_m3"]
+          },
+          "classifiers": [
+            "document_type_classifier",
+            "clause_classifier",
+            "risk_classifier"
+          ]
+        },
+        "slow_path": {
+          "enabled": true,
+          "backend": "paddleocr_vl_1_6",
+          "alternatives": ["qwen3_vl", "granite_docling_258m"],
+          "trigger_on_low_confidence": true,
+          "trigger_on_table_failure": true,
+          "trigger_on_missing_legal_fields": true
+        }
+      },
+
+      "fiction_modern": {
+        "description": "Современная художественная литература.",
+        "ocr": {
+          "primary": "paddleocr_ppocrv6_medium",
+          "fallback": ["surya_ocr"]
+        },
+        "layout": {
+          "primary": "surya_layout",
+          "fallback": ["heuristic_layout"]
+        },
+        "book": {
+          "enabled": true,
+          "chapter_detection": true,
+          "footnote_detection": true,
+          "dehyphenation": true,
+          "remove_headers_footers": true,
+          "paragraph_reconstruction": true
+        },
+        "slow_path": {
+          "enabled": false
+        }
+      },
+
+      "fiction_historical": {
+        "description": "Историческая художественная литература / старые книги.",
+        "ocr": {
+          "primary": "kraken",
+          "fallback": [
+            "escriptorium",
+            "calamari",
+            "paddleocr_ppocrv6_medium",
+            "surya_ocr"
+          ]
+        },
+        "layout": {
+          "primary": "surya_layout",
+          "fallback": ["heuristic_layout"]
+        },
+        "book": {
+          "enabled": true,
+          "historical_orthography": true,
+          "chapter_detection": true,
+          "footnote_detection": true,
+          "dehyphenation": true,
+          "remove_headers_footers": true,
+          "paragraph_reconstruction": true
+        },
+        "slow_path": {
+          "enabled": true,
+          "backend": "qwen3_vl",
+          "alternatives": ["paddleocr_vl_1_6", "granite_docling_258m"],
+          "trigger_on_low_confidence": true
+        }
+      },
+
+      "scientific": {
+        "description": "Научные и технические документы.",
+        "ocr": {
+          "primary": "paddleocr_ppocrv6_medium",
+          "fallback": ["surya_ocr"]
+        },
+        "layout": {
+          "primary": "surya_layout",
+          "fallback": ["docling_layout", "heuristic_layout"]
+        },
+        "tables": {
+          "native": true,
+          "scanned": "table_transformer",
+          "fallback": ["surya_table", "docling_tableformer"]
+        },
+        "formulas": {
+          "native": true,
+          "scanned": "pix2tex",
+          "fallback": ["pix2text", "paddleocr_vl_1_6", "placeholder_formula"]
+        },
+        "slow_path": {
+          "enabled": true,
+          "backend": "paddleocr_vl_1_6",
+          "alternatives": ["qwen3_vl"],
+          "trigger_on_formula_failure": true,
+          "trigger_on_table_failure": true
+        }
+      },
+
+      "mixed_enterprise": {
+        "description": "Разноформатные enterprise-документы.",
+        "structured_document_parse": {
+          "primary": "docling",
+          "fallback": ["paddleocr_vl_1_6", "mock_structured_parser"]
+        },
+        "ocr": {
+          "primary": "paddleocr_ppocrv6_medium",
+          "fallback": ["surya_ocr", "mock_ocr"]
+        },
+        "layout": {
+          "primary": "surya_layout",
+          "fallback": ["docling_layout", "layoutparser_doclaynet", "heuristic_layout"]
+        },
+        "tables": {
+          "native": true,
+          "scanned": "table_transformer",
+          "fallback": ["surya_table", "docling_tableformer", "placeholder_table"]
+        },
+        "formulas": {
+          "native": true,
+          "scanned": "pix2tex",
+          "fallback": ["pix2text", "paddleocr_vl_1_6", "placeholder_formula"]
+        },
+        "legal": {
+          "enabled": "auto"
+        },
+        "book": {
+          "enabled": "auto"
+        },
+        "slow_path": {
+          "enabled": true,
+          "backend": "paddleocr_vl_1_6",
+          "alternatives": ["qwen3_vl", "granite_docling_258m"]
+        }
+      }
+    },
+
+    "backends": {
+      "paddleocr_ppocrv6_medium": {
+        "kind": "ocr",
+        "enabled": true,
+        "backend_type": "http",
+        "required": false,
+        "languages": ["ru", "en"],
+        "detection_model": "PaddlePaddle/PP-OCRv6_medium_det",
+        "recognition_model": "PaddlePaddle/PP-OCRv6_medium_rec",
+        "aliases": {
+          "detection": ["PP-OCRv6_medium_det", "PP-OCRv6_medium_dec"],
+          "recognition": ["PP-OCRv6_medium_rec"]
+        },
+        "local_paths": {
+          "det_model_path": "models/paddleocr/ppocrv6_medium_det.onnx",
+          "rec_model_path": "models/paddleocr/ppocrv6_medium_rec.onnx",
+          "charset_path": "models/paddleocr/ppocrv6_charset.txt"
+        },
+        "provider": "cpu",
+        "url": "http://127.0.0.1:8101",
+        "health_path": "/healthz",
+        "ocr_path": "/v1/ocr",
+        "timeout_sec": 120,
+        "fallback_to_mock": true
+      },
+
+      "surya_ocr": {
+        "kind": "ocr",
+        "enabled": true,
+        "backend_type": "http",
+        "required": false,
+        "languages": ["ru", "en"],
+        "url": "http://127.0.0.1:8102",
+        "health_path": "/healthz",
+        "ocr_path": "/v1/ocr",
+        "layout_path": "/v1/layout",
+        "table_path": "/v1/tables",
+        "timeout_sec": 120,
+        "fallback_to_mock": true
+      },
+
+      "docling": {
+        "kind": "structured_document_parse",
+        "enabled": true,
+        "backend_type": "http",
+        "required": false,
+        "url": "http://127.0.0.1:8103",
+        "health_path": "/healthz",
+        "parse_path": "/v1/parse",
+        "timeout_sec": 300,
+        "fallback_to_mock": true
+      },
+
+      "paddleocr_vl_1_6": {
+        "kind": "vlm_document_parse",
+        "enabled": false,
+        "backend_type": "transformers_or_http",
+        "model": "PaddlePaddle/PaddleOCR-VL-1.6",
+        "required": false,
+        "fallback_to_mock": true
+      },
+
+      "qwen3_vl": {
+        "kind": "vlm",
+        "enabled": false,
+        "backend_type": "vllm_or_http",
+        "model": "Qwen3-VL",
+        "required": false,
+        "fallback_to_mock": true
+      },
+
+      "granite_docling_258m": {
+        "kind": "vlm_document_parse",
+        "enabled": false,
+        "backend_type": "transformers_vllm_or_http",
+        "model": "ibm-granite/granite-docling-258M",
+        "required": false,
+        "fallback_to_mock": true
+      },
+
+      "surya_layout": {
+        "kind": "layout",
+        "enabled": true,
+        "backend_type": "http",
+        "required": false,
+        "url": "http://127.0.0.1:8102",
+        "health_path": "/healthz",
+        "layout_path": "/v1/layout",
+        "timeout_sec": 120,
+        "fallback_to_heuristic": true
+      },
+
+      "docling_layout": {
+        "kind": "layout",
+        "enabled": true,
+        "backend_type": "http",
+        "required": false,
+        "url": "http://127.0.0.1:8103",
+        "health_path": "/healthz",
+        "layout_path": "/v1/layout",
+        "timeout_sec": 300,
+        "fallback_to_heuristic": true
+      },
+
+      "layoutparser_doclaynet": {
+        "kind": "layout",
+        "enabled": false,
+        "backend_type": "python_external",
+        "required": false,
+        "fallback_to_heuristic": true
+      },
+
+      "table_transformer": {
+        "kind": "table_structure",
+        "enabled": true,
+        "backend_type": "onnx_or_http",
+        "required": false,
+        "fallback_to_placeholder": true
+      },
+
+      "surya_table": {
+        "kind": "table_structure",
+        "enabled": true,
+        "backend_type": "http",
+        "required": false,
+        "url": "http://127.0.0.1:8102",
+        "health_path": "/healthz",
+        "table_path": "/v1/tables",
+        "timeout_sec": 120,
+        "fallback_to_placeholder": true
+      },
+
+      "docling_tableformer": {
+        "kind": "table_structure",
+        "enabled": true,
+        "backend_type": "http",
+        "required": false,
+        "url": "http://127.0.0.1:8103",
+        "health_path": "/healthz",
+        "table_path": "/v1/tables",
+        "timeout_sec": 300,
+        "fallback_to_placeholder": true
+      },
+
+      "pix2tex": {
+        "kind": "formula",
+        "enabled": false,
+        "backend_type": "external_command_or_http",
+        "required": false,
+        "fallback_to_placeholder": true
+      },
+
+      "pix2text": {
+        "kind": "formula",
+        "enabled": false,
+        "backend_type": "external_command_or_http",
+        "required": false,
+        "fallback_to_placeholder": true
+      },
+
+      "gliner_large_v2_5": {
+        "kind": "legal_ner",
+        "enabled": false,
+        "backend_type": "http_or_python_external",
+        "model": "gliner-community/gliner_large-v2.5",
+        "required": false,
+        "fallback": ["gliner_medium_v2_5", "gliner_small_v2_5", "rule_based_legal_extractor"]
+      },
+
+      "gliner_medium_v2_5": {
+        "kind": "legal_ner",
+        "enabled": false,
+        "backend_type": "http_or_python_external",
+        "model": "gliner-community/gliner_medium-v2.5",
+        "required": false,
+        "fallback": ["gliner_small_v2_5", "rule_based_legal_extractor"]
+      },
+
+      "gliner_small_v2_5": {
+        "kind": "legal_ner",
+        "enabled": false,
+        "backend_type": "http_or_python_external",
+        "model": "gliner-community/gliner_small-v2.5",
+        "required": false,
+        "fallback": ["rule_based_legal_extractor"]
+      },
+
+      "rule_based_legal_extractor": {
+        "kind": "legal_ner",
+        "enabled": true,
+        "backend_type": "rust_rules",
+        "required": true
+      },
+
+      "deepvk_user_bge_m3": {
+        "kind": "embedding",
+        "enabled": false,
+        "backend_type": "sentence_transformers_or_http",
+        "model": "deepvk/USER-bge-m3",
+        "required": false,
+        "fallback": ["baai_bge_m3"]
+      },
+
+      "baai_bge_m3": {
+        "kind": "embedding",
+        "enabled": false,
+        "backend_type": "sentence_transformers_or_http",
+        "model": "BAAI/bge-m3",
+        "required": false
+      },
+
+      "kraken": {
+        "kind": "historical_ocr",
+        "enabled": false,
+        "backend_type": "external_command",
+        "required": false,
+        "fallback_to_paddleocr": true
+      },
+
+      "escriptorium": {
+        "kind": "historical_ocr",
+        "enabled": false,
+        "backend_type": "http_or_external_command",
+        "required": false
+      },
+
+      "calamari": {
+        "kind": "historical_ocr",
+        "enabled": false,
+        "backend_type": "external_command",
+        "required": false
+      }
+    }
+  }
+}

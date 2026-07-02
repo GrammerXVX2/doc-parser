@@ -7,6 +7,7 @@ fn doctor_reports_missing_optional_tools_as_warnings() {
     let options = DoctorOptions {
         pipeline_config_path: PathBuf::from("configs/pipeline.config.jsonc"),
         service_profile_path: PathBuf::from("configs/profiles/api.jsonc"),
+        model_stack_config_path: PathBuf::from("configs/model_stack.config.jsonc"),
     };
 
     let report = run_doctor(&options);
@@ -23,6 +24,7 @@ fn doctor_reports_invalid_required_config_as_error() {
     let options = DoctorOptions {
         pipeline_config_path: PathBuf::from("configs/does_not_exist.jsonc"),
         service_profile_path: PathBuf::from("configs/profiles/api.jsonc"),
+        model_stack_config_path: PathBuf::from("configs/model_stack.config.jsonc"),
     };
 
     let report = run_doctor(&options);

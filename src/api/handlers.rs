@@ -274,6 +274,35 @@ pub async fn upload_document(
                 ));
             }
             "layout_backend" => options.layout_backend = Some(field.text().await.unwrap_or_default()),
+            "model_stack_config" => {
+                options.model_stack_config = Some(field.text().await.unwrap_or_default())
+            }
+            "model_profile" => options.model_profile = Some(field.text().await.unwrap_or_default()),
+            "domain" => options.domain = Some(field.text().await.unwrap_or_default()),
+            "enable_slow_path" => {
+                options.enable_slow_path = Some(matches!(
+                    field.text().await.unwrap_or_default().to_ascii_lowercase().as_str(),
+                    "true" | "1" | "yes"
+                ));
+            }
+            "execute_slow_path" => {
+                options.execute_slow_path = Some(matches!(
+                    field.text().await.unwrap_or_default().to_ascii_lowercase().as_str(),
+                    "true" | "1" | "yes"
+                ));
+            }
+            "legal_extract" => {
+                options.legal_extract = Some(matches!(
+                    field.text().await.unwrap_or_default().to_ascii_lowercase().as_str(),
+                    "true" | "1" | "yes"
+                ));
+            }
+            "book_extract" => {
+                options.book_extract = Some(matches!(
+                    field.text().await.unwrap_or_default().to_ascii_lowercase().as_str(),
+                    "true" | "1" | "yes"
+                ));
+            }
             _ => {}
         }
     }

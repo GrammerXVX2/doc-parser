@@ -15,6 +15,13 @@ pub struct ProcessingOptions {
     pub extract_tables: Option<bool>,
     pub table_chunks: Option<bool>,
     pub layout_backend: Option<String>,
+    pub model_stack_config: Option<String>,
+    pub model_profile: Option<String>,
+    pub domain: Option<String>,
+    pub enable_slow_path: Option<bool>,
+    pub execute_slow_path: Option<bool>,
+    pub legal_extract: Option<bool>,
+    pub book_extract: Option<bool>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

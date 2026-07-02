@@ -1,7 +1,8 @@
-use std::path::Path;
+use std::path::{Path, PathBuf};
+use std::time::Instant;
+use std::future::Future;
 
 use anyhow::Context;
-use futures::executor::block_on;
 use serde_json::json;
 
 use crate::assets::LocalAssetStore;
@@ -25,6 +26,23 @@ use crate::merge::ReadingOrderEngine;
 use crate::model::{
     Diagnostic, ElementType, ProcessingStage, ProcessingStatus, StageStatus,
 };
+use crate::models::books::extract_book_mvp;
+use crate::models::backends::mocks::{
+    MockDoclingBackend, MockPaddleOcrV6Backend,
+};
+use crate::models::backends::traits::{
+    ExtendedOcrBackend, ExtendedOcrInput, ModelBackend, StructuredDocumentParserBackend,
+    StructuredParseInput,
+};
+use crate::models::config::load_model_stack_config_or_default;
+use crate::models::domain::DocumentDomain;
+use crate::models::layout::{DoclingLayoutHttpBackend, SuryaLayoutHttpBackend, layout_request};
+use crate::models::legal::{extract_legal_mvp, legal_required_fields_present};
+use crate::models::ocr::{PaddleOcrV6HttpBackend, SuryaOcrHttpBackend};
+use crate::models::router::route_models;
+use crate::models::slow_path::decide_slow_path;
+use crate::models::structured::DoclingStructuredParseHttpBackend;
+use crate::models::tables::{DoclingTableFormerHttpBackend, SuryaTableHttpBackend};
 use crate::pdf::{
     PdfTextReconstructionOptions, merge_lines_into_blocks, merge_spans_into_lines,
     pdf_blocks_to_elements, text_to_synthetic_spans,
@@ -85,6 +103,38 @@ pub fn effective_layout_backend(config: &PipelineConfig) -> String {
     backend
 }
 
+fn run_async<F>(future: F) -> F::Output
+where
+    F: Future + Send,
+    F::Output: Send,
+{
+    match tokio::runtime::Handle::try_current() {
+        Ok(handle) => {
+            if handle.runtime_flavor() == tokio::runtime::RuntimeFlavor::MultiThread {
+                tokio::task::block_in_place(|| handle.block_on(future))
+            } else {
+                std::thread::scope(|scope| {
+                    scope
+                        .spawn(|| {
+                            tokio::runtime::Builder::new_current_thread()
+                                .enable_all()
+                                .build()
+                                .expect("tokio runtime")
+                                .block_on(future)
+                        })
+                        .join()
+                        .expect("scoped async worker thread")
+                })
+            }
+        }
+        Err(_) => tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .expect("tokio runtime")
+            .block_on(future),
+    }
+}
+
 pub fn run_pipeline(input_path: &Path, context: &PipelineContext) -> anyhow::Result<(FileClassification, DocumentModel)> {
     let classification = classify_file(input_path)?;
 
@@ -102,6 +152,9 @@ pub fn run_pipeline(input_path: &Path, context: &PipelineContext) -> anyhow::Res
     } else {
         ReadingOrderEngine::assign_natural_order(&mut model);
     }
+
+    apply_model_stack_enrichment(&classification, &mut model);
+    ensure_reading_order(&mut model);
 
     let max_tokens = context
         .pipeline_config
@@ -161,6 +214,904 @@ pub fn run_pipeline(input_path: &Path, context: &PipelineContext) -> anyhow::Res
     Ok((classification, model))
 }
 
+fn ensure_reading_order(model: &mut DocumentModel) {
+    for page in &mut model.pages {
+        for (index, element) in page.elements.iter_mut().enumerate() {
+            element.reading_order = Some((index as u32) + 1);
+        }
+    }
+}
+
+fn apply_model_stack_enrichment(classification: &FileClassification, model: &mut DocumentModel) {
+    let overrides = pipeline_cli_overrides();
+    let config_path = overrides
+        .and_then(|o| o.model_stack_config.as_ref())
+        .map(PathBuf::from)
+        .unwrap_or_else(|| PathBuf::from("configs/model_stack.config.jsonc"));
+
+    if !config_path.exists() {
+        model.warnings.push(Diagnostic {
+            code: "MODEL_STACK_CONFIG_MISSING".to_string(),
+            severity: "warning".to_string(),
+            scope: "document".to_string(),
+            page_number: None,
+            element_id: None,
+            message: "Конфиг model stack не найден, используется безопасный профиль по умолчанию.".to_string(),
+            recoverable: true,
+            extra: Default::default(),
+        });
+    }
+
+    let config = load_model_stack_config_or_default(Some(config_path.as_path()));
+    let routing = route_models(
+        classification,
+        Some(model),
+        &config,
+        overrides.and_then(|o| o.model_profile.as_deref()),
+        overrides.and_then(|o| o.domain.as_deref()),
+    );
+
+    let default_languages = config.model_stack.fallback_languages.clone();
+
+    let mut ocr_backend_used = routing.fast_ocr_backend.clone();
+    let mut ocr_backend_type = "mock".to_string();
+    let mut ocr_backend_url: Option<String> = None;
+    let mut ocr_fallback_used = false;
+    let mut ocr_fallback_backend: Option<String> = None;
+
+    let mut layout_backend_used = routing.layout_backend.clone();
+    let mut layout_backend_type = "heuristic".to_string();
+    let mut layout_backend_url: Option<String> = None;
+    let mut layout_fallback_used = false;
+    let mut layout_regions_detected = 0usize;
+
+    let structured_backend_used = routing.structured_backend.clone();
+    let mut structured_backend_type = "native_or_mock".to_string();
+    let mut structured_backend_url: Option<String> = None;
+    let mut structured_fallback_used = false;
+    let mut structured_executed = false;
+
+    let table_backend_used = routing.table_backend.clone();
+    let mut table_fallback_used = false;
+
+    // Stage: model backend health check and initial routing metadata.
+    model.processing.stages.push(ProcessingStage {
+        name: "model_backend_health_check".to_string(),
+        status: StageStatus::Ok,
+        tool: "model_stack_router".to_string(),
+        duration_ms: Some(1),
+        metadata: json!({
+            "selected_profile": routing.selected_profile,
+            "ocr_backend": routing.fast_ocr_backend,
+            "layout_backend": routing.layout_backend,
+            "structured_backend": routing.structured_backend,
+        }),
+    });
+
+    // OCR execution (Paddle primary, Surya fallback, then mock fallback).
+    if let Some(ocr_name) = routing.fast_ocr_backend.as_deref() {
+        match ocr_name {
+            "paddleocr_ppocrv6_medium" => {
+                if let Some(cfg) = config.model_stack.backends.get("paddleocr_ppocrv6_medium") {
+                    let start = Instant::now();
+                    let backend = PaddleOcrV6HttpBackend::new(cfg.clone());
+                    let health = run_async(backend.health_check());
+                    if health.available {
+                        let mut total_regions = 0usize;
+                        for page_idx in 0..model.pages.len() {
+                            let page_number = model.pages[page_idx].page_number as usize;
+                            let image_path = resolve_page_image_path(model, page_idx, std::path::Path::new(&model.source.uri));
+                            if image_path.is_none() {
+                                continue;
+                            }
+                            let input = ExtendedOcrInput {
+                                document_id: model.document_id.clone(),
+                                page_number,
+                                image_path: image_path.map(|p| p.to_string_lossy().to_string()),
+                                languages: cfg.languages.clone().into_iter().chain(default_languages.clone()).collect(),
+                            };
+                            let mut ex_ctx = ExtractionContext::default();
+                            match run_async(backend.run_ocr(input, &mut ex_ctx)) {
+                                Ok(output) => {
+                                    total_regions += output.elements.len();
+                                    model.pages[page_idx].elements.extend(output.elements);
+                                }
+                                Err(err) => {
+                                    ocr_fallback_used = true;
+                                    ocr_fallback_backend = Some("surya_ocr".to_string());
+                                    model.warnings.push(Diagnostic {
+                                        code: "MODEL_BACKEND_HTTP_ERROR".to_string(),
+                                        severity: "warning".to_string(),
+                                        scope: "document".to_string(),
+                                        page_number: Some(page_number as u32),
+                                        element_id: None,
+                                        message: format!("PaddleOCR HTTP error, fallback will be used: {err}"),
+                                        recoverable: true,
+                                        extra: Default::default(),
+                                    });
+                                }
+                            }
+                        }
+
+                        ocr_backend_type = "http".to_string();
+                        ocr_backend_url = Some(backend.backend_url());
+                        model.processing.stages.push(ProcessingStage {
+                            name: "paddleocr_http_ocr".to_string(),
+                            status: if ocr_fallback_used { StageStatus::Warning } else { StageStatus::Ok },
+                            tool: "paddleocr_ppocrv6_medium_http".to_string(),
+                            duration_ms: Some(start.elapsed().as_millis() as u64),
+                            metadata: json!({
+                                "backend_url": ocr_backend_url,
+                                "regions": total_regions,
+                                "fallback_used": ocr_fallback_used,
+                            }),
+                        });
+                    } else {
+                        ocr_fallback_used = true;
+                        ocr_fallback_backend = Some("surya_ocr".to_string());
+                        model.warnings.push(Diagnostic {
+                            code: "PADDLEOCR_SERVICE_UNAVAILABLE".to_string(),
+                            severity: "warning".to_string(),
+                            scope: "document".to_string(),
+                            page_number: None,
+                            element_id: None,
+                            message: "PaddleOCR service недоступен, будет использован fallback backend.".to_string(),
+                            recoverable: true,
+                            extra: Default::default(),
+                        });
+                    }
+                }
+            }
+            "surya_ocr" => {
+                if let Some(cfg) = config.model_stack.backends.get("surya_ocr") {
+                    let start = Instant::now();
+                    let backend = SuryaOcrHttpBackend::new(cfg.clone());
+                    let health = run_async(backend.health_check());
+                    if health.available {
+                        let mut total_regions = 0usize;
+                        for page_idx in 0..model.pages.len() {
+                            let page_number = model.pages[page_idx].page_number as usize;
+                            let image_path = resolve_page_image_path(model, page_idx, std::path::Path::new(&model.source.uri));
+                            if image_path.is_none() {
+                                continue;
+                            }
+                            let input = ExtendedOcrInput {
+                                document_id: model.document_id.clone(),
+                                page_number,
+                                image_path: image_path.map(|p| p.to_string_lossy().to_string()),
+                                languages: cfg.languages.clone().into_iter().chain(default_languages.clone()).collect(),
+                            };
+                            let mut ex_ctx = ExtractionContext::default();
+                            match run_async(backend.run_ocr(input, &mut ex_ctx)) {
+                                Ok(output) => {
+                                    total_regions += output.elements.len();
+                                    model.pages[page_idx].elements.extend(output.elements);
+                                }
+                                Err(err) => {
+                                    ocr_fallback_used = true;
+                                    model.warnings.push(Diagnostic {
+                                        code: "MODEL_BACKEND_HTTP_ERROR".to_string(),
+                                        severity: "warning".to_string(),
+                                        scope: "document".to_string(),
+                                        page_number: Some(page_number as u32),
+                                        element_id: None,
+                                        message: format!("Surya OCR HTTP error, fallback to mock will be used: {err}"),
+                                        recoverable: true,
+                                        extra: Default::default(),
+                                    });
+                                }
+                            }
+                        }
+
+                        ocr_backend_used = Some("surya_ocr".to_string());
+                        ocr_backend_type = "http".to_string();
+                        ocr_backend_url = Some(backend.backend_url());
+                        model.processing.stages.push(ProcessingStage {
+                            name: "surya_http_ocr".to_string(),
+                            status: if ocr_fallback_used { StageStatus::Warning } else { StageStatus::Ok },
+                            tool: "surya_ocr_http".to_string(),
+                            duration_ms: Some(start.elapsed().as_millis() as u64),
+                            metadata: json!({
+                                "backend_url": ocr_backend_url,
+                                "regions": total_regions,
+                                "fallback_used": ocr_fallback_used,
+                            }),
+                        });
+                    } else {
+                        ocr_fallback_used = true;
+                        model.warnings.push(Diagnostic {
+                            code: "SURYA_SERVICE_UNAVAILABLE".to_string(),
+                            severity: "warning".to_string(),
+                            scope: "document".to_string(),
+                            page_number: None,
+                            element_id: None,
+                            message: "Surya OCR service недоступен, будет использован mock fallback.".to_string(),
+                            recoverable: true,
+                            extra: Default::default(),
+                        });
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+
+    if ocr_fallback_used {
+        let mut ex_ctx = ExtractionContext::default();
+        let mock_backend = MockPaddleOcrV6Backend;
+        let mut total_regions = 0usize;
+        for page_idx in 0..model.pages.len() {
+            let page_number = model.pages[page_idx].page_number as usize;
+            let input = ExtendedOcrInput {
+                document_id: model.document_id.clone(),
+                page_number,
+                image_path: None,
+                languages: default_languages.clone(),
+            };
+            if let Ok(output) = run_async(mock_backend.run_ocr(input, &mut ex_ctx)) {
+                total_regions += output.elements.len();
+                model.pages[page_idx].elements.extend(output.elements);
+            }
+        }
+        model.processing.stages.push(ProcessingStage {
+            name: "model_backend_fallback".to_string(),
+            status: StageStatus::Warning,
+            tool: "mock_ocr".to_string(),
+            duration_ms: Some(1),
+            metadata: json!({
+                "for": "ocr",
+                "regions": total_regions,
+                "fallback_backend": "mock_paddleocr_v6"
+            }),
+        });
+        model.warnings.push(Diagnostic {
+            code: "MODEL_BACKEND_FALLBACK_USED".to_string(),
+            severity: "warning".to_string(),
+            scope: "document".to_string(),
+            page_number: None,
+            element_id: None,
+            message: "OCR backend fallback activated (mock).".to_string(),
+            recoverable: true,
+            extra: Default::default(),
+        });
+        if ocr_backend_used.as_deref() == Some("paddleocr_ppocrv6_medium") {
+            ocr_fallback_backend.get_or_insert("mock_paddleocr_v6".to_string());
+        }
+        ocr_backend_type = "mock".to_string();
+    }
+
+    // Layout execution (Surya/Docling HTTP with heuristic fallback).
+    if let Some(layout_name) = routing.layout_backend.as_deref() {
+        match layout_name {
+            "surya_layout" => {
+                if let Some(cfg) = config.model_stack.backends.get("surya_layout") {
+                    let start = Instant::now();
+                    let backend = SuryaLayoutHttpBackend::new(cfg.clone());
+                    let health = run_async(backend.health_check());
+                    if health.available {
+                        let mut all_regions = Vec::new();
+                        for page_idx in 0..model.pages.len() {
+                            let page_number = model.pages[page_idx].page_number as usize;
+                            let request = layout_request(
+                                &model.document_id,
+                                page_number as u32,
+                                resolve_page_image_path(model, page_idx, std::path::Path::new(&model.source.uri))
+                                    .map(|p| p.to_string_lossy().to_string()),
+                                model.pages[page_idx].width,
+                                model.pages[page_idx].height,
+                            );
+                            match run_async(backend.detect_layout(request)) {
+                                Ok(resp) => {
+                                    let regions = backend.to_layout_regions(page_number, &resp);
+                                    layout_regions_detected += regions.len();
+                                    all_regions.extend(regions);
+                                }
+                                Err(err) => {
+                                    layout_fallback_used = true;
+                                    model.warnings.push(Diagnostic {
+                                        code: "MODEL_BACKEND_HTTP_ERROR".to_string(),
+                                        severity: "warning".to_string(),
+                                        scope: "page".to_string(),
+                                        page_number: Some(page_number as u32),
+                                        element_id: None,
+                                        message: format!("Surya layout HTTP error: {err}"),
+                                        recoverable: true,
+                                        extra: Default::default(),
+                                    });
+                                }
+                            }
+                        }
+
+                        for region in &all_regions {
+                            let page_idx = region.page_number.saturating_sub(1);
+                            if page_idx < model.pages.len() {
+                                if !should_create_placeholder(&region.region_type) {
+                                    continue;
+                                }
+                                if has_region_duplicate(&model.pages[page_idx], region) {
+                                    continue;
+                                }
+                                model.pages[page_idx]
+                                    .elements
+                                    .push(layout_region_to_element_placeholder(region));
+                            }
+                        }
+
+                        layout_backend_type = "http".to_string();
+                        layout_backend_url = Some(backend.backend_url());
+                        model.processing.stages.push(ProcessingStage {
+                            name: "surya_http_layout".to_string(),
+                            status: if layout_fallback_used { StageStatus::Warning } else { StageStatus::Ok },
+                            tool: "surya_layout_http".to_string(),
+                            duration_ms: Some(start.elapsed().as_millis() as u64),
+                            metadata: json!({
+                                "backend_url": layout_backend_url,
+                                "regions": layout_regions_detected,
+                                "fallback_used": layout_fallback_used,
+                            }),
+                        });
+                    } else {
+                        layout_fallback_used = true;
+                        model.warnings.push(Diagnostic {
+                            code: "SURYA_SERVICE_UNAVAILABLE".to_string(),
+                            severity: "warning".to_string(),
+                            scope: "document".to_string(),
+                            page_number: None,
+                            element_id: None,
+                            message: "Surya layout service недоступен, будет использован heuristic fallback.".to_string(),
+                            recoverable: true,
+                            extra: Default::default(),
+                        });
+                    }
+                }
+            }
+            "docling_layout" => {
+                if let Some(cfg) = config.model_stack.backends.get("docling_layout") {
+                    let start = Instant::now();
+                    let backend = DoclingLayoutHttpBackend::new(cfg.clone());
+                    let health = run_async(backend.health_check());
+                    if health.available {
+                        let mut all_regions = Vec::new();
+                        for page_idx in 0..model.pages.len() {
+                            let page_number = model.pages[page_idx].page_number as usize;
+                            let request = layout_request(
+                                &model.document_id,
+                                page_number as u32,
+                                resolve_page_image_path(model, page_idx, std::path::Path::new(&model.source.uri))
+                                    .map(|p| p.to_string_lossy().to_string()),
+                                model.pages[page_idx].width,
+                                model.pages[page_idx].height,
+                            );
+                            match run_async(backend.detect_layout(request)) {
+                                Ok(resp) => {
+                                    let regions = backend.to_layout_regions(page_number, &resp);
+                                    layout_regions_detected += regions.len();
+                                    all_regions.extend(regions);
+                                }
+                                Err(err) => {
+                                    layout_fallback_used = true;
+                                    model.warnings.push(Diagnostic {
+                                        code: "MODEL_BACKEND_HTTP_ERROR".to_string(),
+                                        severity: "warning".to_string(),
+                                        scope: "page".to_string(),
+                                        page_number: Some(page_number as u32),
+                                        element_id: None,
+                                        message: format!("Docling layout HTTP error: {err}"),
+                                        recoverable: true,
+                                        extra: Default::default(),
+                                    });
+                                }
+                            }
+                        }
+
+                        for region in &all_regions {
+                            let page_idx = region.page_number.saturating_sub(1);
+                            if page_idx < model.pages.len() {
+                                if !should_create_placeholder(&region.region_type) {
+                                    continue;
+                                }
+                                if has_region_duplicate(&model.pages[page_idx], region) {
+                                    continue;
+                                }
+                                model.pages[page_idx]
+                                    .elements
+                                    .push(layout_region_to_element_placeholder(region));
+                            }
+                        }
+
+                        layout_backend_used = Some("docling_layout".to_string());
+                        layout_backend_type = "http".to_string();
+                        layout_backend_url = Some(backend.backend_url());
+                        model.processing.stages.push(ProcessingStage {
+                            name: "docling_http_layout".to_string(),
+                            status: if layout_fallback_used { StageStatus::Warning } else { StageStatus::Ok },
+                            tool: "docling_layout_http".to_string(),
+                            duration_ms: Some(start.elapsed().as_millis() as u64),
+                            metadata: json!({
+                                "backend_url": layout_backend_url,
+                                "regions": layout_regions_detected,
+                                "fallback_used": layout_fallback_used,
+                            }),
+                        });
+                    } else {
+                        layout_fallback_used = true;
+                        model.warnings.push(Diagnostic {
+                            code: "DOCLING_SERVICE_UNAVAILABLE".to_string(),
+                            severity: "warning".to_string(),
+                            scope: "document".to_string(),
+                            page_number: None,
+                            element_id: None,
+                            message: "Docling layout service недоступен, будет использован heuristic fallback.".to_string(),
+                            recoverable: true,
+                            extra: Default::default(),
+                        });
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+
+    if layout_fallback_used {
+        model.processing.stages.push(ProcessingStage {
+            name: "model_backend_fallback".to_string(),
+            status: StageStatus::Warning,
+            tool: "heuristic_layout".to_string(),
+            duration_ms: Some(1),
+            metadata: json!({
+                "for": "layout",
+                "fallback_backend": "heuristic_layout"
+            }),
+        });
+        model.warnings.push(Diagnostic {
+            code: "MODEL_BACKEND_FALLBACK_USED".to_string(),
+            severity: "warning".to_string(),
+            scope: "document".to_string(),
+            page_number: None,
+            element_id: None,
+            message: "Layout backend fallback activated (heuristic).".to_string(),
+            recoverable: true,
+            extra: Default::default(),
+        });
+        layout_backend_type = "heuristic".to_string();
+    }
+
+    // Structured parsing (Docling HTTP with mock fallback).
+    if let Some(structured_name) = routing.structured_backend.as_deref() {
+        if structured_name == "docling" {
+            if let Some(cfg) = config.model_stack.backends.get("docling") {
+                let start = Instant::now();
+                let backend = DoclingStructuredParseHttpBackend::new(cfg.clone());
+                let health = run_async(backend.health_check());
+                if health.available {
+                    let mut ex_ctx = ExtractionContext::default();
+                    let input = StructuredParseInput {
+                        document_id: model.document_id.clone(),
+                        input_path: model.source.uri.clone(),
+                    };
+                    match run_async(backend.parse_document_structured(input, &mut ex_ctx)) {
+                        Ok(out) => {
+                            structured_executed = out.executed;
+                            structured_backend_type = "http".to_string();
+                            structured_backend_url = Some(backend.backend_url());
+                            if let Some(markdown) = out.metadata.get("markdown").and_then(|v| v.as_str()) {
+                                if let Some(page) = model.pages.first_mut() {
+                                    if page.markdown.trim().is_empty() {
+                                        page.markdown = markdown.to_string();
+                                    }
+                                }
+                            }
+                            if let Some(text) = out.metadata.get("text").and_then(|v| v.as_str()) {
+                                if let Some(page) = model.pages.first_mut() {
+                                    if page.text.trim().is_empty() {
+                                        page.text = text.to_string();
+                                    }
+                                }
+                            }
+                            model.extra.insert(
+                                "docling_structured".to_string(),
+                                out.metadata.clone(),
+                            );
+                        }
+                        Err(err) => {
+                            structured_fallback_used = true;
+                            model.warnings.push(Diagnostic {
+                                code: "MODEL_BACKEND_HTTP_ERROR".to_string(),
+                                severity: "warning".to_string(),
+                                scope: "document".to_string(),
+                                page_number: None,
+                                element_id: None,
+                                message: format!("Docling parse HTTP error, fallback to mock will be used: {err}"),
+                                recoverable: true,
+                                extra: Default::default(),
+                            });
+                        }
+                    }
+
+                    model.processing.stages.push(ProcessingStage {
+                        name: "docling_http_parse".to_string(),
+                        status: if structured_fallback_used { StageStatus::Warning } else { StageStatus::Ok },
+                        tool: "docling_http".to_string(),
+                        duration_ms: Some(start.elapsed().as_millis() as u64),
+                        metadata: json!({
+                            "backend_url": structured_backend_url,
+                            "executed": structured_executed,
+                            "fallback_used": structured_fallback_used,
+                        }),
+                    });
+                } else {
+                    structured_fallback_used = true;
+                    model.warnings.push(Diagnostic {
+                        code: "DOCLING_SERVICE_UNAVAILABLE".to_string(),
+                        severity: "warning".to_string(),
+                        scope: "document".to_string(),
+                        page_number: None,
+                        element_id: None,
+                        message: "Docling service недоступен, будет использован mock/native fallback.".to_string(),
+                        recoverable: true,
+                        extra: Default::default(),
+                    });
+                }
+            }
+        }
+    }
+
+    if structured_fallback_used {
+        let mut ex_ctx = ExtractionContext::default();
+        let mock_backend = MockDoclingBackend;
+        let input = StructuredParseInput {
+            document_id: model.document_id.clone(),
+            input_path: model.source.uri.clone(),
+        };
+        if let Ok(out) = run_async(mock_backend.parse_document_structured(input, &mut ex_ctx)) {
+            structured_executed = out.executed;
+            model.extra.insert("docling_structured".to_string(), out.metadata);
+        }
+        model.processing.stages.push(ProcessingStage {
+            name: "model_backend_fallback".to_string(),
+            status: StageStatus::Warning,
+            tool: "mock_docling".to_string(),
+            duration_ms: Some(1),
+            metadata: json!({
+                "for": "structured_document_parse",
+                "fallback_backend": "mock_docling"
+            }),
+        });
+        model.warnings.push(Diagnostic {
+            code: "MODEL_BACKEND_FALLBACK_USED".to_string(),
+            severity: "warning".to_string(),
+            scope: "document".to_string(),
+            page_number: None,
+            element_id: None,
+            message: "Structured parser fallback activated (mock_docling).".to_string(),
+            recoverable: true,
+            extra: Default::default(),
+        });
+        structured_backend_type = "mock".to_string();
+    }
+
+    // Optional table helper health checks for explicit table backends.
+    if let Some(table_name) = routing.table_backend.as_deref() {
+        match table_name {
+            "surya_table" => {
+                if let Some(cfg) = config.model_stack.backends.get("surya_table") {
+                    let backend = SuryaTableHttpBackend::new(cfg.clone());
+                    let health = run_async(backend.health_check());
+                    if !health.available {
+                        table_fallback_used = true;
+                        model.warnings.push(Diagnostic {
+                            code: "SURYA_SERVICE_UNAVAILABLE".to_string(),
+                            severity: "warning".to_string(),
+                            scope: "document".to_string(),
+                            page_number: None,
+                            element_id: None,
+                            message: "Surya table service недоступен, будет использован placeholder fallback.".to_string(),
+                            recoverable: true,
+                            extra: Default::default(),
+                        });
+                    }
+                }
+            }
+            "docling_tableformer" => {
+                if let Some(cfg) = config.model_stack.backends.get("docling_tableformer") {
+                    let backend = DoclingTableFormerHttpBackend::new(cfg.clone());
+                    let health = run_async(backend.health_check());
+                    if !health.available {
+                        table_fallback_used = true;
+                        model.warnings.push(Diagnostic {
+                            code: "DOCLING_SERVICE_UNAVAILABLE".to_string(),
+                            severity: "warning".to_string(),
+                            scope: "document".to_string(),
+                            page_number: None,
+                            element_id: None,
+                            message: "Docling table service недоступен, будет использован placeholder fallback.".to_string(),
+                            recoverable: true,
+                            extra: Default::default(),
+                        });
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+
+    for reason in &routing.reasons {
+        if reason.starts_with("MODEL_PROFILE_NOT_FOUND") {
+            model.warnings.push(Diagnostic {
+                code: "MODEL_PROFILE_NOT_FOUND".to_string(),
+                severity: "warning".to_string(),
+                scope: "document".to_string(),
+                page_number: None,
+                element_id: None,
+                message: "Запрошенный профиль моделей не найден, использован fallback профиль.".to_string(),
+                recoverable: true,
+                extra: Default::default(),
+            });
+        }
+        if reason.starts_with("OCR_BACKEND_FALLBACK_USED") {
+            model.warnings.push(Diagnostic {
+                code: "OCR_BACKEND_FALLBACK_USED".to_string(),
+                severity: "warning".to_string(),
+                scope: "document".to_string(),
+                page_number: None,
+                element_id: None,
+                message: "Основной OCR backend недоступен, использован fallback.".to_string(),
+                recoverable: true,
+                extra: Default::default(),
+            });
+        }
+    }
+
+    let force_legal = overrides.and_then(|o| o.legal_extract);
+    let force_book = overrides.and_then(|o| o.book_extract);
+
+    let should_legal_extract = force_legal.unwrap_or_else(|| {
+        routing.selected_profile.starts_with("legal")
+            || matches!(routing.domain_profile.domain, DocumentDomain::Legal)
+    });
+
+    if should_legal_extract {
+        let legal = extract_legal_mvp(model);
+        if config.model_stack.routing.legal_required_fields_check
+            && !legal_required_fields_present(&legal)
+        {
+            model.warnings.push(Diagnostic {
+                code: "LEGAL_REQUIRED_FIELDS_MISSING".to_string(),
+                severity: "warning".to_string(),
+                scope: "document".to_string(),
+                page_number: None,
+                element_id: None,
+                message: "Не найдены все обязательные юридические поля (parties/dates/identifiers)."
+                    .to_string(),
+                recoverable: true,
+                extra: Default::default(),
+            });
+        }
+        model.extra.insert(
+            "legal".to_string(),
+            serde_json::to_value(&legal).unwrap_or_else(|_| json!({})),
+        );
+    }
+
+    let should_book_extract = force_book.unwrap_or_else(|| {
+        routing.selected_profile.starts_with("fiction")
+            || matches!(
+                routing.domain_profile.domain,
+                DocumentDomain::Fiction | DocumentDomain::HistoricalBook
+            )
+    });
+
+    if should_book_extract {
+        let book = extract_book_mvp(model);
+        if book.dehyphenation_applied {
+            model.warnings.push(Diagnostic {
+                code: "BOOK_DEHYPHENATION_APPLIED".to_string(),
+                severity: "warning".to_string(),
+                scope: "document".to_string(),
+                page_number: None,
+                element_id: None,
+                message: "Применена де-гипенизация переносов в книжном тексте.".to_string(),
+                recoverable: true,
+                extra: Default::default(),
+            });
+        }
+        if book.historical_orthography_detected {
+            model.warnings.push(Diagnostic {
+                code: "HISTORICAL_ORTHOGRAPHY_DETECTED".to_string(),
+                severity: "warning".to_string(),
+                scope: "document".to_string(),
+                page_number: None,
+                element_id: None,
+                message: "Обнаружена дореформенная орфография в тексте книги.".to_string(),
+                recoverable: true,
+                extra: Default::default(),
+            });
+        }
+        model.extra.insert(
+            "book".to_string(),
+            serde_json::to_value(&book).unwrap_or_else(|_| json!({})),
+        );
+    }
+
+    model.extra.insert(
+        "domain_profile".to_string(),
+        serde_json::to_value(&routing.domain_profile).unwrap_or_else(|_| json!({})),
+    );
+
+    let slow_path = decide_slow_path(model, &routing, &config);
+    if slow_path.should_run {
+        model.warnings.push(Diagnostic {
+            code: "SLOW_PATH_TRIGGERED".to_string(),
+            severity: "warning".to_string(),
+            scope: "document".to_string(),
+            page_number: None,
+            element_id: None,
+            message: "Условия slow path выполнены, решение записано в model_outputs.".to_string(),
+            recoverable: true,
+            extra: Default::default(),
+        });
+    }
+
+    let selected_profile_cfg = config
+        .model_stack
+        .profiles
+        .get(&routing.selected_profile)
+        .cloned()
+        .unwrap_or_default();
+    let primary_ocr = selected_profile_cfg
+        .ocr
+        .get("primary")
+        .and_then(|v| {
+            v.get("backend")
+                .and_then(|x| x.as_str())
+                .map(ToOwned::to_owned)
+                .or_else(|| v.as_str().map(ToOwned::to_owned))
+        })
+        .or_else(|| {
+            selected_profile_cfg
+                .ocr
+                .as_str()
+                .map(ToOwned::to_owned)
+        });
+    let fallback_used = routing.fast_ocr_backend != primary_ocr;
+
+    let ocr_backend_cfg = ocr_backend_used
+        .as_ref()
+        .and_then(|b| config.model_stack.backends.get(b));
+    let ocr_detection_model = ocr_backend_cfg.and_then(|b| b.detection_model.clone());
+    let ocr_recognition_model = ocr_backend_cfg.and_then(|b| b.recognition_model.clone());
+    let ocr_languages = ocr_backend_cfg
+        .map(|b| b.languages.clone())
+        .filter(|v| !v.is_empty())
+        .unwrap_or_else(|| config.model_stack.fallback_languages.clone());
+
+    let table_count = model
+        .pages
+        .iter()
+        .flat_map(|p| p.elements.iter())
+        .filter(|e| e.element_type == ElementType::Table)
+        .count() as u32;
+    let formula_count = model
+        .pages
+        .iter()
+        .flat_map(|p| p.elements.iter())
+        .filter(|e| e.element_type == ElementType::Formula)
+        .count() as u32;
+    let placeholder_tables = model
+        .pages
+        .iter()
+        .flat_map(|p| p.elements.iter())
+        .filter(|e| {
+            e.element_type == ElementType::Table
+                && e.content
+                    .get("text")
+                    .and_then(|v| v.as_str())
+                    .map(|s| s.contains("placeholder"))
+                    .unwrap_or(false)
+        })
+        .count() as u32;
+    let placeholder_formulas = model
+        .pages
+        .iter()
+        .flat_map(|p| p.elements.iter())
+        .filter(|e| {
+            e.element_type == ElementType::Formula
+                && e.extra
+                    .get("format")
+                    .and_then(|v| v.as_str())
+                    .map(|v| v == "unknown")
+                    .unwrap_or(false)
+        })
+        .count() as u32;
+
+    let legal_count = model
+        .extra
+        .get("legal")
+        .and_then(|v| v.get("identifiers"))
+        .and_then(|v| v.as_array())
+        .map(|v| v.len() as u32)
+        .unwrap_or(0);
+
+    let model_outputs = json!({
+        "routing": {
+            "selected_profile": routing.selected_profile,
+            "domain": routing.domain_profile.domain.as_str(),
+            "confidence": routing.domain_profile.confidence,
+            "reasons": routing.domain_profile.reasons,
+        },
+        "ocr": {
+            "backend": ocr_backend_used,
+            "backend_type": ocr_backend_type,
+            "url": ocr_backend_url,
+            "detection_model": ocr_detection_model,
+            "recognition_model": ocr_recognition_model,
+            "fallback_used": fallback_used || ocr_fallback_used,
+            "fallback_backend": ocr_fallback_backend,
+            "languages": ocr_languages,
+            "pages_processed": model.pages.len(),
+            "elements_created": model.stats.ocr_element_count,
+        },
+        "layout": {
+            "backend": layout_backend_used,
+            "backend_type": layout_backend_type,
+            "url": layout_backend_url,
+            "fallback_used": layout_fallback_used,
+            "regions_detected": layout_regions_detected,
+        },
+        "structured_document_parse": {
+            "backend": structured_backend_used,
+            "backend_type": structured_backend_type,
+            "url": structured_backend_url,
+            "fallback_used": structured_fallback_used,
+            "executed": structured_executed,
+        },
+        "tables": {
+            "backend": table_backend_used,
+            "fallback_used": table_fallback_used,
+            "native_tables": table_count,
+            "scanned_tables": table_count,
+            "placeholder_tables": placeholder_tables,
+        },
+        "formulas": {
+            "backend": routing.formula_backend,
+            "native_formulas": formula_count,
+            "scanned_formulas": formula_count,
+            "placeholder_formulas": placeholder_formulas,
+        },
+        "legal": {
+            "ner_backend": routing.legal_ner_backend,
+            "embedding_backend": routing.embedding_backend,
+            "entities_extracted": model.extra.contains_key("legal"),
+            "entities_count": legal_count,
+        },
+        "slow_path": {
+            "enabled": config.model_stack.routing.allow_slow_path,
+            "triggered": slow_path.should_run,
+            "backend": slow_path.backend,
+            "alternatives": slow_path.alternatives,
+            "executed": slow_path.executed,
+            "reason": slow_path.reasons.first().cloned(),
+        }
+    });
+
+    model.extra.insert("model_outputs".to_string(), model_outputs);
+    model.processing.stages.push(ProcessingStage {
+        name: "model_routing".to_string(),
+        status: StageStatus::Ok,
+        tool: "model_stack_router".to_string(),
+        duration_ms: Some(1),
+        metadata: json!({
+            "selected_profile": model
+                .extra
+                .get("model_outputs")
+                .and_then(|v| v.get("routing"))
+                .and_then(|v| v.get("selected_profile"))
+                .cloned()
+                .unwrap_or(json!("mixed_enterprise")),
+        }),
+    });
+}
+
 fn apply_stage7_visual_enhancements(
     input_path: &Path,
     classification: &FileClassification,
@@ -194,7 +1145,7 @@ fn apply_stage7_visual_enhancements(
             };
 
             let mut ex_ctx = ExtractionContext::default();
-            match block_on(detector.detect_layout(input, &mut ex_ctx)) {
+            match run_async(detector.detect_layout(input, &mut ex_ctx)) {
                 Ok(mut regions) => {
                     total_layout_regions += regions.len();
                     for region in &regions {
@@ -432,7 +1383,7 @@ fn apply_scanned_table_pipeline(input_path: &Path, config: &PipelineConfig, mode
         };
 
         let mut ex_ctx = ExtractionContext::default();
-        let regions = match block_on(detector.detect_tables(input, &mut ex_ctx)) {
+        let regions = match run_async(detector.detect_tables(input, &mut ex_ctx)) {
             Ok(v) => v,
             Err(err) => {
                 model.warnings.push(Diagnostic {
@@ -477,7 +1428,7 @@ fn apply_scanned_table_pipeline(input_path: &Path, config: &PipelineConfig, mode
                     &region.source,
                 )
             } else {
-                match block_on(recognizer.recognize_structure(
+                match run_async(recognizer.recognize_structure(
                     TableStructureInput {
                         document_id: model.document_id.clone(),
                         table_region: region.clone(),
@@ -573,7 +1524,7 @@ fn apply_formula_pipeline(input_path: &Path, config: &PipelineConfig, model: &mu
             page_height: page.height.unwrap_or(1400.0),
         };
         let mut ex_ctx = ExtractionContext::default();
-        let regions = match block_on(detector.detect_formulas(input, &mut ex_ctx)) {
+        let regions = match run_async(detector.detect_formulas(input, &mut ex_ctx)) {
             Ok(v) => v,
             Err(err) => {
                 model.warnings.push(Diagnostic {
@@ -615,7 +1566,7 @@ fn apply_formula_pipeline(input_path: &Path, config: &PipelineConfig, model: &mu
                     &region.source,
                 )
             } else {
-                match block_on(recognizer.recognize_formula(
+                match run_async(recognizer.recognize_formula(
                     FormulaRecognitionInput {
                         document_id: model.document_id.clone(),
                         formula_region: region.clone(),

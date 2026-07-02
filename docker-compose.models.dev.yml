@@ -1,0 +1,49 @@
+services:
+  paddleocr_service:
+    build:
+      context: .
+      dockerfile: model_services/paddleocr_service/Dockerfile
+    image: doc_parser_paddleocr_service:dev
+    container_name: doc_parser_paddleocr_service
+    environment:
+      PADDLEOCR_BACKEND: mock
+      PADDLEOCR_DEVICE: cpu
+      PADDLEOCR_LANG: ru,en
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    ports:
+      - "8101:8101"
+    command: ["uvicorn", "model_services.paddleocr_service.app:app", "--host", "0.0.0.0", "--port", "8101"]
+
+  surya_service:
+    build:
+      context: .
+      dockerfile: model_services/surya_service/Dockerfile
+    image: doc_parser_surya_service:dev
+    container_name: doc_parser_surya_service
+    environment:
+      SURYA_BACKEND: mock
+      SURYA_DEVICE: cpu
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    ports:
+      - "8102:8102"
+    command: ["uvicorn", "model_services.surya_service.app:app", "--host", "0.0.0.0", "--port", "8102"]
+
+  docling_service:
+    build:
+      context: .
+      dockerfile: model_services/docling_service/Dockerfile
+    image: doc_parser_docling_service:dev
+    container_name: doc_parser_docling_service
+    environment:
+      DOCLING_BACKEND: mock
+      DOCLING_DEVICE: cpu
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    ports:
+      - "8103:8103"
+    command: ["uvicorn", "model_services.docling_service.app:app", "--host", "0.0.0.0", "--port", "8103"]

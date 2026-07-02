@@ -82,6 +82,14 @@ output/
 - [docs/REGRESSION_TESTING.md](docs/REGRESSION_TESTING.md)
 - [docs/QUALITY_METRICS.md](docs/QUALITY_METRICS.md)
 - [docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md)
+- [docs/MODEL_STACK.md](docs/MODEL_STACK.md)
+- [docs/MODEL_ROUTING.md](docs/MODEL_ROUTING.md)
+- [docs/OCR_BACKENDS.md](docs/OCR_BACKENDS.md)
+- [docs/LEGAL_EXTRACTION.md](docs/LEGAL_EXTRACTION.md)
+- [docs/BOOK_EXTRACTION.md](docs/BOOK_EXTRACTION.md)
+- [docs/VLM_SLOW_PATH.md](docs/VLM_SLOW_PATH.md)
+- [docs/MODEL_SERVICES_DEV.md](docs/MODEL_SERVICES_DEV.md)
+- [docs/REAL_MODEL_RUNTIME.md](docs/REAL_MODEL_RUNTIME.md)
 
 ## Ограничения
 

@@ -118,6 +118,10 @@ async fn main() -> anyhow::Result<()> {
                 if let Some(path) = args.next() {
                     options.service_profile_path = PathBuf::from(path);
                 }
+            } else if arg == "--model-stack-config" {
+                if let Some(path) = args.next() {
+                    options.model_stack_config_path = PathBuf::from(path);
+                }
             } else if arg == "--json" {
                 as_json = true;
             }
@@ -215,6 +219,32 @@ async fn main() -> anyhow::Result<()> {
             pipeline_overrides.reading_order = args.next();
         } else if arg == "--exclude-headers-footers-from-chunks" {
             pipeline_overrides.exclude_headers_footers_from_chunks = args
+                .next()
+                .as_deref()
+                .map(|v| matches!(v.to_ascii_lowercase().as_str(), "true" | "1" | "yes"));
+        } else if arg == "--model-stack-config" {
+            pipeline_overrides.model_stack_config = args.next();
+        } else if arg == "--model-profile" {
+            pipeline_overrides.model_profile = args.next();
+        } else if arg == "--domain" {
+            pipeline_overrides.domain = args.next();
+        } else if arg == "--enable-slow-path" {
+            pipeline_overrides.enable_slow_path = args
+                .next()
+                .as_deref()
+                .map(|v| matches!(v.to_ascii_lowercase().as_str(), "true" | "1" | "yes"));
+        } else if arg == "--execute-slow-path" {
+            pipeline_overrides.execute_slow_path = args
+                .next()
+                .as_deref()
+                .map(|v| matches!(v.to_ascii_lowercase().as_str(), "true" | "1" | "yes"));
+        } else if arg == "--legal-extract" {
+            pipeline_overrides.legal_extract = args
+                .next()
+                .as_deref()
+                .map(|v| matches!(v.to_ascii_lowercase().as_str(), "true" | "1" | "yes"));
+        } else if arg == "--book-extract" {
+            pipeline_overrides.book_extract = args
                 .next()
                 .as_deref()
                 .map(|v| matches!(v.to_ascii_lowercase().as_str(), "true" | "1" | "yes"));

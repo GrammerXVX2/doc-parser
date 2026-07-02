@@ -1,0 +1,49 @@
+{
+  "domain_profile": {
+    "domain": "legal",
+    "confidence": 0.91,
+    "reasons": ["обнаружены юридические маркеры"]
+  },
+  "model_outputs": {
+    "routing": {
+      "selected_profile": "legal_fast",
+      "domain": "legal",
+      "confidence": 0.91,
+      "reasons": []
+    },
+    "ocr": {
+      "backend": "paddleocr_ppocrv6_medium",
+      "detection_model": "PaddlePaddle/PP-OCRv6_medium_det",
+      "recognition_model": "PaddlePaddle/PP-OCRv6_medium_rec",
+      "fallback_used": false,
+      "languages": ["ru", "en"],
+      "pages_processed": 2,
+      "elements_created": 180
+    },
+    "legal": {
+      "ner_backend": "gliner_large_v2_5",
+      "embedding_backend": "deepvk_user_bge_m3",
+      "entities_extracted": true,
+      "entities_count": 24
+    },
+    "slow_path": {
+      "enabled": true,
+      "triggered": false,
+      "backend": "paddleocr_vl_1_6",
+      "alternatives": ["qwen3_vl", "granite_docling_258m"],
+      "executed": false,
+      "reason": null
+    }
+  },
+  "legal": {
+    "document_type": "contract",
+    "parties": [],
+    "dates": [],
+    "amounts": [],
+    "identifiers": [],
+    "clauses": [],
+    "risks": [],
+    "citations": [],
+    "confidence": 0.78
+  }
+}

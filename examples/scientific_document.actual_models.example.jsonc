@@ -1,0 +1,35 @@
+{
+  "domain_profile": {
+    "domain": "scientific",
+    "confidence": 0.88,
+    "reasons": ["обнаружены научные маркеры"]
+  },
+  "model_outputs": {
+    "routing": {
+      "selected_profile": "scientific",
+      "domain": "scientific",
+      "confidence": 0.88,
+      "reasons": []
+    },
+    "tables": {
+      "backend": "table_transformer",
+      "native_tables": 3,
+      "scanned_tables": 1,
+      "placeholder_tables": 0
+    },
+    "formulas": {
+      "backend": "pix2tex",
+      "native_formulas": 12,
+      "scanned_formulas": 4,
+      "placeholder_formulas": 1
+    },
+    "slow_path": {
+      "enabled": true,
+      "triggered": true,
+      "backend": "paddleocr_vl_1_6",
+      "alternatives": ["qwen3_vl"],
+      "executed": false,
+      "reason": "SLOW_PATH_TRIGGERED: обнаружены placeholder formulas"
+    }
+  }
+}

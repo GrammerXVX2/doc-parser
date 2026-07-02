@@ -1,0 +1,39 @@
+{
+  "domain_profile": {
+    "domain": "fiction",
+    "confidence": 0.86,
+    "reasons": ["обнаружены литературные маркеры"]
+  },
+  "model_outputs": {
+    "routing": {
+      "selected_profile": "fiction_modern",
+      "domain": "fiction",
+      "confidence": 0.86,
+      "reasons": []
+    },
+    "ocr": {
+      "backend": "paddleocr_ppocrv6_medium",
+      "fallback_used": false,
+      "languages": ["ru", "en"],
+      "pages_processed": 120,
+      "elements_created": 5500
+    },
+    "slow_path": {
+      "enabled": false,
+      "triggered": false,
+      "backend": null,
+      "alternatives": [],
+      "executed": false,
+      "reason": null
+    }
+  },
+  "book": {
+    "title": "Пример книги",
+    "authors": ["Автор Примеров"],
+    "chapters": [],
+    "footnotes": [],
+    "toc": [],
+    "dehyphenation_applied": true,
+    "historical_orthography_detected": false
+  }
+}

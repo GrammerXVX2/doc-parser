@@ -6,7 +6,13 @@ use serde::{Deserialize, Serialize};
 
 use crate::config::profiles::ServiceProfile;
 use crate::config::{PipelineConfig, load_pipeline_config};
+use crate::models::config::load_model_stack_config;
+use crate::models::{
+    DoclingStructuredParseHttpBackend, PaddleOcrV6HttpBackend, SuryaLayoutHttpBackend,
+    SuryaOcrHttpBackend,
+};
 use crate::ocr::{OcrBackendKind, OcrConfig};
+use crate::models::backends::traits::ModelBackend;
 use crate::utils::command_exists::resolve_command_path;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -46,6 +52,7 @@ impl DoctorReport {
 pub struct DoctorOptions {
     pub pipeline_config_path: PathBuf,
     pub service_profile_path: PathBuf,
+    pub model_stack_config_path: PathBuf,
 }
 
 impl Default for DoctorOptions {
@@ -53,6 +60,7 @@ impl Default for DoctorOptions {
         Self {
             pipeline_config_path: PathBuf::from("configs/pipeline.config.jsonc"),
             service_profile_path: PathBuf::from("configs/profiles/api.jsonc"),
+            model_stack_config_path: PathBuf::from("configs/model_stack.config.jsonc"),
         }
     }
 }
@@ -133,6 +141,22 @@ pub fn run_doctor(options: &DoctorOptions) -> DoctorReport {
     if let Some(pipeline) = &pipeline {
         check_ocr_models(pipeline, &mut checks);
         check_triton(pipeline, &mut checks);
+    }
+
+    match load_model_stack_config(&options.model_stack_config_path) {
+        Ok(model_stack) => {
+            checks.push(DoctorCheck {
+                code: "DOCTOR_MODEL_STACK_LOADED".to_string(),
+                status: DoctorStatus::Ok,
+                message: "Конфигурация model stack загружена".to_string(),
+            });
+            check_model_services(&model_stack, &mut checks);
+        }
+        Err(error) => checks.push(DoctorCheck {
+            code: "DOCTOR_MODEL_STACK_INVALID".to_string(),
+            status: DoctorStatus::Warn,
+            message: format!("Ошибка загрузки model stack config: {}", error),
+        }),
     }
 
     DoctorReport {
@@ -299,5 +323,86 @@ fn check_security_limits(profile: &ServiceProfile, checks: &mut Vec<DoctorCheck>
             message: "Обнаружены некорректные security-лимиты (нулевые/отрицательные значения)."
                 .to_string(),
         });
+    }
+}
+
+fn check_model_services(config: &crate::models::config::ModelStackConfig, checks: &mut Vec<DoctorCheck>) {
+    let runtime = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build();
+
+    let Ok(rt) = runtime else {
+        checks.push(DoctorCheck {
+            code: "DOCTOR_RUNTIME_UNAVAILABLE".to_string(),
+            status: DoctorStatus::Warn,
+            message: "Не удалось создать runtime для model service health checks.".to_string(),
+        });
+        return;
+    };
+
+    if let Some(paddle_cfg) = config.model_stack.backends.get("paddleocr_ppocrv6_medium") {
+        let backend = PaddleOcrV6HttpBackend::new(paddle_cfg.clone());
+        let health = rt.block_on(backend.health_check());
+        if health.available {
+            checks.push(DoctorCheck {
+                code: "DOCTOR_MODEL_SERVICE_READY".to_string(),
+                status: DoctorStatus::Ok,
+                message: "PaddleOCR service доступен.".to_string(),
+            });
+        } else {
+            checks.push(DoctorCheck {
+                code: "PADDLEOCR_SERVICE_UNAVAILABLE".to_string(),
+                status: if paddle_cfg.required { DoctorStatus::Error } else { DoctorStatus::Warn },
+                message: "PaddleOCR service недоступен, будет использован mock fallback".to_string(),
+            });
+        }
+    }
+
+    if let Some(surya_cfg) = config.model_stack.backends.get("surya_ocr") {
+        let backend = SuryaOcrHttpBackend::new(surya_cfg.clone());
+        let health = rt.block_on(backend.health_check());
+        if health.available {
+            checks.push(DoctorCheck {
+                code: "DOCTOR_MODEL_SERVICE_READY".to_string(),
+                status: DoctorStatus::Ok,
+                message: "Surya service доступен.".to_string(),
+            });
+        } else {
+            checks.push(DoctorCheck {
+                code: "SURYA_SERVICE_UNAVAILABLE".to_string(),
+                status: if surya_cfg.required { DoctorStatus::Error } else { DoctorStatus::Warn },
+                message: "Surya service недоступен, будет использован heuristic fallback".to_string(),
+            });
+        }
+    }
+
+    if let Some(surya_layout_cfg) = config.model_stack.backends.get("surya_layout") {
+        let backend = SuryaLayoutHttpBackend::new(surya_layout_cfg.clone());
+        let health = rt.block_on(backend.health_check());
+        if !health.available {
+            checks.push(DoctorCheck {
+                code: "SURYA_SERVICE_UNAVAILABLE".to_string(),
+                status: if surya_layout_cfg.required { DoctorStatus::Error } else { DoctorStatus::Warn },
+                message: "Surya layout service недоступен, будет использован heuristic fallback".to_string(),
+            });
+        }
+    }
+
+    if let Some(docling_cfg) = config.model_stack.backends.get("docling") {
+        let backend = DoclingStructuredParseHttpBackend::new(docling_cfg.clone());
+        let health = rt.block_on(backend.health_check());
+        if health.available {
+            checks.push(DoctorCheck {
+                code: "DOCTOR_MODEL_SERVICE_READY".to_string(),
+                status: DoctorStatus::Ok,
+                message: "Docling service доступен.".to_string(),
+            });
+        } else {
+            checks.push(DoctorCheck {
+                code: "DOCLING_SERVICE_UNAVAILABLE".to_string(),
+                status: if docling_cfg.required { DoctorStatus::Error } else { DoctorStatus::Warn },
+                message: "Docling service недоступен, будет использован native/mock fallback".to_string(),
+            });
+        }
     }
 }

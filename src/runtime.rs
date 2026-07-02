@@ -30,6 +30,13 @@ pub struct PipelineCliOverrides {
     pub debug_layout: Option<bool>,
     pub reading_order: Option<String>,
     pub exclude_headers_footers_from_chunks: Option<bool>,
+    pub model_stack_config: Option<String>,
+    pub model_profile: Option<String>,
+    pub domain: Option<String>,
+    pub enable_slow_path: Option<bool>,
+    pub execute_slow_path: Option<bool>,
+    pub legal_extract: Option<bool>,
+    pub book_extract: Option<bool>,
 }
 
 pub fn set_output_root_dir(path: PathBuf) {

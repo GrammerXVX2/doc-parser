@@ -1,0 +1,40 @@
+{
+  "domain_profile": {
+    "domain": "mixed_enterprise",
+    "confidence": 0.72,
+    "reasons": ["tables + images + formulas + text"]
+  },
+  "model_outputs": {
+    "routing": {
+      "selected_profile": "mixed_enterprise",
+      "domain": "mixed_enterprise",
+      "confidence": 0.72,
+      "reasons": []
+    },
+    "ocr": {
+      "backend": "paddleocr_ppocrv6_medium",
+      "fallback_used": false,
+      "languages": ["ru", "en"],
+      "pages_processed": 24,
+      "elements_created": 910
+    },
+    "layout": {
+      "backend": "surya_layout",
+      "fallback_used": false,
+      "regions_detected": 147
+    },
+    "structured_document_parse": {
+      "backend": "docling",
+      "fallback_used": false,
+      "executed": true
+    },
+    "slow_path": {
+      "enabled": true,
+      "triggered": false,
+      "backend": "paddleocr_vl_1_6",
+      "alternatives": ["qwen3_vl", "granite_docling_258m"],
+      "executed": false,
+      "reason": null
+    }
+  }
+}
